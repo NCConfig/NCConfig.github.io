@@ -1,0 +1,293 @@
+
+body {
+    font-family: "Times New Roman", serif;
+    font-size: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#header {
+    background-color: grey;
+    color: white;
+    padding-top: 10px;
+    padding-bottom: 15px;
+    text-align: center;
+    font-size: 1.5em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Navigation side-bar */
+#nav {
+    width: 170px;
+    background-color: linen;
+    padding: 20px 2px;
+    float: left;
+    border: black solid 2px;
+    margin: 0px;
+}
+#nav button{
+    margin: 10px 8px;
+    width: 150px;
+    font-size: 1.2em; 
+}
+
+/* Content div - holds tabs and tab-content */
+/* Not much to do, just provide space for navigation colunm */
+#content {
+    margin-left: 178px;
+}
+
+/* Tabs --------------------------------------------------- */
+#tabButtons {  /* The bar which holds the buttons */
+    min-height: 45px;
+    background-color: lightgrey;
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+div.tabDivItem { /* A div which holds each tab button and close btn. */
+    display: inline;
+    padding: 10px 0px 10px 0px;
+    position: relative;
+    top: 7px;
+    background-color: lightgray;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+} 
+
+input.tabButton { /* The button which selects the tab. */
+    font-size: 1.2em;
+    padding: 1px 5px 10px 21px;
+    border: none;
+    margin: 0;
+    background: rgba(0,0,0,0); /* this make the background transparent */
+}
+
+div.tabDivItem:hover {
+    background-color: lightblue;
+}
+
+div.activeItem,
+div.activeItem:hover {
+    background-color: white;
+}
+
+input.tabButton:hover,
+input.tabButton:focus {
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+span.closeTab {
+    position:relative;
+    top: 5px;
+    padding: 0px 4px 0px 2px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closeTab:hover,
+.closeTab:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+#tabContents {  /* The div that encloses all tabContent items */
+    visibility: visible;
+    display: block;
+    margin: 10px;
+}
+
+div.tabContent { /* A div enclosing the content for one tab */
+}
+
+/* Solutions Dialog Elements ------------------------------ */
+
+
+/* Main solutions dialog box. */
+#solutionsDlg {
+    display: none;
+    position: fixed;
+    top: 120px;
+    left: 150px;
+    z-index: 1;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    width: 500px;
+    height: 400px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
+    float: left;
+}
+
+#possibleSolutions {
+    z-index: 2;
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    width: 360px;
+    height: 220px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
+    float: left;}
+
+/* Title */
+#solutionsDlg > h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 150%; 
+    text-align: center;
+}
+
+p.solutionTitle, p.solutionsTitle {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 3px 8px;
+}
+
+p.devicesTitle {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 3px 8px;
+    position: relative;
+    left: 40px;
+}
+
+.activityButton, .solutionButton {
+    font-family: "Times New Roman", serif;
+    font-size: 1.2em;
+    display: block;
+    border: none;
+    background-color: white;
+    padding: 5px 20px;
+    position: relative;
+}
+
+.deviceButton {
+    font-family: "Times New Roman", serif;
+    font-size: 1.2em;
+    display: block;
+    border: none;
+    border-left: 2px solid black;
+    background-color: white;
+    padding: 5px 10px;   
+    position: relative;
+    left: 50px;
+}
+
+.close {
+    font-size: 28px;
+    font-weight: bold;
+    float: right;
+    color: #aaa;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+}
+
+.activityButton:hover, 
+.activityButton:focus,
+.solutionButton:hover, 
+.solutionButton:focus,
+.deviceButton:hover,
+.deviceButton:focus {
+    background-color: lightblue;
+}
+
+.tooltipdiv {
+    position: relative;
+    display: block;
+}
+
+.tooltipdiv .tooltip {
+    visibility: hidden;
+    width: 240px;
+    position: absolute;
+    top: -10px;
+    left: 75%;
+    z-index: 3;   
+    padding: 5px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    font-size: 1.1em;
+}
+
+.tooltipdiv:hover .tooltip {
+    visibility: visible;
+}
+
+/* Solution content ---------------------- */
+.solutionBlock {
+    margin: 10px 5px;
+    padding: 3px 10px 10px 10px;
+    border-radius: 10px;
+    border: 1px solid lightgrey;
+    min-height: 150px;
+}
+
+div.solutionBlock h2{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 140%;  
+    margin: 0px;
+}
+
+.solutionBlock p {
+    font-size: 1.2em;
+}
+
+/* Input controls */
+.setting {
+    font-size: 1.2em;
+    padding: 4px;
+    margin: 0px 0px 4px 0px;
+}
+
+select.setting {
+    font-size: 1em;
+}
+
+.textinput {
+    font-family: monospace;
+}
+
+#infoBox {
+    display: none;
+    position: fixed;
+    top: 120px;
+    left: 250px;
+    z-index: 1;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    width: 550px;
+    height: 400px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
+}
+
+#infoContent {
+    font-size: 1.2em;
+    padding: 5px;
+}
+
+#infoButtons {
+    margin: auto;
+   width: fit-content;
+}
+#infoButtons input {
+    margin: 8px;
+    font-size: 1.2em;
+}

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+
+<html>
+    <head>
+        <title>Tab Test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            var tabID = 0;
+            function addTab() {
+                tabID++;
+                var currentID = tabID;
+                let tabHolder = document.getElementById("tabButtons");
+                
+                let tabDiv = document.createElement("div");
+                let tabBtn = document.createElement("input");
+                let tabClose = document.createElement("span");
+                
+                tabDiv.className = "tabDivItem";
+                tabDiv.myID = currentID;
+                tabBtn.type = "button";
+                tabBtn.className = "tabButton";
+                tabBtn.value = "Tab #" + currentID;
+                tabBtn.onclick = function() {
+                    setSelectedTab(currentID);
+                };
+                tabClose.className = "closeTab";
+                tabClose.innerHTML = "&times";
+                tabClose.onclick = function() {
+                    removeTab(currentID);
+                };
+                
+                tabDiv.appendChild(tabBtn);
+                tabDiv.appendChild(tabClose);
+                tabHolder.appendChild(tabDiv);
+                
+                setSelectedTab(currentID);
+            }
+            
+            function setSelectedTab(targetID) {
+                let tabDivs = document.getElementsByClassName("tabDivItem");
+                for(var td of tabDivs) {
+                    if (td.myID == targetID) {
+                        td.className = "tabDivItem activeItem";
+                    } else {
+                        td.className = "tabDivItem";
+                    }
+                }
+            }
+            
+            function removeTab(targetID) {
+                let tabHolder = document.getElementById("tabButtons");
+                let tabDivs = document.getElementsByClassName("tabDivItem");
+                for(var td of tabDivs) {
+                    if (td.myID == targetID) {
+                        tabHolder.removeChild(td);
+                        break;
+                    }
+                }
+                
+                tabDivs = document.getElementsByClassName("activeItem");
+                if (tabDivs.length == 0) {  // We deleted the active item ...
+                    let tabDivs = document.getElementsByClassName("tabDivItem");
+                    tabDivs[0].className = "tabDivItem activeItem";
+                }
+            }
+        </script>
+        <style>
+            body {
+                margin: 0px;
+                padding: 0px;
+            }
+            /* Tabs --------------------------------------------------- */
+            #tabButtons {  /* The bar which holds the buttons */
+                min-height: 45px;
+                background-color: lightgrey;
+                padding-left: 0px;
+                margin-left: 0px;
+            }
+            
+            div.tabDivItem {
+                display: inline;
+                padding: 10px 0px 10px 0px;
+                position: relative;
+                top: 7px;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                background-color: lightgray;
+            }
+
+            input.tabButton {
+                font-size: 1.2em;
+                padding: 1px 5px 10px 21px; 
+                border: none;
+                margin: 0;
+            /* This makes button background transparent. */
+                background: rgba(0, 0, 0, 0);
+            } 
+                        
+            div.tabDivItem:hover {
+                background-color: lightblue;
+            }
+                        
+            input.tabButton,
+            input.tabButton:hover {
+                border: none;
+                outline: none;                
+                cursor: pointer;
+            }
+
+            div.activeItem:hover {
+                background-color: white;
+            }
+            
+            div.activeItem {  /* The one active button */
+                background-color: white;
+                border: none;
+                outline: none;
+            }
+
+            /* -- tab Close Button -- */
+            span.closeTab {
+                position: relative;
+                top: 5px;
+              padding: 0px 4px 0px 2px;
+              color: #aaa;
+              font-size: 28px; 
+              font-weight: bold;
+            }
+
+            .closeTab:hover, 
+            .closeTab:focus {
+              color: black;
+              text-decoration: none;
+              cursor: pointer;
+            }               
+
+            /* Tab contents */
+            #tabContents {  /* The div that encloses all tabContent items */
+                visibility: visible;
+                display: block;
+                margin: 10px;
+            }
+
+            div.tabContent { /* A div enclosing the content for one tab */
+            }
+            
+
+        </style> 
+    </head>
+    <body>
+        <h1>Tab Test</h1>
+        <div id="content">
+            <button onclick="addTab();">Add Tab</button>
+            <p></p>
+            <div id="tabButtons">
+                <div class="tabDivItem activeItem">
+                <input type="button" class="tabButton" value="This is a test">
+                <span class="closeTab">&times</span>    
+                </div>
+                <div class="tabDivItem">
+                <input type="button" class="tabButton" value="This is also a test">
+                <span class="closeTab">&times</span>      
+                </div>
+            </div>
+            <div id="tabContents">
+             </div>
+            
+        </div>
+    </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Javascript Object Testing</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            var obj1 = function() {
+                this.item1 = 1;
+                this.item2 = 2;
+            }
+            obj1.prototype.func1 = function(){this.item1++;};
+            
+            class first {
+                constructor() {
+                    this.item1 = 1;
+                    this.item2 = 2;
+                }
+                func1() {this.item1++;}
+            }
+            
+            class second extends first {
+                constructor() {
+                    super();
+                    this.item3 = 3;
+                }
+                func1() {this.item1 += this.item3; }
+                func2() {this.item2++;}
+            }
+            
+            function runtest() {
+                var instant1 = new obj1;
+                var instant2 = new obj1;
+                instant2.item3 = 3;
+                
+                var first1 = new first();
+                var second1 = new second();
+
+                var instant3 = Object.create(instant1);
+                instant3.item1++;
+                instant3.item1 = 5;
+            }
+        </script>
+    </head>
+    <body>
+        <div>
+        <button onclick="runtest();">Run Test</button>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Mucking About</title>
+        <link rel="shortcut icon" href="image.png">        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="aac.css">  
+        <script src="const.js"></script>
+        <script src="keyCodes.js"></script>
+        <script src="widgets.js"></script>
+        <script src="solutions.js"></script>
+        <script src="chooser.js"></script>
+        <script src="connect.js"></script>
+        <script src="triggers.js"></script>
+        <script src="main.js"></script>
+    </head>
+    <body onload="startup();">
+        <div id="header"><h1>netClé Configuration Tool</h1></div>
+        <div id="nav">
+            <button onclick="showSolutionDlg();">Add Solution</button>
+            <button onclick="download();">Download</button>
+            <button onclick="getVersion();">Get Version</button>
+            <button onclick="getConfig();">Get Config</button>
+            <button onclick="sendTriggers();">Send Config</button>
+            <button onclick="closeConnection();">Close Connection</button>
+            <button onclick="getValueTest();">Get Value</button>
+            <button onclick="setValueTest();">Set Value</button>
+            <button onclick="SolutionList.compile();">Compile Test</button>
+            <button onclick="window.location.href = 'tabTest.html'">Tab Test</button>
+        </div>
+        <div id="content">
+            <div id="tabButtons"></div>
+            <div id="tabContents"></div>
+        </div>
+        <div id="solutionsDlg">
+            <span onclick="closeIt()" class="close">&times;</span>
+            <h2>Add a Solution</h2>
+            <div id="solutionContent"></div>
+        </div>
+        <div id="possibleSolutions"></div>
+        <div id="infoBox">
+            <h2 id="infoHeading"></h2>
+            <p id="infoContent"></p>
+            <div id="infoButtons">
+            </div>
+        </div>
+    </body>
+</html>
