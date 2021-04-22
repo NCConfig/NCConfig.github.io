@@ -27,13 +27,16 @@ function startup() {
     }
 }
 
-function download() {
+async function download() {
     if (!connection.isSupported()) {
         showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
         return;
     } else {
+        if (await SolutionList.doPortCheck() == false) {
+            return;
+        }
         if (connection.connected) {
-            doDownload();
+                doDownload();
         } else {
             showMessageBox("Information", MSG_MUST_CONNECT, ["OK"])
             .then( () => {  // after message box is closed ...
@@ -58,8 +61,8 @@ In order to use this tool you will need a firmware upgrade.", ["OK"]);
                 showMessageBox("Error", "Connection failed:<br/>" + error, ["OK"]);
                 return;
             });
-        }
-    } 
+        } 
+    }
 }
 
 function doDownload() {
