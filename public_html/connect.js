@@ -1,5 +1,5 @@
 
-"use strict"
+"use strict";
 
 
 const REPORT_MODE   = 'Q'.charCodeAt(0);
@@ -23,6 +23,7 @@ var CONDITION_MASK = '0'.charCodeAt(0);
 var BOOL_TRUE	= 'p'.charCodeAt(0);
 var BOOL_FALSE	= 'q'.charCodeAt(0);
 
+// Concatination for 2 Uint8Array structures.
 var concat = function(buffer1, buffer2) {
   var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
   tmp.set(new Uint8Array(buffer1), 0);
@@ -44,7 +45,7 @@ var connection = {
     open: async function() {
         const filters = [
             { usbVendorId: 0x2341, usbProductId: 0x8036 },
-            { usbVendorId: 0x10c4, usbProductId: 0xea60 },
+            { usbVendorId: 0x10c4, usbProductId: 0xea60 }
             ]; 
         this.thePort = await navigator.serial.requestPort(filters);
         await this.thePort.open({baudRate: 9600});
@@ -82,12 +83,12 @@ var connection = {
               // value is a Uint8Array.
               console.log(value);
               buffer = concat(buffer, value);
-              if (buffer[buffer.length-1] == END_OF_BLOCK) {
+              if (buffer[buffer.length-1] === END_OF_BLOCK) {
                   console.log("Buffer complete.");
                   console.log(new TextDecoder().decode(buffer));
-                  if (buffer[0] == GET_VERSION) {
+                  if (buffer[0] === GET_VERSION) {
                       this.processVersion(buffer);
-                  } else if (buffer[0] == START_OF_TRIGGER_BLOCK) {
+                  } else if (buffer[0] === START_OF_TRIGGER_BLOCK) {
                       inputStream.init(buffer);
                       loadTriggers(inputStream);
                   }
@@ -149,7 +150,7 @@ var inputStream = {
     getByte: function() {
         let tmp = this.dataStream.next().value;
         // Filter out newlines  and CR that may have been added for readability.
-        while(tmp == 10 || tmp == 13) {  
+        while(tmp === 10 || tmp === 13) {  
             tmp = this.dataStream.next();
         }
         return tmp;

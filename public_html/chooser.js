@@ -3,7 +3,7 @@
  * 
  * Holds data and code needed to run the cascading solutions chooser.
  */
-"use strict"
+"use strict";
 
 const ActivityPrompt = "What do you want to do?";
 const DevicePrompt = "What device do you want to use?";
@@ -69,7 +69,7 @@ let DS_ONE_BTN_MOUSE   = "Enable left-click and control of cursor motion \
 with a single button.";
 let DS_TWO_BTN_MOUSE   = "Enable cursor control with two buttons. \
 One button controls left-right cursor motion and the other controls \
-up-down motion."
+up-down motion.";
 let DS_JOYSTICK_MOUSE1 = "Control the cursor with a joystick. \
 Left- and right-click capability can be added.";
 let DS_JOYSTICK_MOUSE2 = "Enable cursor and scrolling control with \
@@ -235,7 +235,7 @@ function deviceButtonAction(btn, device) {
         theDiv.appendChild(title);
         
         for (let solRef of SolutionRef) {
-            if (solRef.deviceid == device.id) {
+            if (solRef.deviceid === device.id) {
                 var innerDiv = document.createElement("div");
                 innerDiv.className = "tooltipdiv";
                 theDiv.appendChild(innerDiv);
@@ -271,14 +271,14 @@ function hidePossible() {
 // Define the action when a solutions button is pressed
 function solutionButtonAction(btn, solRef) {
     btn.onclick = function() {
-        if (solRef.createFunc == null) {
+        if (solRef.createFunc === null) {
             closeIt();
             showMessageBox("Information", solRef.displayFunc, ["OK"]);
         } else {
             addTab(solRef);
             closeIt();
         }
-    }
+    };
 }
 
 // --- New Tab --------------
@@ -334,7 +334,7 @@ function addTab(solRef) {
 function setActiveTab(selectedID) {
     var tabs = document.getElementsByClassName("tabDivItem");
     for(let t of tabs) {
-        if (t.myID == selectedID) {
+        if (t.myID === selectedID) {
             t.className = "tabDivItem activeItem";
         } else {
             t.className = "tabDivItem";
@@ -393,20 +393,20 @@ function removeTab(selectedID) {
     // Remove the tab
     var tabs = document.getElementsByClassName("tabDivItem");
     for(let t of tabs) {
-        if (t.myID == selectedID) {
+        if (t.myID === selectedID) {
             tabsHolder.removeChild(t);
         }
     }
     var cont = document.getElementsByClassName("tabContent");
     for(let c of cont) {
-        if (c.myID == selectedID) {
+        if (c.myID === selectedID) {
             c.style.display = "none";
             contentHolder.removeChild(c);
         } 
     } 
     
     tabs = document.getElementsByClassName("activeItem");
-    if (tabs.length == 0) { // we just deleted the active item.
+    if (tabs.length === 0) { // we just deleted the active item.
         tabs = document.getElementsByClassName("tabDivItem");
         if (tabs.length > 0) {
             setActiveTab(tabs[0].myID);

@@ -28,6 +28,10 @@ let SolutionList = {
         }       
     },
     
+    portCheck: function() {
+        
+    },
+    
     compile: function() {
         Triggers.clear();
         for (var sol of this.list) {
