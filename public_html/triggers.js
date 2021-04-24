@@ -321,6 +321,10 @@ function putTriggers(ostream) {
     for(var i=0; i<ntrig; i++) {
         Triggers.get(i).toStream(ostream);
     }
+    
+    // Send cursor speed data.
+    rawCursorSpeed.toStream(ostream);
+    
     ostream.putByte(END_OF_BLOCK);  // Write end of transmission block byte
     ostream.flush();
 }
@@ -358,8 +362,12 @@ function readTriggers (tmpTriggers, stream) {
     var nextByte = stream.getByte();
     if (nextByte === MOUSE_SPEED_DATA) {
         var dataCount = stream.getNum(2);
-        for(let i=0; i<dataCount; i++) {
-            stream.getByte();
+        if (dataCount == 20) {
+            rawCursorSpeed.fromStream(stream);
+        } else {
+            for(let i=0; i<dataCount; i++) {
+                stream.getByte();
+            }
         }
         nextByte = stream.getByte();
     }

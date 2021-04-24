@@ -40,13 +40,15 @@ let SolutionList = {
         }       
     },
     
+    // This function limits the show-message / promise stuff to 
+    // the highest possible level in the code.
     doPortCheck: async function() {
         var self = this;
         var p = new Promise(function (resolve, reject) {
             self.messageTitle = null;
             self.messageBody = null;
             var result = self.portCheck();
-            if (self.errorTitle !== null) {
+            if (self.messageTitle !== null) {
                 showMessageBox(self.messageTitle, self.messageBody, ["OK"])
                 .then ( () => {
                     resolve(result);
@@ -280,20 +282,7 @@ function makeOneButtonMouse(id) {
     return sol;
 }
 
-// Temporary Test Code -------------------------------
-// These tests expect that OneButtonMouse is loaded in SolutionList[0]
-function getValueTest() {
-    var sol = SolutionList[0];
-    var value = sol.settings[0].getValue();
-    alert("Value is " + value.name);
-}
 
-function setValueTest() {
-    var sol = SolutionList[0];
-    var value = portOptions[2];
-    sol.settings[0].setValue(value);
-    
-}
 // ----------------------------------------------------
 
 

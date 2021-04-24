@@ -311,6 +311,9 @@ function addTab(solRef) {
     tabClose.className = "closeTab";
     tabClose.innerHTML = "&times";
     tabClose.onclick = function() {
+/*        if (confirm("Do you want to delete " + solRef.text + "?")) {
+            removeTab(currentID);
+        }*/
         showMessageBox("Please confirm", "Do you want to delete " + solRef.text + "?", ["Yes", "No"])
                 .then( (response) => {
                     if (response == "Yes") {

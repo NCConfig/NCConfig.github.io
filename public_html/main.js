@@ -11,7 +11,7 @@ Supported browers are Chrome, Edge and Opera.  In addition, on these browsers yo
 </ul>\
 and paste it into your brower's address bar.  Then, set the option to \'Enabled\'.";
    
-const MSG_MUST_CONNECT = "We now need to correct the your netClé device. \
+const MSG_MUST_CONNECT = "We now need to correct the your netClé device.<br/>\
 Please ensure the divice is connected to your computer, and then press OK.";
 
 function startup() {
@@ -27,42 +27,49 @@ function startup() {
     }
 }
 
-async function download() {
+function download() {
     if (!connection.isSupported()) {
         showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
         return;
     } else {
-        if (await SolutionList.doPortCheck() == false) {
-            return;
-        }
-        if (connection.connected) {
-                doDownload();
-        } else {
-            showMessageBox("Information", MSG_MUST_CONNECT, ["OK"])
-            .then( () => {  // after message box is closed ...
-                return connection.open();
-                
-            }).then( () => {  // after connection is complete ...
-                return connection.checkVersion();
-                
-            }).then( (version) => {  // after version check is complete.
-                if (version == null) {
-                     showMessageBox("Error", "You are not connected to a netClé device.", ["OK"]);
-                     connection.close();
-                 } else if (version == "1.04" || version == "2.04") {
-                     doDownload();
-                 } else {
-                     showMessageBox("Error", "Your netClé device is out-of-date. \
-In order to use this tool you will need a firmware upgrade.", ["OK"]);
-                     connection.close();
-                 }        
-                 
-            }).catch( (error) => {  // if connection.open fails
-                showMessageBox("Error", "Connection failed:<br/>" + error, ["OK"]);
-                return;
-            });
-        } 
+        // doPortCheck may put up a dialog, and thus returns a promise.
+        SolutionList.doPortCheck().then( (val) => {
+            if (val === true) {  // Port check passed
+                if (connection.connected) {
+                    doDownload();
+                } else {
+                    getConnected( doDownload );
+                } 
+            }
+        });
     }
+}
+
+// Establish the connections to the hub.  If successful call the callback function.
+function getConnected( callbackFunc ) {
+    showMessageBox("Information", MSG_MUST_CONNECT, ["OK"])
+    .then( () => {  // after message box is closed ...
+        return connection.open();
+
+    }).then( () => {  // after connection is complete ...
+        return connection.checkVersion();
+
+    }).then( (version) => {  // after version check is complete.
+        if (version == null) {
+             showMessageBox("Error", "You are not connected to a netClé device.", ["OK"]);
+             connection.close();
+         } else if (version == "1.04" || version == "2.04") {
+             callbackFunc();
+         } else {
+             showMessageBox("Error", "Your netClé device is out-of-date. \
+In order to use this tool you will need a firmware upgrade.", ["OK"]);
+             connection.close();
+         }        
+
+    }).catch( (error) => {  // if connection.open fails
+        showMessageBox("Error", "Connection failed:<br/>" + error, ["OK"]);
+        return;
+    });    
 }
 
 function doDownload() {
@@ -124,4 +131,18 @@ async function showMessageBox(title, message, buttonList) {
         box.style.display = "block";
     });
     return p;
+}
+
+function getValueTest() {
+    let slider = document.getElementById("csspeed1");
+
+    var value = parseInt( slider.value );
+    alert(value);
+    alert( 10 + value );
+}
+
+function setValueTest() {
+    let slider = document.getElementById("csspeed1");
+    
+    slider.value = "600";
 }
