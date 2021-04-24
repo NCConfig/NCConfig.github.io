@@ -11,28 +11,29 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="aac.css">  
-        <script src="const.js"></script>
-        <script src="keyCodes.js"></script>
-        <script src="widgets.js"></script>
-        <script src="solutions.js"></script>
-        <script src="chooser.js"></script>
-        <script src="connect.js"></script>
-        <script src="triggers.js"></script>
-        <script src="main.js"></script>
+        <script type="text/javascript" src="const.js"></script>
+        <script type="text/javascript" src="keyCodes.js"></script>
+        <script type="text/javascript" src="widgets.js"></script>
+        <script type="text/javascript" src="solutions.js"></script>
+        <script type="text/javascript" src="chooser.js"></script>
+        <script type="text/javascript" src="connect.js"></script>
+        <script type="text/javascript" src="triggers.js"></script>
+        <script type="text/javascript" src="cursorSpeed.js"></script>
+        <script type="text/javascript" src="main.js"></script>
     </head>
     <body onload="startup();">
         <div id="header"><h1>netClé Configuration Tool</h1></div>
         <div id="nav">
             <button onclick="showSolutionDlg();">Add Solution</button>
             <button onclick="download();">Download</button>
-            <button onclick="getVersion();">Get Version</button>
-            <button onclick="getConfig();">Get Config</button>
-            <button onclick="sendTriggers();">Send Config</button>
+            <button onclick="showCursorSpeed();">Cursor Speed</button>
+<!--            <button onclick="getConnected(()=>{});">Connect</button>
             <button onclick="closeConnection();">Close Connection</button>
+            <button onclick="getConfig();">Get Config</button>
+            <button onclick="getVersion();">Get Version</button>
+            <button onclick="sendTriggers();">Send Config</button>
             <button onclick="getValueTest();">Get Value</button>
-            <button onclick="setValueTest();">Set Value</button>
-            <button onclick="SolutionList.compile();">Compile Test</button>
-            <button onclick="window.location.href = 'tabTest.html'">Tab Test</button>
+            <button onclick="setValueTest();">Set Value</button> -->
         </div>
         <div id="content">
             <div id="tabButtons"></div>
@@ -48,6 +49,43 @@ and open the template in the editor.
             <h2 id="infoHeading"></h2>
             <p id="infoContent"></p>
             <div id="infoButtons">
+            </div>
+        </div>
+        
+        <!-- Mouse Speed Application -->
+        <div id="cursorSpeed">
+            <h2>Cursor Speed Adjustment</h2>
+            <div>
+                <label for="csspeed1" class="cslabel1">Start speed </label>
+                <span class="cstag">slow</span>
+                <input id="csspeed1" class="csspeed" type="range" min="350" max="650" value="420"/>
+                <span class="cstag">fast</span>
+            </div>
+            <div>
+                <label for="csinterval1" class="cslabel2">After </label>
+                <input id="csinterval1" class="csinterval" type="number" min="50" max="10000" value="500"/>
+                <span> milliseconds</span>
+            </div>
+            <div>
+                <label for="csspeed2" class="cslabel1">change to </label>
+                <span class="cstag">slow</span>
+                <input id="csspeed2" class="csspeed" type="range" min="350" max="650" value="480"/>
+                <span class="cstag">fast</span>
+            </div>
+            <div>
+                <label for="csinterva2" class="cslabel2">After an additional </label>
+                <input id="csinterval2" class="csinterval" type="number" min="50" max="10000" value="500"/>
+                <span> milliseconds</span>
+            </div>
+            <div>
+                <label for="csspeed3" class="cslabel1">change to </label>
+                <span class="cstag">slow</span>
+                <input id="csspeed3" class="csspeed" type="range" min="350" max="650" value="540"/>
+                <span class="cstag">fast</span>
+            </div>
+            <div id="csbuttons">
+                <button onclick="saveCursorSpeed();">Save</button>
+                <button onclick="cancelCursorSpeed();">Cancel</button>
             </div>
         </div>
     </body>

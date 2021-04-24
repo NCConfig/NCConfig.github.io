@@ -200,7 +200,7 @@ class NumericSelector extends WidgetBase {
             var val = this.value;
             if (val < minValue) { this.value = minValue; }
             if (val > maxValue) { this.value = maxValue; }
-        } 
+        };
     }
     
     getLabel() { return this.label;}
@@ -248,7 +248,7 @@ class TextBox extends WidgetBase {
                 val = val.slice(0,20);
                 this.value = val;
             }
-        }
+        };
     }
     
     getLabel() { return this.label; }

@@ -60,7 +60,7 @@ function createSensorList() {
     
 function getSensorByID(id) {
     for(var i=0; i<sensors.length; i++) {
-        if (sensors[i].id == id) {
+        if (sensors[i].id === id) {
             return sensors[i];
         }
     }
@@ -80,7 +80,7 @@ class portValue {
     }
     
     getSensor(sensorSide) {
-        if (sensorSide == SENSOR_A) {
+        if (sensorSide === SENSOR_A) {
             return this.sensorA;
         } else {
             return this.sensorB;
@@ -134,7 +134,7 @@ function createActionList() {
     
 function getActionByID(id) {
     for(var i=0; i<actions.length; i++) {
-        if (actions[i].id == id) {
+        if (actions[i].id === id) {
             return actions[i];
         }
     }
@@ -218,18 +218,18 @@ class Trigger {
     fromStream( stream ) {
         let sensorID = stream.getID(2);
         this.sensor = getSensorByID(sensorID);
-        if (this.sensor == null) {
+        if (this.sensor === null) {
             throw ("Invalid Sensor ID");
         }
         this.reqdState = stream.getID(1);
         this.triggerValue = stream.getNum(2);
         this.condition = stream.getCondition();
-        this.repeat = (this.condition & 4) == 4;
+        this.repeat = (this.condition & 4) === 4;
         this.condition = this.condition & ~4;
 
         let actionID = stream.getID(2);
         this.action = getActionByID(actionID);
-        if (this.action == null) {
+        if (this.action === null) {
             throw ("Invalid Action ID");
         }
         this.actionState = stream.getID(1);
@@ -321,6 +321,10 @@ function putTriggers(ostream) {
     for(var i=0; i<ntrig; i++) {
         Triggers.get(i).toStream(ostream);
     }
+    
+    // Send cursor speed data.
+    rawCursorSpeed.toStream(ostream);
+    
     ostream.putByte(END_OF_BLOCK);  // Write end of transmission block byte
     ostream.flush();
 }
@@ -342,11 +346,11 @@ function loadTriggers(stream) {
 }
 	
 function readTriggers (tmpTriggers, stream) {
-    if (stream.getByte() != START_OF_TRIGGER_BLOCK) {
+    if (stream.getByte() !== START_OF_TRIGGER_BLOCK) {
         throw("Invalid start of transmission");
     }
     // Version check
-    if (stream.getByte() != '1'.charCodeAt(0)) {
+    if (stream.getByte() !== '1'.charCodeAt(0)) {
          throw("Invalid protocol version");
     }
     var triggerCount = stream.getNum(1);
@@ -356,14 +360,18 @@ function readTriggers (tmpTriggers, stream) {
         tmpTriggers.push(t);
     }
     var nextByte = stream.getByte();
-    if (nextByte == MOUSE_SPEED_DATA) {
+    if (nextByte === MOUSE_SPEED_DATA) {
         var dataCount = stream.getNum(2);
-        for(let i=0; i<dataCount; i++) {
-            stream.getByte();
+        if (dataCount == 20) {
+            rawCursorSpeed.fromStream(stream);
+        } else {
+            for(let i=0; i<dataCount; i++) {
+                stream.getByte();
+            }
         }
         nextByte = stream.getByte();
     }
-    if (nextByte != END_OF_BLOCK) {
+    if (nextByte !== END_OF_BLOCK) {
         throw("Invalid end of transmission");
     }
     console.log("Loaded ", triggerCount, "triggers.");

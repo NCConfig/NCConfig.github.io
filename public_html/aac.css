@@ -228,7 +228,7 @@ p.devicesTitle {
     visibility: visible;
 }
 
-/* Solution content ---------------------- */
+/* =========== Solution content ================== */
 .solutionBlock {
     margin: 10px 5px;
     padding: 3px 10px 10px 10px;
@@ -273,8 +273,8 @@ select.setting {
     border: 2px solid black;
     border-radius: 10px;
     padding: 20px;
-    width: 550px;
-    height: 400px;
+    width: fit-content;
+    height: fit-content;
     box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
 }
 
@@ -290,4 +290,89 @@ select.setting {
 #infoButtons input {
     margin: 8px;
     font-size: 1.2em;
+}
+
+/* ========== Cursor Speed Styling =============== */
+#cursorSpeed {
+    display: none;
+    position: fixed;
+    top: 100px;
+    left: 150px;
+    z-index: 1;
+    padding: 20px;
+    font-size: 1.2em;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    width: fit-content;
+    height: fit-content;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
+}
+
+/* Slider */
+.csspeed {
+  -webkit-appearance: none;
+  width: 300px;
+  margin: 10px 5px;
+  height: 10px;
+  background: lightgray;
+  outline: none;
+}
+
+.csspeed:hover {
+  opacity: 1;
+}
+
+.csspeed::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 25px;
+  background: gray;
+  cursor: pointer;
+}
+
+.csspeed::-moz-range-thumb {
+  width: 10px;
+  height: 40px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+/* The slow, fast labels at the ends of the slider */
+.cstag {
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+/* Number box */
+.csinterval {
+    width: 70px;
+    margin: 10px 5px;
+    font-size: 1.0em;
+    text-align: right;
+}
+
+/* Slider label */
+.cslabel1 {
+    display: inline-block;
+    width: 90px;
+    margin: 10px 5px;
+}
+
+/* Label on number input */
+.cslabel2 {
+    margin: 10px 5px;
+}
+
+/* Div holding the buttons */
+#csbuttons {
+    margin: auto;
+   width: fit-content;    
+}
+
+#csbuttons button {
+    font-size: 1.0em;
+    margin: 15px 8px 8px 8px;
 }

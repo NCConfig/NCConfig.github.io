@@ -7,6 +7,18 @@
 
 "use strict"
 
+class PortUsage {
+    constructor(thePort) {
+        this.thePort = thePort;
+        this.useCount = 0;
+        this.firstUser = null;
+        this.secondUser = null;
+    }
+};
+
+let portMap = {};
+let portsWithTwoSingles = [];
+
 let SolutionList = {
     list: [],
     
@@ -26,6 +38,112 @@ let SolutionList = {
         if (found >= 0) {
             this.list.splice(found, 1);
         }       
+    },
+    
+    // This function limits the show-message / promise stuff to 
+    // the highest possible level in the code.
+    doPortCheck: async function() {
+        var self = this;
+        var p = new Promise(function (resolve, reject) {
+            self.messageTitle = null;
+            self.messageBody = null;
+            var result = self.portCheck();
+            if (self.messageTitle !== null) {
+                showMessageBox(self.messageTitle, self.messageBody, ["OK"])
+                .then ( () => {
+                    resolve(result);
+                });                
+            } else {
+                resolve(result);
+            }
+        });
+        return p;
+    },
+    
+    portCheck: function() {
+        portMap = {};
+        portsWithTwoSingles = [];
+        var portName;
+        var pu;
+        
+        var ok;
+        
+        for(var sol of this.list) {
+            var p1 = sol.getPortUsed();
+            if (p1 !== null) {
+                ok = this.checkOnePort(sol, p1, sol.sensorCount);
+                if(!ok) return false;
+            }
+            var p2 = sol.getPortBUsed();
+            if (p2 !== null) {
+                ok = this.checkOnePort(sol, p2, sol.sensorBCount);
+                if(!ok) return false;
+            }
+        }     
+        
+        // If we get this far there are no show-stopper errors.
+        // We may still need to put out warnings about ports with two singles.
+        if (portsWithTwoSingles.length > 0) {
+            portName = portsWithTwoSingles[0]
+            pu = portMap[ portName ];
+            this.messageTitle = "Information";
+            this.messageBody = "The solutions '" + pu.firstUser.name + "' and '" + 
+    pu.secondUser.name + "' are both using " + portName + " for a single button.<br/>" +
+    "This is possible.  You may attach two buttons to the port using a splitter " +
+    "or you may attach a two-button control to the port.";
+        }
+        
+        // Make sure single-user ports are assigned to subport A
+        for(portName in portMap) {
+            pu = portMap[portName];
+            if (pu.useCount === 1) {
+                pu.firstUser.setSubPort(SENSOR_A);
+            }
+        } 
+        return true;
+    },
+    
+    checkOnePort: function(sol, port, sensorCount) {
+        let portName = port.name;
+        var pu = portMap[portName];
+        if (pu === undefined) {
+            // First detected use of this port
+            pu = new PortUsage(port);
+            pu.useCount = sensorCount;
+            pu.firstUser = sol;
+            portMap[portName] = pu;
+            return true;
+        } else {
+            if ( (pu.useCount + sensorCount > 2) ) {
+                if (pu.secondUser === null) {
+                    // There are two users.
+                    this.messageTitle = "Port Overuse Error";
+                    this.messageBody = "The solutions '" + pu.firstUser.name + 
+                            "' and '" + sol.name + "' are both using " + 
+                            portName + 
+                            ".<br/>You need to move one to another port before downloading.";
+                    return false;
+                } else {
+                    // There are three single-button users
+                    this.messageTitle = "Port Overuse Error";
+                    this.messageBody = "You have assigned three things to " + portName + ":<br/>" +
+    "'" + pu.firstUser.name + "', '" + pu.secondUser.name + "' and '" + sol.name + "'.<br/>" +
+    "The maximum allowed is two simple buttons.  Please re-assign one of the solutions."
+                    return false;
+                }
+            } else { 
+                //Must be two single-button users.
+                pu.useCount = pu.useCount + sensorCount;
+                pu.secondUser = sol;
+                
+                pu.firstUser.setSubPort(SENSOR_A);
+                pu.secondUser.setSubPort(SENSOR_B);
+                
+                portsWithTwoSingles.push(portName);
+                return true;
+            }
+        }
+        return true;
     },
     
     compile: function() {
@@ -164,20 +282,7 @@ function makeOneButtonMouse(id) {
     return sol;
 }
 
-// Temporary Test Code -------------------------------
-// These tests expect that OneButtonMouse is loaded in SolutionList[0]
-function getValueTest() {
-    var sol = SolutionList[0];
-    var value = sol.settings[0].getValue();
-    alert("Value is " + value.name);
-}
 
-function setValueTest() {
-    var sol = SolutionList[0];
-    var value = portOptions[2];
-    sol.settings[0].setValue(value);
-    
-}
 // ----------------------------------------------------
 
 
