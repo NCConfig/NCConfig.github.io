@@ -72,6 +72,11 @@ In order to use this tool you will need a firmware upgrade.", ["OK"]);
     });    
 }
 
+function decodeTriggers() {
+    SolutionList.compile();
+    writeTriggersToSaveDiv();
+} 
+
 function doDownload() {
     SolutionList.compile();
     sendTriggersToSensact();
