@@ -1,5 +1,14 @@
 /* trig2.js - code to deduce the original solution from the hub's configuration 
     2021-04-27 Tue
+
+
+usage:
+1) pick a solution
+2) press 'decodeTriggers'
+
+the panel shows 
+a) the number of triggers and buzzer rings and a hashcode
+b) 'normalized' trigger set
 */
 
 function convert_condition(c) {
@@ -127,3 +136,77 @@ function reformat_triggers(old_t) {
 
     return triggers
 }
+
+/* counting number of triggers and buzzers could disambiguate most solutions
+hash codes provide the identity of the solution uniquely
+
+One button mouse 
+[ null, { total_triggers: 15, total_buzzers: 5, hash: -889832255 } ]
+
+Two button mouse 
+[ null, { total_triggers: 7, total_buzzers: 2, hash: 139278869 }, { total_triggers: 7, total_buzzers: 2, hash: 139278869 } ]
+
+Joystick mouse 1 
+[ null, { total_triggers: 2, total_buzzers: 0, hash: 1871802012 }, { total_triggers: 2, total_buzzers: 0, hash: 1871802012 } ]
+
+	Enable L/R 	
+  [ null, { total_triggers: 10, total_buzzers: 0, hash: -401143458 }, { total_triggers: 2, total_buzzers: 0, hash: 1871802012 } ]
+      
+	+ audio [ null, { total_triggers: 12, total_buzzers: 2, hash: 2044482811 }, { total_triggers: 2, total_buzzers: 0, hash: 1871802012 } ]
+
+
+Joystick mouse 2
+	[ null, { total_triggers: 2, total_buzzers: 0, hash: -1086941184 }, { total_triggers: 4, total_buzzers: 0, hash: -499512249 }, { total_triggers: 6, total_buzzers: 0, hash: 163173103 } ]
+
+
+   Enable left/right clicks
+[ null, { total_triggers: 10, total_buzzers: 0, hash: -962778536 }, { total_triggers: 4, total_buzzers: 0, hash: -499512249 }, { total_triggers: 6, total_buzzers: 0, hash: 163173103 } ]
+
+	+ audio for mouse clicks 
+[ null, { total_triggers: 12, total_buzzers: 2, hash: 662332507 }, { total_triggers: 4, total_buzzers: 0, hash: -499512249 }, { total_triggers: 6, total_buzzers: 0, hash: 163173103 } ]
+
+	    + audio for toggle [ null, { total_triggers: 12, total_buzzers: 2, hash: 662332507 }, { total_triggers: 4, total_buzzers: 0, hash: -499512249 }, { total_triggers: 8, total_buzzers: 2, hash: 683962587 } ]
+
+
+   Add audio feedback for clicks
+[ null, { total_triggers: 2, total_buzzers: 0, hash: -1086941184 }, { total_triggers: 4, total_buzzers: 0, hash: -499512249 }, { total_triggers: 6, total_buzzers: 0, hash: 163173103 } ]
+
+           + add audio for toggle
+[ null, { total_triggers: 2, total_buzzers: 0, hash: -1086941184 }, { total_triggers: 4, total_buzzers: 0, hash: -499512249 }, { total_triggers: 8, total_buzzers: 2, hash: 683962587 } ]
+
+
+    Toggle only
+[ null, { total_triggers: 2, total_buzzers: 0, hash: -1086941184 }, { total_triggers: 4, total_buzzers: 0, hash: -499512249 }, { total_triggers: 8, total_buzzers: 2, hash: 683962587 } ]
+
+
+
+Press one button
+
+One button left click [ { total_triggers: 1, total_buzzers: 0, hash: -1523159288 } ]
+	      + audio  [ { total_triggers: 2, total_buzzers: 1, hash: 1770342761 } ]
+
+One button right click [ { total_triggers: 1, total_buzzers: 0, hash: 1545335333 } ]
+	+ audio [ { total_triggers: 2, total_buzzers: 1, hash: 867735340 } ]
+
+Left press/release toggle [ { total_triggers: 4, total_buzzers: 0, hash: -1824454985 } ]
+       + audio [ { total_triggers: 6, total_buzzers: 2, hash: -80945229 } ]
+
+	Left button emulation [ { total_triggers: 2, total_buzzers: 0, hash: -688313775 } ]
+	Three function[ { total_triggers: 6, total_buzzers: 2, hash: 1956077131 } ]
+
+Two buttons left/right click
+
+[ { total_triggers: 1, total_buzzers: 0, hash: 1545335333 }, { total_triggers: 1, total_buzzers: 0, hash: 1545335333 } ]
+    + audio [ { total_triggers: 2, total_buzzers: 1, hash: 867735340 }, { total_triggers: 2, total_buzzers: 1, hash: 867735340 } ]
+
+
+Scrolling
+
+One button scrolling[ { total_triggers: 7, total_buzzers: 3, hash: 1302697201 } ]
+
+Two button scrolling 
+[ { total_triggers: 1, total_buzzers: 0, hash: -107394979 }, { total_triggers: 1, total_buzzers: 0, hash: -107394979 } ]
+	+audio    [ { total_triggers: 2, total_buzzers: 1, hash: 346826228 }, { total_triggers: 2, total_buzzers: 1, hash: 346826228 } ]
+
+
+*/
