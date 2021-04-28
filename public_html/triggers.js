@@ -304,8 +304,15 @@ function writeTriggersToSaveDiv() {
 }
 
 function writeToSaveDiv(data) {
-    var savePre = document.getElementById("savepre");
-    savePre.innerHTML = data;
+    // var savePre = document.getElementById("savepre");
+    // savePre.innerHTML = data;
+    let elem = document.getElementById("savepre")
+    let new_format_triggers = rewrite_triggers(Triggers)
+    elem.innerHTML =
+        "<pre>Analysis result:<br>" +
+        prettyPrintJson.toHtml(new_format_triggers.analysis) + 
+        "<br><br>New format trigger set:<br>" + 
+        prettyPrintJson.toHtml(new_format_triggers) + "</pre>"
 }
 
 function toSensact(data) {

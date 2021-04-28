@@ -11,6 +11,11 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="aac.css">  
+
+        <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/pretty-print-json@1.0/dist/pretty-print-json.css>
+        <script src=https://cdn.jsdelivr.net/npm/pretty-print-json@1.0/dist/pretty-print-json.min.js></script>
+        <script type="text/javascript" src="trig2.js"></script>
+
         <script type="text/javascript" src="const.js"></script>
         <script type="text/javascript" src="keyCodes.js"></script>
         <script type="text/javascript" src="widgets.js"></script>
@@ -26,6 +31,7 @@ and open the template in the editor.
         <div id="nav">
             <button onclick="showSolutionDlg();">Add Solution</button>
             <button onclick="download();">Download</button>
+            <button onclick="decodeTriggers();">decodeTriggers</button>
             <button onclick="showCursorSpeed();">Cursor Speed</button>
 <!--            <button onclick="getConnected(()=>{});">Connect</button>
             <button onclick="closeConnection();">Close Connection</button>
@@ -50,6 +56,9 @@ and open the template in the editor.
             <p id="infoContent"></p>
             <div id="infoButtons">
             </div>
+        </div>
+
+        <div id="savepre">
         </div>
         
         <!-- Mouse Speed Application -->
