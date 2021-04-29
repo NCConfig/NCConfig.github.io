@@ -15,10 +15,13 @@ const MSG_MUST_CONNECT = "We now need to correct the your netClé device.<br/>\
 Please ensure the divice is connected to your computer, and then press OK.";
 
 function startup() {
+    // A bunch of lists that cannot be initialized until all javascript
+    // files have been loaded.
     createSensorList();
     createActionList();
     loadPorts();
     LoadSolutionList();
+    createConnectionOptions();
     
    if (!connection.isSupported()) {
         let p = showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
@@ -34,7 +37,7 @@ function generateTrigs() {
 
 function getHash() {
     let hash = Triggers.getHash()
-    showMessageBox("Hash", "Value is 0x" + hash.toString(16), ["OK"]);
+    showMessageBox("Hash", "Value is " + hash.toString(10), ["OK"]);
 }
 
 function download() {

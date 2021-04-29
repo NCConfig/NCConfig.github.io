@@ -161,8 +161,12 @@ let SolutionList = {
 };
 
 class SolutionBase {
-    constructor(name, description) {
-        this.name = name;
+    constructor(solReg, description) {
+        // solReg is a pointer to an entry in registry.js
+        // This is a location where commonly used constant solution 
+        // values can be stored.  For now, this is only name, but
+        // descriptions and other stuff may be moved there in the future.
+        this.name = solReg.name;
         this.description = description;
         this.id = 0;    // This matches the myID member of the content div and the tag button.
                         // It is used when a solution is deleted to find and delete
@@ -207,6 +211,29 @@ const Q_ENABLE_L_AND_R_CLICKS = "Enable left & right clicks";
 const Q_ADD_AUDIO_FEEDBACK_CLICKS = "Add audio feedback for mouse clicks";
 const Q_ADD_AUDIO_FEEDBACK_TOGGLE = "Add audio feedback for the toggle button";
 const Q_ADD_AUDIO_FEEDBACK_FOR_BTN = "Add audio feedback for button presses.";
+const Q_CONNECTION_TYPE = "Connection type:";
+
+// -- Connection Type (wired or bluetooth)
+
+class ConnectionType {
+    constructor(name, mouseAction, keybdAction, keycodeFunction) { 
+        this.name = name; 
+        this.mouseAction = mouseAction;
+        this.keybdAction = keybdAction;
+        this.getKeyCode = keycodeFunction; // Function takes a keyCode (from keyCodes.js)
+                                           // and returns the code value
+    }
+}
+const connectionOptions = [];
+
+function createConnectionOptions() {
+    connectionOptions.push( new ConnectionType("Wired", ACT_WIRED_MOUSE, ACT_WIRED_KEYBOARD,
+    (keyid) => {return(keyid.wiredCode);} ));
+    connectionOptions.push( new ConnectionType("Bluetooth", ACT_BT_MOUSE, ACT_BT_KEYBOARD,
+    (keyid) => {return(keyid.btCode);} ));
+}
+
+// ======================================================================
 // -- SOLUTIONS --------------------------------------------
 
 // -----------------------------------------------------------------
@@ -222,7 +249,8 @@ that the system has reset and you may choose a new mouse direction.";
 
 class OneButtonMouse extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_ONE_BTN_MOUSE);
+        super(solreg, LDS_ONE_BTN_MOUSE);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new NumericSelector("Length of delay between beeps (in milliseconds):",
             300, 2000, 1000));
@@ -231,15 +259,17 @@ class OneButtonMouse extends SolutionBase {
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         var delay = this.options[0].getValue();
         var buzzDuration = this.options[1].getValue() ;
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Delay: " + delay);
         console.log("  Beep: " +  buzzDuration);
@@ -249,11 +279,12 @@ class OneButtonMouse extends SolutionBase {
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
 
         // Actions
-        var mouseUp = new TAction(ACT_WIRED_MOUSE, MOUSE_UP, true);
-        var mouseDown = new TAction(ACT_WIRED_MOUSE, MOUSE_DOWN, true);
-        var mouseRight = new TAction(ACT_WIRED_MOUSE, MOUSE_RIGHT, true);
-        var mouseLeft = new TAction(ACT_WIRED_MOUSE, MOUSE_LEFT, true);
-        var leftClick = new TAction(ACT_WIRED_MOUSE, MOUSE_CLICK, false);
+        var mouseAction = connection.mouseAction;
+        var mouseUp = new TAction(mouseAction, MOUSE_UP, true);
+        var mouseDown = new TAction(mouseAction, MOUSE_DOWN, true);
+        var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
+        var mouseLeft = new TAction(mouseAction, MOUSE_LEFT, true);
+        var leftClick = new TAction(mouseAction, MOUSE_CLICK, false);
                 
         var nothing = new TAction(ACT_NONE, 0, false);
         var lowDur = buzzDuration * 2 / 3;
@@ -303,19 +334,22 @@ const LDS_TWO_BTN_MOUSE   = "Control cursor motion with two toggle buttons.<br/>
 
 class TwoButtonMouse extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_TWO_BTN_MOUSE);
+        super(solreg, LDS_TWO_BTN_MOUSE);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_TWO_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.sensorCount = 2;
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
-        
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
+         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         var sensorA = port.getSensor(SENSOR_A);
         var sensorB = port.getSensor(SENSOR_B);
@@ -325,10 +359,11 @@ class TwoButtonMouse extends SolutionBase {
         var btnBPressed = new TSignal(sensorB, 500, TRIGGER_ON_HIGH);
         var btnBRelease = new TSignal(sensorB, 500, TRIGGER_ON_LOW);
         
-        var mouseUp = new TAction(ACT_WIRED_MOUSE, MOUSE_UP, true);
-        var mouseDown = new TAction(ACT_WIRED_MOUSE, MOUSE_DOWN, true);
-        var mouseRight = new TAction(ACT_WIRED_MOUSE, MOUSE_RIGHT, true);
-        var mouseLeft = new TAction(ACT_WIRED_MOUSE, MOUSE_LEFT, true);
+        var mouseAction = connection.mouseAction;
+        var mouseUp = new TAction(mouseAction, MOUSE_UP, true);
+        var mouseDown = new TAction(mouseAction, MOUSE_DOWN, true);
+        var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
+        var mouseLeft = new TAction(mouseAction, MOUSE_LEFT, true);
         
         var nothing = new TAction(ACT_NONE, 0, false);
         var buzz    = getBuzzerAction(200, 100);
@@ -363,7 +398,8 @@ const LDS_JOYSTICK_MOUSE1 = "This is a simple control which uses a joystick to m
 
 class JoystickMouse1 extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_JOYSTICK_MOUSE1);
+        super(solreg, LDS_JOYSTICK_MOUSE1);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_JOYSTICK_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ENABLE_L_AND_R_CLICKS, false));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
@@ -371,15 +407,17 @@ class JoystickMouse1 extends SolutionBase {
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
 
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         var doClicks = this.options[0].getValue();
         var doAudio = this.options[1].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Clicks: " + doClicks);
         console.log("  Do Audio: " + doAudio);   
@@ -394,12 +432,13 @@ class JoystickMouse1 extends SolutionBase {
         var sBHigh    = new TSignal(sensorB, 700, TRIGGER_ON_HIGH);
         var sBLow     = new TSignal(sensorB, 250, TRIGGER_ON_LOW);
         
-        var mouseUp = new TAction(ACT_WIRED_MOUSE, MOUSE_UP, true);
-        var mouseDown = new TAction(ACT_WIRED_MOUSE, MOUSE_DOWN, true);
-        var mouseRight = new TAction(ACT_WIRED_MOUSE, MOUSE_RIGHT, true);
-        var mouseLeft = new TAction(ACT_WIRED_MOUSE, MOUSE_LEFT, true);
-        var leftClick =  new TAction(ACT_WIRED_MOUSE, MOUSE_CLICK, false);
-        var rightClick =  new TAction(ACT_WIRED_MOUSE, MOUSE_RIGHT_CLICK, false);
+        var mouseAction = connection.mouseAction;
+        var mouseUp = new TAction(mouseAction, MOUSE_UP, true);
+        var mouseDown = new TAction(mouseAction, MOUSE_DOWN, true);
+        var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
+        var mouseLeft = new TAction(mouseAction, MOUSE_LEFT, true);
+        var leftClick =  new TAction(mouseAction, MOUSE_CLICK, false);
+        var rightClick =  new TAction(mouseAction, MOUSE_RIGHT_CLICK, false);
                 
         var nothing = new TAction(ACT_NONE, 0, false);
         var leftBuzz    = getBuzzerAction(400, 150);
@@ -454,7 +493,8 @@ const LDS_JOYSTICK_MOUSE2 = "Allows a joystick and a button to control mouse mot
 
 class JoystickMouse2 extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_JOYSTICK_MOUSE2);
+        super(solreg, LDS_JOYSTICK_MOUSE2);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_JOYSTICK_LOCATION, portOptions, portOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ENABLE_L_AND_R_CLICKS, false));
@@ -466,21 +506,23 @@ class JoystickMouse2 extends SolutionBase {
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
-    }
-    
-    getPortBUsed() {
         return this.settings[1].getValue();
     }
     
+    getPortBUsed() {
+        return this.settings[2].getValue();
+    }
+    
     compile() {
-        var joystickPort = this.settings[0].getValue();
-        var buttonPort = this.settings[1].getValue();
+        var connection = this.settings[0].getValue();
+        var joystickPort = this.settings[1].getValue();
+        var buttonPort = this.settings[2].getValue();
         var doClicks = this.options[0].getValue();
         var doAudioClicks = this.options[1].getValue();
         var doAudioToggle = this.options[2].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Joystick Port: " + joystickPort.name);
         console.log("  Button Port: " + buttonPort.name);
         console.log("  Do Clicks: " + doClicks);
@@ -501,14 +543,15 @@ class JoystickMouse2 extends SolutionBase {
         var btnRelease = new TSignal(btnSensor, 500, TRIGGER_ON_LOW);
         
         // Mouse actions
-        var mouseUp    = new TAction(ACT_WIRED_MOUSE, MOUSE_UP, true);
-        var mouseDown  = new TAction(ACT_WIRED_MOUSE, MOUSE_DOWN, true);
-        var mouseRight = new TAction(ACT_WIRED_MOUSE, MOUSE_RIGHT, true);
-        var mouseLeft  = new TAction(ACT_WIRED_MOUSE, MOUSE_LEFT, true);
-        var leftClick  = new TAction(ACT_WIRED_MOUSE, MOUSE_CLICK, false);
-        var rightClick = new TAction(ACT_WIRED_MOUSE, MOUSE_RIGHT_CLICK, false);
-        var scrollUp   = new TAction(ACT_WIRED_MOUSE, MOUSE_WHEEL_UP, true);
-        var scrollDown = new TAction(ACT_WIRED_MOUSE, MOUSE_WHEEL_DOWN, true);
+        var mouseAction = connection.mouseAction;
+        var mouseUp    = new TAction(mouseAction, MOUSE_UP, true);
+        var mouseDown  = new TAction(mouseAction, MOUSE_DOWN, true);
+        var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
+        var mouseLeft  = new TAction(mouseAction, MOUSE_LEFT, true);
+        var leftClick  = new TAction(mouseAction, MOUSE_CLICK, false);
+        var rightClick = new TAction(mouseAction, MOUSE_RIGHT_CLICK, false);
+        var scrollUp   = new TAction(mouseAction, MOUSE_WHEEL_UP, true);
+        var scrollDown = new TAction(mouseAction, MOUSE_WHEEL_DOWN, true);
                 
         // Other actions
         var nothing = new TAction(ACT_NONE, 0, false);
@@ -587,7 +630,8 @@ const LDS_GYRO_MOUSE      = "Allows the use of head motions to control the curso
 
 class GyroMouse extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_GYRO_MOUSE);
+        super(solreg, LDS_GYRO_MOUSE);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         
         this.sensorCount = 0;
     }
@@ -604,27 +648,30 @@ function makeGyroMouse(solreg) {
 const LDS_LEFT_CLICK       = "The button generates a left-click when pressed.";
 class LeftClickButton extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_LEFT_CLICK);
+        super(solreg, LDS_LEFT_CLICK);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
     }
 
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
         
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
-        var leftClick  = new TAction(ACT_WIRED_MOUSE, MOUSE_CLICK, false);
+        var leftClick  = new TAction(connection.mouseAction, MOUSE_CLICK, false);
          
         Triggers.add(btnPressed, 1,  0, leftClick, 1); 
         
@@ -646,26 +693,29 @@ function makeLeftClickButton(solreg) {
 const LDS_RIGHT_CLICK      = "The button generates a right-click when pressed.";
 class RightClickButton extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_RIGHT_CLICK);
+        super(solreg, LDS_RIGHT_CLICK);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
-        var rightClick  = new TAction(ACT_WIRED_MOUSE, MOUSE_RIGHT_CLICK, false);
+        var rightClick = new TAction(connection.mouseAction, MOUSE_RIGHT_CLICK, false);
          
         Triggers.add(btnPressed, 1,  0, rightClick, 1); 
         
@@ -690,20 +740,23 @@ Thus, you can tap the button, move the cursor and then tap the button again to p
 This enables drag and drop for someone who has difficulty pressing and holding a button.";
 class LeftPressReleaseToggle extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_LEFT_PRESS_RELEASE_TOGGLE);
+        super(solreg, LDS_LEFT_PRESS_RELEASE_TOGGLE);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
                 
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
 
@@ -711,8 +764,8 @@ class LeftPressReleaseToggle extends SolutionBase {
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
         
-        var press   = new TAction(ACT_WIRED_MOUSE, MOUSE_PRESS, false);
-        var release = new TAction(ACT_WIRED_MOUSE, MOUSE_RELEASE, false);
+        var press   = new TAction(connection.mouseAction, MOUSE_PRESS, false);
+        var release = new TAction(connection.mouseAction, MOUSE_RELEASE, false);
         var nothing = new TAction(ACT_NONE, 0, false);
         var buzz = getBuzzerAction(200, 100);
         var hibuzz = getBuzzerAction(800, 100);
@@ -742,26 +795,29 @@ const LDS_LEFT_EMULATION   = "The button acts exactly like the left-mouse button
 It is pressed when pressed, remains pressed when held and is released when released.";
 class LeftButtonEmulation extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_LEFT_EMULATION);
+        super(solreg, LDS_LEFT_EMULATION);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
 
-        var press   = new TAction(ACT_WIRED_MOUSE, MOUSE_PRESS, false);
-        var release = new TAction(ACT_WIRED_MOUSE, MOUSE_RELEASE, false);
+        var press   = new TAction(connection.mouseAction, MOUSE_PRESS, false);
+        var release = new TAction(connection.mouseAction, MOUSE_RELEASE, false);
                 
         Triggers.add(btnPressed, 1, 0, press,   2); 
         Triggers.add(btnRelease, 2, 0, release, 1);         
@@ -783,27 +839,31 @@ Release after two beeps to generate a left-mouse press-and-hold, initiating drag
 Use a quick tap to release the held button.";
 class ThreeFunctionButton extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_THREE_FUNC_BUTTON, solreg);
+        super(solreg, LDS_THREE_FUNC_BUTTON, solreg);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
         
-        var mouseLClick = new TAction(ACT_WIRED_MOUSE, MOUSE_CLICK, false);
-        var mouseRClick = new TAction(ACT_WIRED_MOUSE, MOUSE_RIGHT_CLICK, false);
-        var mouseLPress = new TAction(ACT_WIRED_MOUSE, MOUSE_PRESS, false);
+        var mouseAction = connection.mouseAction;
+        var mouseLClick = new TAction(mouseAction, MOUSE_CLICK, false);
+        var mouseRClick = new TAction(mouseAction, MOUSE_RIGHT_CLICK, false);
+        var mouseLPress = new TAction(mouseAction, MOUSE_PRESS, false);
         var nothing = new TAction(ACT_NONE, 0, false);
         var hibuzz = getBuzzerAction(400, 100);
         
@@ -828,7 +888,8 @@ const LDS_LEFT_RIGHT_CLICK     = "One button generates a left-click, the other g
 
 class LeftRightClick extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_LEFT_RIGHT_CLICK);
+        super(solreg, LDS_LEFT_RIGHT_CLICK);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_TWO_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
         
@@ -836,14 +897,16 @@ class LeftRightClick extends SolutionBase {
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
         
@@ -852,8 +915,8 @@ class LeftRightClick extends SolutionBase {
         var btnAPressed = new TSignal(sensorA, 500, TRIGGER_ON_HIGH);
         var btnBPressed = new TSignal(sensorB, 500, TRIGGER_ON_HIGH);
         
-        var mouseLClick = new TAction(ACT_WIRED_MOUSE, MOUSE_CLICK, false);
-        var mouseRClick = new TAction(ACT_WIRED_MOUSE, MOUSE_RIGHT_CLICK, false);
+        var mouseLClick = new TAction(connection.mouseAction, MOUSE_CLICK, false);
+        var mouseRClick = new TAction(connection.mouseAction, MOUSE_RIGHT_CLICK, false);
         var buzz = getBuzzerAction(200, 100);
         
         Triggers.add(btnAPressed, 1, 0, mouseLClick, 1);
@@ -894,26 +957,29 @@ There is a half-second delay before the change of direction takes place.  This m
 repeated quick taps to finely adjust the scroll position.";               
 class ScrollUpDownToggle extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_SCROLL_UP_DOWN_TOGGLE);
+        super(solreg, LDS_SCROLL_UP_DOWN_TOGGLE);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
                 
-        var scrollUp = new TAction(ACT_WIRED_MOUSE, MOUSE_WHEEL_UP, true);
-        var scrollDown = new TAction(ACT_WIRED_MOUSE, MOUSE_WHEEL_DOWN, true);
+        var scrollUp = new TAction(connection.mouseAction, MOUSE_WHEEL_UP, true);
+        var scrollDown = new TAction(connection.mouseAction, MOUSE_WHEEL_DOWN, true);
         var nothing = new TAction(ACT_NONE, 0, false);
         var buzz   = getBuzzerAction(200, 100);
         var hibuzz = getBuzzerAction(800, 100);
@@ -939,7 +1005,8 @@ function makeScrollUpDownToggle(solreg) {
 const LDS_SCROLL_UP_DOWN  = "One button scrolls up, the other scrolls down.";
 class ScrollUpDownButtons extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_LEFT_RIGHT_CLICK);
+        super(solreg, LDS_LEFT_RIGHT_CLICK);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_TWO_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_FOR_BTN, false));
         
@@ -947,14 +1014,16 @@ class ScrollUpDownButtons extends SolutionBase {
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
         
@@ -963,8 +1032,8 @@ class ScrollUpDownButtons extends SolutionBase {
         var btnAPressed = new TSignal(sensorA, 500, TRIGGER_ON_HIGH);
         var btnBPressed = new TSignal(sensorB, 500, TRIGGER_ON_HIGH);
         
-        var scrollUp   = new TAction(ACT_WIRED_MOUSE, MOUSE_WHEEL_UP, true);
-        var scrollDown = new TAction(ACT_WIRED_MOUSE, MOUSE_WHEEL_DOWN, true);
+        var scrollUp   = new TAction(connection.mouseAction, MOUSE_WHEEL_UP, true);
+        var scrollDown = new TAction(connection.mouseAction, MOUSE_WHEEL_DOWN, true);
         var buzz = getBuzzerAction(200, 100);
         
         Triggers.add(btnAPressed, 1, 0, scrollUp, 1);
@@ -994,22 +1063,25 @@ const LDS_KEYBOARD_TEXT     = "Send up to 20 characters (optionally ending with 
 by pressing a single button.";
 class KeyboardText extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_KEYBOARD_TEXT);
+        super(solreg, LDS_KEYBOARD_TEXT);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addSetting( new TextBox ("Text: ", 20));
         this.addOption( new CheckBox ("End with RETURN.", false));
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
-        var text = this.settings[1].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
+        var text = this.settings[2].getValue();
         var addReturn = this.options[0].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Text: " + text);
         console.log("  Return: " + addReturn);
@@ -1027,13 +1099,13 @@ class KeyboardText extends SolutionBase {
             for(let j=0; j < data.length; j++) {
                 value = (value << 8) + data.charCodeAt(j);
             }
-            var keys = new TAction(ACT_WIRED_KEYBOARD, value, false);
+            var keys = new TAction(connection.keybdAction, value, false);
             i = end;
             Triggers.add(btnPressed, 1, 0, keys, 1);
         }
         
         if ( addReturn ) {
-            var returnKey = new TAction(ACT_WIRED_KEYBOARD, RETURN_KEY.wiredCode, false);
+            var returnKey = new TAction(connection.keybdAction, connection.getKeyCode(RETURN_KEY), false);
             Triggers.add(btnPressed, 1,  0, returnKey, 1);            
         }        
     }
@@ -1050,27 +1122,30 @@ function makeKeyboardText(solreg) {
 const LDS_KEYBOARD_SPECIAL  = "Send a special character (e.g. Page Up, Home or F3).";
 class KeyboardSpecial extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_KEYBOARD_SPECIAL);
+        super(solreg, LDS_KEYBOARD_SPECIAL);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addSetting( new SpecialKeys("Special Key "));
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
-        var key = this.settings[1].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
+        var key = this.settings[2].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Key:  " + key.name);
         
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
-        var action = new TAction(ACT_WIRED_KEYBOARD, key.wiredCode, false);
+        var action = new TAction(connection.keybdAction, connection.getKeyCode(key), false);
         
         Triggers.add(btnPressed, 1,  0, action, 1);         
     }
@@ -1090,7 +1165,7 @@ This solution allows you to create a button that will send a modifier key (like 
 and a regular key with a single press.";
 class KeyboardModifier extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_KEYBOARD_MODIFIER);
+        super(solreg, LDS_KEYBOARD_MODIFIER);
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0], "setting"));
         this.addSetting( new ModifierKeys("Modifier Key "));
         this.addSetting( new NotModifierKeys("Key Press "));
@@ -1136,25 +1211,28 @@ repeated quick taps to make fine adjustments.";
 class KeyboardUpDownArrowToggle extends SolutionBase {
     constructor(solreg) {
         super(solreg, LDS_UP_DOWN_ARROW_TOGGLE);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0], "setting"));
     }
     
     getPortUsed() {
-        return this.settings[0].getValue();
+        return this.settings[1].getValue();
     }
     
     compile() {
-        var port = this.settings[0].getValue();
+        var connection = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
         
         console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
                 
-        var upArrow   = new TAction(ACT_WIRED_KEYBOARD, UP_ARROW_KEY.wiredCode, true);
-        var downArrow = new TAction(ACT_WIRED_KEYBOARD, DOWN_ARROW_KEY.wiredCode, true);
+        var upArrow   = new TAction(connection.keybdAction, connection.getKeyCode(UP_ARROW_KEY), true);
+        var downArrow = new TAction(connection.keybdAction, connection.getKeyCode(DOWN_ARROW_KEY), true);
         var nothing = new TAction(ACT_NONE, 0, false);
         var buzz   = getBuzzerAction(200, 100);
         var hibuzz = getBuzzerAction(800, 100);
@@ -1182,7 +1260,7 @@ and generates the release when pressed a second time.  Allows a user to 'hold' t
 without having the actually hold a key.";
 class KeyboardShift extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_KEYBOARD_SHIFT);
+        super(solreg, LDS_KEYBOARD_SHIFT);
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0], "setting"));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_FOR_BTN, false));
     }
@@ -1236,7 +1314,7 @@ and generates the release when pressed a second time.  Allows a user to 'hold' t
 without having the actually hold a key.";
 class KeyboardControl extends SolutionBase {
     constructor(solreg) {
-        super(solreg.name, LDS_KEYBOARD_CONTROL);
+        super(solreg, LDS_KEYBOARD_CONTROL);
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0], "setting"));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_FOR_BTN, false));
     }

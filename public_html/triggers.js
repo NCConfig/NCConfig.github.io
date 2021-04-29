@@ -212,13 +212,20 @@ class Trigger {
     
     doHash(value) {
         value = ((value << 5) - value) + this.reqdState;
-        value = value & 0x7fffffff;
+        value |= 0;
         value = ((value << 5) - value) + this.condition;
-        value = value & 0x7fffffff;
+        value |= 0;
         value = ((value << 5) - value) + this.action.id;
-        value = value & 0x7fffffff;
+        value |= 0;
         value = ((value << 5) - value) + this.actionState;
-        value = value & 0x7fffffff;
+        value |= 0;
+        // For these actions the parameter is really the action identifier. 
+        if (this.action == ACT_WIRED_MOUSE ||
+                this.action === ACT_BT_MOUSE ||
+                this.action === ACT_IR) {
+            value = ((value << 5) - value) + this.actionParam;
+            value |= 0;
+        }
         return value;
     }
     
