@@ -18,6 +18,7 @@ function startup() {
     createSensorList();
     createActionList();
     loadPorts();
+    LoadSolutionList();
     
    if (!connection.isSupported()) {
         let p = showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
@@ -25,6 +26,15 @@ function startup() {
             
         });
     }
+}
+
+function generateTrigs() {
+    SolutionList.compile();
+}
+
+function getHash() {
+    let hash = Triggers.getHash()
+    showMessageBox("Hash", "Value is 0x" + hash.toString(16), ["OK"]);
 }
 
 function download() {

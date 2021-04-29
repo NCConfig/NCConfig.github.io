@@ -20,12 +20,17 @@ let Device = function(id, parentid, text) {
     this.text = text;
 }
 
-let Selection = function(deviceid, text, description, createFunc, displayFunc) {
+let Selection = function(deviceid, description, reg) {
     this.deviceid = deviceid;
-    this.text = text;
     this.description = description;
-    this.createFunc = createFunc;
-    this.displayFunc = displayFunc
+    this.solreg = reg;  // Solution registry. Holds name and createFunc
+}
+
+let Reference = function(deviceid, name, shortD, longD) {
+    this.deviceid = deviceid;
+    this.name = name;
+    this.shortD = shortD;
+    this.longD = longD;
 }
 
 // -----------------------------------------
@@ -90,7 +95,7 @@ with a single button.";
 let DS_LEFT_RIGHT_CLICK     = "Create two buttons.  One  does a left-click \
 and the other does a right-click.";
 
-// -- mouse buttons - other
+// -- mouse buttons - references to other solutions
 let DS_JOYSTICK_CLICKS = "Generate left- and right-clicks as part of a \
 <i>Joystick Mouse</i> solution.";
 let DS_GYRO_CLICKS     = "Generate left- and right-clicks as part of a \
@@ -99,6 +104,7 @@ let DS_GYRO_CLICKS     = "Generate left- and right-clicks as part of a \
 // -- scrolling
 let DS_SCROLL_UP_DOWN_TOGGLE  = "Control scrolling up and down with a single button.";
 let DS_SCROLL_UP_DOWN  = "Create two buttons, one button scrolls up, the other scrolls down.";
+// Reference
 let DS_JOYSTICK_SCROLL = "Control scrolling with a <i>Joystick Mouse</i>.";
 
 // -- keyboard
@@ -112,37 +118,38 @@ let DS_KEYBOARD_CONTROL  = "Press and hold the control key by touching a button.
 // --------------------------------------------------------
 // Solution References
 let SolutionRef = [];
-SolutionRef.push (new Selection(1, "One Button Mouse", DS_ONE_BTN_MOUSE, makeOneButtonMouse, defaultDisplay));
-SolutionRef.push (new Selection(2, "Two Button Mouse", DS_TWO_BTN_MOUSE, makeTwoButtonMouse, defaultDisplay));
-SolutionRef.push (new Selection(3, "Joystick Mouse1", DS_JOYSTICK_MOUSE1, makeJoystickMouse1, defaultDisplay));
-SolutionRef.push (new Selection(3, "Joystick Mouse2", DS_JOYSTICK_MOUSE2, makeJoystickMouse2, defaultDisplay));
-SolutionRef.push (new Selection(4, "Gyro Mouse", DS_GYRO_MOUSE, makeGyroMouse, defaultDisplay));
+SolutionRef.push (new Selection(1, DS_ONE_BTN_MOUSE, SolOneBtnMouse));
+SolutionRef.push (new Selection(2, DS_TWO_BTN_MOUSE, SolTwoBtnMouse));
+SolutionRef.push (new Selection(3, DS_JOYSTICK_MOUSE1, SolJoystickMouse1));
+SolutionRef.push (new Selection(3, DS_JOYSTICK_MOUSE2, SolJoystickMouse2));
+SolutionRef.push (new Selection(4, DS_GYRO_MOUSE, SolGyroMouse));
 
-SolutionRef.push (new Selection(10, "Left Click Button", DS_LEFT_CLICK, makeLeftClickButton, defaultDisplay));
-SolutionRef.push (new Selection(10, "Right Click Button", DS_RIGHT_CLICK, makeRightClickButton, defaultDisplay));
-SolutionRef.push (new Selection(10, "Left Press-Release Toggle", DS_LEFT_PRESS_RELEASE_TOGGLE, makeLeftPressReleaseToggle, defaultDisplay));
-SolutionRef.push (new Selection(10, "Left Button Emulation", DS_LEFT_EMULATION, makeLeftButtonEmulation, defaultDisplay));
-SolutionRef.push (new Selection(10, "Three Function Mouse Button", DS_THREE_FUNC_BUTTON, makeThreeFunctionButton, defaultDisplay));
+SolutionRef.push (new Selection(10, DS_LEFT_CLICK, SolLeftClick));
+SolutionRef.push (new Selection(10, DS_RIGHT_CLICK, SolRightClick));
+SolutionRef.push (new Selection(10, DS_LEFT_PRESS_RELEASE_TOGGLE, SolLeftPressReleaseToggle));
+SolutionRef.push (new Selection(10, DS_LEFT_EMULATION, SolLeftEmulation));
+SolutionRef.push (new Selection(10, DS_THREE_FUNC_BUTTON, SolThreeFuncMouseButton));
 
 // -- mouse buttons - two button
-SolutionRef.push (new Selection(11, "Left-Right Click", DS_LEFT_RIGHT_CLICK, makeLeftRightClick, defaultDisplay));
+SolutionRef.push (new Selection(11, DS_LEFT_RIGHT_CLICK, SolLeftRightClick));
 
-// -- mouse buttons - other
-SolutionRef.push (new Selection(12, "Joystick Clicks", DS_JOYSTICK_CLICKS, null, LDS_JOYSTICK_CLICKS));
-SolutionRef.push (new Selection(13, "Gyro Clicks", DS_GYRO_CLICKS, null, LDS_GYRO_CLICKS));
+// -- mouse buttons - references to other solutions
+SolutionRef.push (new Reference(12, "Joystick Clicks", DS_JOYSTICK_CLICKS, LDS_JOYSTICK_CLICKS));
+SolutionRef.push (new Reference(13, "Gyro Clicks",     DS_GYRO_CLICKS,     LDS_GYRO_CLICKS));
 
 // -- scrolling
-SolutionRef.push (new Selection(21, "Scroll Up-Down Toggle", DS_SCROLL_UP_DOWN_TOGGLE, makeScrollUpDownToggle, defaultDisplay));
-SolutionRef.push (new Selection(22, "Scroll Up-Down Buttons", DS_SCROLL_UP_DOWN, makeScrollUpDownButtons, defaultDisplay));
-SolutionRef.push (new Selection(23, "Scroll With Joystick", DS_JOYSTICK_SCROLL, null, LDS_JOYSTICK_SCROLL));
+SolutionRef.push (new Selection(21, DS_SCROLL_UP_DOWN_TOGGLE, SolScrollToggle));
+SolutionRef.push (new Selection(22, DS_SCROLL_UP_DOWN,        SolScrollButtons));
+//Reference
+SolutionRef.push (new Reference(23, "Scroll With Joystick", DS_JOYSTICK_SCROLL, LDS_JOYSTICK_SCROLL));
 
 // -- keyboard
-SolutionRef.push (new Selection(31, "Send a text string", DS_KEYBOARD_TEXT, makeKeyboardText, defaultDisplay));
-SolutionRef.push (new Selection(31, "Send a special character", DS_KEYBOARD_SPECIAL, makeKeyboardSpecial, defaultDisplay));
-SolutionRef.push (new Selection(31, "Send a character plus a modifier", DS_KEYBOARD_MODIFIER, makeKeyboardModifier, defaultDisplay));
-SolutionRef.push (new Selection(31, "Up-Down toggle", DS_UP_DOWN_ARROW_TOGGLE, makeKeyboardUpDownArrowToggle, defaultDisplay));
-SolutionRef.push (new Selection(31, "Press-Release toggle for shift key", DS_KEYBOARD_SHIFT, makeKeyboardShift, defaultDisplay));
-SolutionRef.push (new Selection(31, "Press-Release toggle for control key", DS_KEYBOARD_CONTROL, makeKeyboardControl, defaultDisplay));
+SolutionRef.push (new Selection(31, DS_KEYBOARD_TEXT, SolKeyboardText));
+SolutionRef.push (new Selection(31, DS_KEYBOARD_SPECIAL, SolKeyboardSpecial));
+SolutionRef.push (new Selection(31, DS_KEYBOARD_MODIFIER, SolKeyboardModifier));
+SolutionRef.push (new Selection(31, DS_UP_DOWN_ARROW_TOGGLE, SolUpDownArrowToggle));
+SolutionRef.push (new Selection(31, DS_KEYBOARD_SHIFT, SolKeyboardShift));
+SolutionRef.push (new Selection(31, DS_KEYBOARD_CONTROL, SolKeyboardControl));
 
 // Show the solutions modal dialog 
 function showSolutionDlg() {
@@ -236,6 +243,16 @@ function deviceButtonAction(btn, device) {
         
         for (let solRef of SolutionRef) {
             if (solRef.deviceid === device.id) {
+                var name;
+                var toolTipText;
+                
+                if (solRef instanceof Selection) {
+                    name = solRef.solreg.name;
+                    toolTipText = solRef.description;
+                } else {
+                    name = solRef.name;
+                    toolTipText = solRef.shortD;
+                }
                 var innerDiv = document.createElement("div");
                 innerDiv.className = "tooltipdiv";
                 theDiv.appendChild(innerDiv);
@@ -243,14 +260,14 @@ function deviceButtonAction(btn, device) {
                 var b = document.createElement("input");
                 b.type = "button";
                 b.className = "solutionButton";
-                b.value = solRef.text;
+                b.value = name;
                 solutionButtonAction(b, solRef);
                 innerDiv.appendChild(b);  
                 
                 // Tool tip
                 var tooltip = document.createElement("span");
                 tooltip.className = "tooltip";
-                tooltip.innerHTML = solRef.description;
+                tooltip.innerHTML = toolTipText;
                 innerDiv.appendChild(tooltip);
             }
         }
@@ -271,11 +288,13 @@ function hidePossible() {
 // Define the action when a solutions button is pressed
 function solutionButtonAction(btn, solRef) {
     btn.onclick = function() {
-        if (solRef.createFunc === null) {
+        if (solRef instanceof Reference) {
             closeIt();
-            showMessageBox("Information", solRef.displayFunc, ["OK"]);
+            showMessageBox("Information", solRef.longD, ["OK"]);
         } else {
-            addTab(solRef);
+            var solreg = solRef.solreg;  // Get solution registry
+            var theSolution = solreg.createFunc(solreg); // Create solution
+            addTab(theSolution);
             closeIt();
         }
     };
@@ -287,9 +306,10 @@ function solutionButtonAction(btn, solRef) {
 // and display of solution settings and options.
 let nextID = 0;
 
-function addTab(solRef) {
+function addTab(theSolution) {
     nextID++;
     let currentID = nextID;
+    theSolution.id = currentID;  // This id is attached to the solution, tab and content-div.
     let buttonHolder = document.getElementById("tabButtons");
     let contentHolder = document.getElementById("tabContents");
     
@@ -302,7 +322,7 @@ function addTab(solRef) {
     
     tabButton.type = "button";
     tabButton.className = "tabButton";
-    tabButton.value = solRef.text;
+    tabButton.value = theSolution.name;
     tabButton.myID = currentID;
     tabButton.onclick = function() {
         setActiveTab(currentID);
@@ -311,15 +331,12 @@ function addTab(solRef) {
     tabClose.className = "closeTab";
     tabClose.innerHTML = "&times";
     tabClose.onclick = function() {
-/*        if (confirm("Do you want to delete " + solRef.text + "?")) {
-            removeTab(currentID);
-        }*/
-        showMessageBox("Please confirm", "Do you want to delete " + solRef.text + "?", ["Yes", "No"])
-                .then( (response) => {
-                    if (response == "Yes") {
-                        removeTab(currentID);
-                    }
-                });
+        showMessageBox("Please confirm", "Do you want to delete " + theSolution.name + "?", ["Yes", "No"])
+            .then( (response) => {
+                if (response == "Yes") {
+                    removeTab(currentID);
+                }
+            });
     };
     
     tabDiv.appendChild(tabButton);
@@ -327,7 +344,7 @@ function addTab(solRef) {
    
     buttonHolder.appendChild(tabDiv);
     
-    createContent(solRef, contentHolder, currentID);
+    createContent(theSolution, contentHolder, currentID);
      
     setActiveTab(currentID);
 }
@@ -353,7 +370,7 @@ function setActiveTab(selectedID) {
     }
 }
 
-function createContent(solRef, contentHolder, currentID) {
+function createContent(theSolution, contentHolder, currentID) {
     let content = document.createElement("div");
     content.className = "tabContent";
     content.myID = currentID;
@@ -383,7 +400,7 @@ function createContent(solRef, contentHolder, currentID) {
     t3.innerHTML = "Options";
     optionsDiv.appendChild(t3);
     
-    solRef.displayFunc(solRef, descriptionDiv, settingsDiv, optionsDiv, currentID);
+    displayContent(theSolution, descriptionDiv, settingsDiv, optionsDiv);
 }
 
 // Close button is clicked.
@@ -420,8 +437,7 @@ function removeTab(selectedID) {
     SolutionList.remove(selectedID);
 }
 
-function defaultDisplay(solRef, descriptionDiv, settingsDiv, optionsDiv, currentID) {
-    var theSolution = solRef.createFunc(currentID);
+function displayContent(theSolution, descriptionDiv, settingsDiv, optionsDiv) {
 
     var p = document.createElement("p");
     p.innerHTML = theSolution.description;

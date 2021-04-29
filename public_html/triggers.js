@@ -197,8 +197,31 @@ class Trigger {
 	this.actionParam = 0;           // A 4-byte value.  May encode multiple parameters.
 	this.actionState = DEFAULT_STATE; // The state (1 to 15) to be set if the action triggers	
     }
-
-
+    
+    setValues(signal, startState, delay, action, finalState) {
+        this.sensor = signal.sensor;
+        this.reqdState = startState;
+        this.triggerValue = signal.level;
+        this.condition = signal.condition;
+        this.delay = delay;
+        this.action = action.action;
+        this.actionParam = action.parameter;
+        this.repeat = action.repeat;
+        this.actionState = finalState;
+    }
+    
+    doHash(value) {
+        value = ((value << 5) - value) + this.reqdState;
+        value = value & 0x7fffffff;
+        value = ((value << 5) - value) + this.condition;
+        value = value & 0x7fffffff;
+        value = ((value << 5) - value) + this.action.id;
+        value = value & 0x7fffffff;
+        value = ((value << 5) - value) + this.actionState;
+        value = value & 0x7fffffff;
+        return value;
+    }
+    
     toStream( ostream ) {
 	ostream.putByte('\n'.charCodeAt(0));
 	ostream.putID(this.sensor.id, 2);
@@ -257,16 +280,16 @@ class TriggerList {
 
     add(signal, startState, delay, action, finalState) {
         var t = new Trigger();
-        t.sensor = signal.sensor;
-        t.reqdState = startState;
-        t.triggerValue = signal.level;
-        t.condition = signal.condition;
-        t.delay = delay;
-        t.action = action.action;
-        t.actionParam = action.parameter;
-        t.repeat = action.repeat;
-        t.actionState = finalState;
+        t.setValues(signal, startState, delay, action, finalState);
         this.theList.push(t);
+    }
+    
+    getHash() {
+        let hash = 0;
+        for(var t of this.theList) {
+            hash = t.doHash(hash);
+        }
+        return hash;
     }
     
     // replace triggers is called after new triggers are received.
