@@ -164,6 +164,14 @@ class TSignal {
         this.level = level;
         this.condition = condition;
     }
+    
+    not() {
+        if (this.condition === TRIGGER_ON_HIGH) {
+            return new TSignal(this.sensor, this.level, TRIGGER_ON_LOW);
+        } else {            
+            return new TSignal(this.sensor, this.level, TRIGGER_ON_HIGH);
+        }
+    }
 }
 
 // TAction - holder for all parts of an action.
@@ -289,6 +297,16 @@ class TriggerList {
         var t = new Trigger();
         t.setValues(signal, startState, delay, action, finalState);
         this.theList.push(t);
+    }
+    
+    getSubSet(sensor) {
+        var subset = new TriggerList();
+        for(let t of this.theList) {
+            if (t.sensor.id === sensor.id) {
+                subset.theList.push(t);
+            }
+        }
+        return subset;
     }
     
     getHash() {

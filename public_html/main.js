@@ -36,8 +36,17 @@ function generateTrigs() {
 }
 
 function getHash() {
-    let hash = Triggers.getHash()
-    showMessageBox("Hash", "Value is " + hash.toString(10), ["OK"]);
+    var sensorList = [SENSOR_1A, SENSOR_1B, SENSOR_2A, SENSOR_2B, SENSOR_3A, SENSOR_3B];
+    var text = "";
+    
+    for(let s of sensorList) {
+        var subset = Triggers.getSubSet(s);
+        if (subset.length() > 0) {
+            let hash = subset.getHash()
+            text += "Value for " + s.name + " is " + hash.toString(10) + "<br/>";
+        }
+    }
+    showMessageBox("Hash", text, ["OK"]);
 }
 
 function download() {
@@ -74,7 +83,8 @@ function getConnected( callbackFunc ) {
          } else if (version == "1.04" || version == "2.04") {
              callbackFunc();
          } else {
-             showMessageBox("Error", "Your netClé device is out-of-date. \
+             showMessageBox("Error", "Your netClé hub firmware is version " + version + 
+                ". This is out-of-date. \
 In order to use this tool you will need a firmware upgrade.", ["OK"]);
              connection.close();
          }        

@@ -267,13 +267,13 @@ class OneButtonMouse extends SolutionBase {
         var port = this.settings[1].getValue();
         var delay = this.options[0].getValue();
         var buzzDuration = this.options[1].getValue() ;
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Delay: " + delay);
         console.log("  Beep: " +  buzzDuration);
-        
+  */      
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
@@ -347,10 +347,11 @@ class TwoButtonMouse extends SolutionBase {
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
-         
+/*         
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
+  */      
         var sensorA = port.getSensor(SENSOR_A);
         var sensorB = port.getSensor(SENSOR_B);
         
@@ -415,13 +416,13 @@ class JoystickMouse1 extends SolutionBase {
         var port = this.settings[1].getValue();
         var doClicks = this.options[0].getValue();
         var doAudio = this.options[1].getValue();
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Clicks: " + doClicks);
         console.log("  Do Audio: " + doAudio);   
-        
+  */      
         var sensorA = port.getSensor(SENSOR_A);
         var sensorB = port.getSensor(SENSOR_B);
 
@@ -520,7 +521,7 @@ class JoystickMouse2 extends SolutionBase {
         var doClicks = this.options[0].getValue();
         var doAudioClicks = this.options[1].getValue();
         var doAudioToggle = this.options[2].getValue();
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Joystick Port: " + joystickPort.name);
@@ -528,7 +529,7 @@ class JoystickMouse2 extends SolutionBase {
         console.log("  Do Clicks: " + doClicks);
         console.log("  Do Audio for Clicks: " + doAudioClicks);        
         console.log("  Do Audio for Toggle: " + doAudioToggle);  
-        
+  */      
         var joystickA = joystickPort.getSensor(SENSOR_A);
         var joystickB = joystickPort.getSensor(SENSOR_B);
         var btnSensor = buttonPort.getSensor(this.subPort);
@@ -627,15 +628,191 @@ const LDS_GYRO_MOUSE      = "Allows the use of head motions to control the curso
     Attach the cursor to side of the head using a head band, the arm of a pair of glassed or a cap<br/>\
     with the wire hanging straight down.<br/>\
     Before using press the <i>Calibrate</i> button and follow the instructions.";
+class GyroPosition {
+    constructor(name) { 
+        this.name = name; 
+    }
+}
+
+const GM_RIGHT_CLICK_OPTION = "Do a right click with a quick right head motion.";
+const GM_LEFT_CLICK_OPTION = "Do a left click with a quick nod.";
+const GM_HEAD_TILT_OPTION = "A head tilt can be used to turn the gyro on and off.";
+const LEFT_SIDE = "left side";
+const RIGHT_SIDE = "right side";
+const gyroPositions = [];
+gyroPositions.push( new GyroPosition(LEFT_SIDE) );
+gyroPositions.push( new GyroPosition(RIGHT_SIDE) );
 
 class GyroMouse extends SolutionBase {
     constructor(solreg) {
         super(solreg, LDS_GYRO_MOUSE);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
+        this.addSetting( new SelectionBox ("I will place the gyro on the ", gyroPositions, gyroPositions[0]));
+        this.addSetting( new Slider("Sensitivity", 0, 100, 50) );
+        var btn = new Button("Calibrate");
+        btn.button.onclick = doCalibration;
+        this.addSetting( btn );
         
+        this.addOption( new CheckBox (GM_LEFT_CLICK_OPTION, false));
+        this.addOption( new CheckBox (GM_RIGHT_CLICK_OPTION, false));
+        this.addOption( new CheckBox (GM_HEAD_TILT_OPTION, false));
         this.sensorCount = 0;
+        
+        // Defaults - until calibration is run.
+        this.yBias = 0;
+        this.zBias = 0;
+        this.tiltThreshold = -2000;
+        this.tiltIsNegative = false;
+    }
+    
+    compile() {
+        var connection  = this.settings[0].getValue();
+        var side        = this.settings[1].getValue();
+        var sensitivity = this.settings[2].getValue();
+        var leftClickOp  = this.options[0].getValue();
+        var rightClickOp = this.options[1].getValue();
+        var tiltOption = this.options[2].getValue();
+        
+        if (CalibrationData.calibrationDone) {
+            this.yBias = CalibrationData.gyroYBias;
+            this.zBias = CalibrationData.gyroZBias;
+            this.tiltThreshold = CalibrationData.tiltPoint;
+            this.tiltIsNegative = CalibrationData.tiltIsNegative;
+        }
+
+        // Default thresholds.
+        var z_threshold = 2500 - (sensitivity-50) * 30;
+        var y_threshold = 3500 - (sensitivity-50) * 30;
+/*
+        console.log("Compile " + this.name);
+        console.log("  Connection: " + connection.name);
+        console.log("  Side: " + side.name);
+        console.log("  Sensitivity: " + sensitivity);
+        console.log("  Left Click: " + leftClickOp);
+        console.log("  Right Click: " + rightClickOp);
+        console.log("  Head Tilt: " + tiltOption);
+        console.log("  yBias: " + this.yBias);
+        console.log("  zBias: " + this.zBias);
+        console.log("  tilt threshold: " + this.tiltThreshold);
+        console.log("  tilt is negative: " + this.tiltIsNegative);
+ */       
+        var mouseAction = connection.mouseAction;
+        var mouseUp    = new TAction(mouseAction, MOUSE_UP, true);
+        var mouseDown  = new TAction(mouseAction, MOUSE_DOWN, true);
+        var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
+        var mouseLeft  = new TAction(mouseAction, MOUSE_LEFT, true);
+        var leftClick  = new TAction(mouseAction, MOUSE_CLICK, false);
+        var rightClick = new TAction(mouseAction, MOUSE_RIGHT_CLICK, false);
+        
+        // Actions used in sub-routines.
+        this.nothing = new TAction(ACT_NONE, 0, false);
+        this.buzzLo    = getBuzzerAction(400, 250);
+        this.buzzVLo    = getBuzzerAction(250, 50);
+        this.buzzHi    = getBuzzerAction(800, 100);                
+        
+        // ------------------------------
+        // Left-Right
+        this.genSimple(SENSOR_GYRO_Y, y_threshold, this.yBias, true, mouseLeft, 2);
+        if (rightClickOp) {
+            this.genWithClicks(SENSOR_GYRO_Y, y_threshold, this.yBias, false, mouseRight, rightClick);
+        } else {
+            this.genSimple(SENSOR_GYRO_Y, y_threshold, this.yBias, false, mouseRight, 4);
+        }
+        
+        // ------------------------------
+        // Up-Down
+        if (side.name === LEFT_SIDE) {
+            this.genSimple(SENSOR_GYRO_Z, z_threshold, this.zBias, true, mouseUp, 2);
+            if (leftClickOp) {
+                this.genWithClicks(SENSOR_GYRO_Z, z_threshold, this.zBias, false, mouseDown, leftClick);
+            } else {
+                this.genSimple(SENSOR_GYRO_Z, z_threshold, this.zBias, false, mouseDown, 4);
+            }
+        } else {
+            this.genSimple(SENSOR_GYRO_Z, z_threshold, this.zBias, false, mouseUp, 2);
+            if (leftClickOp) {
+                this.genWithClicks(SENSOR_GYRO_Z, z_threshold, this.zBias, true, mouseDown, leftClick);                
+            } else {
+                this.genSimple(SENSOR_GYRO_Z, z_threshold, this.zBias, true, mouseDown, 4);    
+            }
+        }
+        
+        // ------------------------------------------
+        // Left tilt to turn the gyro on and off.
+        if (tiltOption) {
+            var gyroYOff = getSetStateAction(SENSOR_GYRO_Y, 9);
+            var gyroZOff = getSetStateAction(SENSOR_GYRO_Z, 9);
+            var gyroYOn  = getSetStateAction(SENSOR_GYRO_Y, 1);
+            var gyroZOn  = getSetStateAction(SENSOR_GYRO_Z, 1);
+            var offBeep   = getBuzzerAction(200, 500);
+            var readyBeep = getBuzzerAction(800, 100);
+            var onBeep    = getBuzzerAction(1200, 100);
+
+            var low, high;
+            if (this.tiltIsNegative) {
+                low = new TSignal(SENSOR_ACCEL_Z, this.tiltThreshold, TRIGGER_ON_LOW);
+                high = new TSignal(SENSOR_ACCEL_Z, this.tiltThreshold, TRIGGER_ON_HIGH);
+             } else {
+                low = new TSignal(SENSOR_ACCEL_Z, this.tiltThreshold, TRIGGER_ON_HIGH);
+                high = new TSignal(SENSOR_ACCEL_Z, this.tiltThreshold, TRIGGER_ON_LOW);
+             }           
+             
+            Triggers.add(low,  1,    0, gyroYOff,  2);
+            Triggers.add(low,  2,    0, gyroZOff,  3);
+            Triggers.add(low,  3,    0, offBeep,   4);
+            Triggers.add(high, 4,  500, this.nothing,   8);
+            Triggers.add(high, 6,    0, gyroYOn,   7);
+            Triggers.add(high, 7,    0, gyroZOn,   1);
+            Triggers.add(low,  8,    0, readyBeep, 9);
+            Triggers.add(high, 9,  100, onBeep,    6);
+        }       
+    }    
+    
+    genSimple(sensor, threshold, bias, startLow, func, next) {
+        var low, notLow, high, notHigh;
+        
+        if (startLow) {
+            low = new TSignal(sensor, -threshold+bias, TRIGGER_ON_LOW);
+            high = new TSignal(sensor, threshold+bias, TRIGGER_ON_HIGH);
+        } else {
+            // Reverse high-low sense
+            high = new TSignal(sensor, -threshold + bias, TRIGGER_ON_LOW);
+            low = new TSignal(sensor, threshold + bias, TRIGGER_ON_HIGH);            
+        }
+        notLow = low.not();
+        notHigh = high.not();
+        
+        // Left-Right
+        Triggers.add(low,          1,  80, this.buzzLo,  next);
+        Triggers.add(notLow,    next,   0, func,    next);
+        Triggers.add(high,      next,  50, this.buzzVLo, next+1);
+        Triggers.add(notHigh, next+1, 250, this.nothing, 1);        
+    }
+    
+    genWithClicks(sensor, threshold, bias, startLow, func1, func2) {
+        var low, notLow, high, notHigh;
+        
+        if (startLow) {
+            low = new TSignal(sensor, -threshold + bias, TRIGGER_ON_LOW);
+            high = new TSignal(sensor, threshold + bias, TRIGGER_ON_HIGH);
+        } else {
+            // Reverse high-low sense
+            high = new TSignal(sensor, -threshold + bias, TRIGGER_ON_LOW);
+            low = new TSignal(sensor, threshold + bias, TRIGGER_ON_HIGH);            
+        }
+        notLow = low.not();
+        notHigh = high.not();
+    
+        Triggers.add(low,     1,  80, this.buzzLo,  4);
+        Triggers.add(notLow,  4, 300, func1,   5);
+        Triggers.add(notHigh, 5,   0, func1,   5);
+        Triggers.add(high,    5,  50, this.buzzVLo, 8);
+        Triggers.add(high,    4,  50, this.buzzHi,  7);
+        Triggers.add(notHigh, 7,   0, func2,   8);
+        Triggers.add(notHigh, 8, 250, this.nothing, 1);
     }
 }
+    
 
 function makeGyroMouse(solreg) {
     var sol = new GyroMouse(solreg);
@@ -662,12 +839,12 @@ class LeftClickButton extends SolutionBase {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
-        
+ /*                       
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
-        
+   */     
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
@@ -707,11 +884,12 @@ class RightClickButton extends SolutionBase {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
+        */
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
@@ -754,12 +932,12 @@ class LeftPressReleaseToggle extends SolutionBase {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
-                
+ /*               
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
-
+*/
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
@@ -807,11 +985,11 @@ class LeftButtonEmulation extends SolutionBase {
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
-        
+  */      
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
@@ -851,11 +1029,11 @@ class ThreeFunctionButton extends SolutionBase {
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
-        
+  */      
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
@@ -904,12 +1082,12 @@ class LeftRightClick extends SolutionBase {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
-        
+  */      
         var sensorA = port.getSensor(SENSOR_A);
         var sensorB = port.getSensor(SENSOR_B);
         var btnAPressed = new TSignal(sensorA, 500, TRIGGER_ON_HIGH);
@@ -969,11 +1147,11 @@ class ScrollUpDownToggle extends SolutionBase {
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
-        
+ /*       
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
-        
+   */     
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
@@ -1021,12 +1199,12 @@ class ScrollUpDownButtons extends SolutionBase {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
-        
+/*       
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
-        
+  */      
         var sensorA = port.getSensor(SENSOR_A);
         var sensorB = port.getSensor(SENSOR_B);
         var btnAPressed = new TSignal(sensorA, 500, TRIGGER_ON_HIGH);
@@ -1079,13 +1257,13 @@ class KeyboardText extends SolutionBase {
         var port = this.settings[1].getValue();
         var text = this.settings[2].getValue();
         var addReturn = this.options[0].getValue();
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Text: " + text);
         console.log("  Return: " + addReturn);
-        
+  */      
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         
@@ -1136,12 +1314,12 @@ class KeyboardSpecial extends SolutionBase {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var key = this.settings[2].getValue();
-        
+ /*       
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
         console.log("  Key:  " + key.name);
-        
+   */     
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
@@ -1179,12 +1357,12 @@ class KeyboardModifier extends SolutionBase {
         var port = this.settings[0].getValue();
         var modifier  = this.settings[1].getValue();
         var key = this.settings[2].getValue();
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Port: " + port.name);
         console.log("  Modifier:" + modifier.name);
         console.log("  Key:     " + key.name);
-        
+  */      
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
@@ -1222,11 +1400,11 @@ class KeyboardUpDownArrowToggle extends SolutionBase {
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
-        
+/*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Port: " + port.name);
-        
+  */      
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
@@ -1272,11 +1450,11 @@ class KeyboardShift extends SolutionBase {
     compile() {
         var port = this.settings[0].getValue();
         var doAudio = this.options[0].getValue();
-                
+ /*               
         console.log("Compile " + this.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
-
+*/
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
@@ -1331,11 +1509,11 @@ class KeyboardControl extends SolutionBase {
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
          var port = this.settings[0].getValue();
         var doAudio = this.options[0].getValue();
-                
+/*                
         console.log("Compile " + this.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
-
+*/
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);

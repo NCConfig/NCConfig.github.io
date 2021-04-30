@@ -37,6 +37,7 @@ var connection = {
     theReader: null,
     theWriter: null,
     version: null,
+    onNewSensorData: null,
     
     isSupported: function() {
         return ("serial" in navigator);
@@ -53,7 +54,7 @@ var connection = {
         this.theWriter = this.thePort.writable.getWriter();
 
         this.startReader();
-        console.log("Open successful.");
+//        console.log("Open successful.");
         this.connected = true;
         return;
     },
@@ -77,30 +78,35 @@ var connection = {
               if (done) {
                 // Allow the serial port to be closed later.
                 this.theReader.releaseLock();
-                console.log("Reader cancelled.");
+//                console.log("Reader cancelled.");
                 break;
               }
               // value is a Uint8Array.
-              console.log(value);
+//              console.log(value);
               buffer = concat(buffer, value);
               if (buffer[buffer.length-1] === END_OF_BLOCK) {
-                  console.log("Buffer complete.");
-                  console.log(new TextDecoder().decode(buffer));
+//                  console.log("Buffer complete.");
+//                  console.log(new TextDecoder().decode(buffer));
                   if (buffer[0] === GET_VERSION) {
                       this.processVersion(buffer);
                   } else if (buffer[0] === START_OF_TRIGGER_BLOCK) {
                       inputStream.init(buffer);
                       loadTriggers(inputStream);
+                  } else if (buffer[0] === START_OF_SENSOR_DATA) {
+                      if (this.onNewSensorData !== null) {
+                          inputStream.init(buffer);
+                          this.onNewSensorData(inputStream);
+                      }
                   }
                   buffer = new Uint8Array();
               }
             }    
         } catch (e) {
-            console.log("Read Error: " + e);
+//            console.log("Read Error: " + e);
             this.close();
         }
  
-        console.log("Read Exit");
+//        console.log("Read Exit");
     },
     
     processVersion: function(buffer) {
@@ -109,7 +115,7 @@ var connection = {
     },
     
     sendCommand: function(cmd) {
-        console.log("Send command", cmd);
+ //       console.log("Send command", cmd);
         var data = new Uint8Array([cmd]);
         this.write(data);
     },
@@ -120,7 +126,7 @@ var connection = {
     },
         
     close: async function() {
-        console.log("Connection Close");
+//        console.log("Connection Close");
         if (!this.connected) return;
         try {
             await this.theReader.cancel();
@@ -128,14 +134,14 @@ var connection = {
             this.theWriter.releaseLock();
             await this.thePort.close();
         } catch (e) {
-            console.log("Close error: " + e);
+//            console.log("Close error: " + e);
         }
         this.theReader = null;
         this.theWriter = null;
         this.thePort = null;
         this.version = null;
         this.connected = false;
-        console.log("Port closed.");
+//        console.log("Port closed.");
     }
 };
 
@@ -158,14 +164,22 @@ var inputStream = {
 
     // Read a number. Count is the byte-length of the number.
     getNum: function(count) {
-        count = count * 2;  // Bytes to nibbles
+        var isNegative = false;
         var value = 0;
-        for(var i=0; i< count; i++) {
+        for(var i=0; i< count * 2; i++) {
             var tmp = this.getByte() - NUMBER_MASK;
             if (tmp < 0 || tmp > 15) {
                 throw "Invalid Number";
             }
             value = (value << 4) + tmp;
+            
+            if (i==0 && (tmp & 0x8) == 0x8) {
+                isNegative = true;
+            }
+        }
+        
+        if (isNegative && count == 2) {
+            value -= 0x10000;
         }
         return value;
     },

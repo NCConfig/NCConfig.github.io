@@ -21,6 +21,7 @@ and open the template in the editor.
         <script type="text/javascript" src="triggers.js"></script>
         <script type="text/javascript" src="cursorSpeed.js"></script>
         <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="calibration.js"></script>
     </head>
     <body onload="startup();">
         <div id="header"><h1>netClé Configuration Tool</h1></div>
@@ -28,9 +29,9 @@ and open the template in the editor.
             <button onclick="showSolutionDlg();">Add Solution</button>
             <button onclick="download();">Download</button>
             <button onclick="showCursorSpeed();">Cursor Speed</button>
-            <button onclick="generateTrigs();">Generate</button>
+<!--            <button onclick="generateTrigs();">Generate</button>
             <button onclick="getHash();">Test</button>
-<!--            <button onclick="getConnected(()=>{});">Connect</button>
+            <button onclick="getConnected(()=>{});">Connect</button>
             <button onclick="closeConnection();">Close Connection</button>
             <button onclick="getConfig();">Get Config</button>
             <button onclick="getVersion();">Get Version</button>

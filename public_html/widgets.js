@@ -258,5 +258,40 @@ class TextBox extends WidgetBase {
     setValue(val) { this.textBox.value = val; }  
 }
 
+class Slider extends WidgetBase {
+    constructor(label, min, max, dft) {
+        super(label)
+        
+        this.slider = document.createElement("input");
+        this.slider.type = "range";
+        this.slider.className = "setting range";
+        this.slider.min = min;
+        this.slider.max = max;
+        this.slider.value = dft;
+    }
+    getLabel() { return this.label; }
+    getWidget() { return this.slider; }
+    
+    // Meaningless
+    getValue() { return parseInt(this.slider.value); }
+    setValue(val) { this.slider.value = val; }  
+}
+
+class Button extends WidgetBase {
+    constructor(text) {
+        super("");
+        
+        this.button = document.createElement("input");
+        this.button.type = "button";
+        this.button.className = "setting button";
+        this.button.value = text;
+    }
+    getLabel() { return this.label; }
+    getWidget() { return this.button; }
+    
+    // Meaningless
+    getValue() { return 0; }
+    setValue(val) { }  
+}
 
 
