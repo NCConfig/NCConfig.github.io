@@ -12,7 +12,7 @@ Supported browers are Chrome, Edge and Opera.  In addition, on these browsers yo
 and paste it into your brower's address bar.  Then, set the option to \'Enabled\'.";
    
 const MSG_MUST_CONNECT = "We now need to correct the your netClé device.<br/>\
-Please ensure the divice is connected to your computer, and then press OK.";
+Please ensure your device is connected to your computer, and then press OK.";
 
 function startup() {
     // A bunch of lists that cannot be initialized until all javascript
@@ -32,18 +32,23 @@ function startup() {
 }
 
 function generateTrigs() {
-    SolutionList.compile();
+    SolutionList.doPortCheck().then( (val) => {
+        if (val === true) {  // Port check passed    
+            
+            SolutionList.compile();
+        }
+    });
 }
 
 function getHash() {
-    var sensorList = [SENSOR_1A, SENSOR_1B, SENSOR_2A, SENSOR_2B, SENSOR_3A, SENSOR_3B];
+//    var sensorList = [SENSOR_1A, SENSOR_1B, SENSOR_2A, SENSOR_2B, SENSOR_3A, SENSOR_3B];
     var text = "";
     
-    for(let s of sensorList) {
+    for(let s of sensors) {
         var subset = Triggers.getSubSet(s);
         if (subset.length() > 0) {
             let hash = subset.getHash()
-            text += "Value for " + s.name + " is " + hash.toString(10) + "<br/>";
+            text += "Value for " + s.name + "(" + subset.length() + ") is " + hash.toString(10) + "<br/>";
         }
     }
     showMessageBox("Hash", text, ["OK"]);
@@ -61,6 +66,24 @@ function download() {
                     doDownload();
                 } else {
                     getConnected( doDownload );
+                } 
+            }
+        });
+    }
+}
+
+function upload() {
+    if (!connection.isSupported()) {
+        showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
+        return;
+    } else {
+        // doPortCheck may put up a dialog, and thus returns a promise.
+        SolutionList.doPortCheck().then( (val) => {
+            if (val === true) {  // Port check passed
+                if (connection.connected) {
+                    Recreate.doAll();
+                } else {
+                    getConnected( Recreate.doAll );
                 } 
             }
         });

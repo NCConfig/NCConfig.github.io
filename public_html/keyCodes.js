@@ -115,7 +115,21 @@ keyCodeList.push( new keyCode("Right Shift",   0x85, 0, true, false) );
 keyCodeList.push( new keyCode("Right Alt",     0x86, 0, true, false) );
 keyCodeList.push( new keyCode("Right Windows", 0x87, 0, true, false) );
 
+function getWiredKey(value) {
+    for(let ch of keyCodeList) {
+        if (ch.wiredCode === value) {
+            return ch;
+        }
+    }
+}
 
+function getBTKey(value) {
+    for(let ch of keyCodeList) {
+        if (ch.btCode === value) {
+            return ch;
+        }
+    }    
+}
 
 
 

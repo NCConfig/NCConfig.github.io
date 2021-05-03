@@ -14,30 +14,31 @@ var actions = [];
 // ======= SENSORS =============================
 // -- Sensor - defines a 'Sensor' class -- //
 //    This holds sensor names and properties
-function Sensor(i, n, minval, maxval, c) {
+function Sensor(i, n, minval, maxval, c, port) {
     this.id = i;
     this.name = n;
     this.minval = minval;
     this.maxval = maxval; 
+    this.port = port;    
     this.isContinuous = c;   // If true the sensor delivers continuous data.
 						   // If false the sensor delivers descrete values.
 }
 
 // -- sensors - holds a list of all possible sensors -- //
-const SENSOR_1A = new Sensor(5, "Sensor 1A", 0, 1023, true);
-const SENSOR_1B = new Sensor(6, "Sensor 1B", 0, 1023, true);
-const SENSOR_2A = new Sensor(3, "Sensor 2A", 0, 1023, true);
-const SENSOR_2B = new Sensor(4, "Sensor 2B", 0, 1023, true);
-const SENSOR_3A = new Sensor(1, "Sensor 3A", 0, 1023, true);
-const SENSOR_3B = new Sensor(2, "Sensor 3B", 0, 1023, true);
-const SENSOR_USB = new Sensor(7, "USB Input ", 0, 255, false);
-const SENSOR_ACCEL_X = new Sensor(8, "Accel-X", -16000, 16000, true);
-const SENSOR_ACCEL_Y = new Sensor(9, "Accel-Y", -16000, 16000, true) ;
-const SENSOR_ACCEL_Z = new Sensor(10, "Accel-Z", -16000, 16000, true);
-const SENSOR_GYRO_X = new Sensor(11, "Gyro-X", -15000, 15000, true);
-const SENSOR_GYRO_Y = new Sensor(12, "Gyro-Y", -15000, 15000, true);
-const SENSOR_GYRO_Z = new Sensor(13, "Gyro-Z", -15000, 15000, true);
-const SENSOR_GYRO_ANY = new Sensor(14, "Gyro-Any", 0, 13000, true);
+const SENSOR_1A = new Sensor(5, "Sensor 1A", 0, 1023, true, 1);
+const SENSOR_1B = new Sensor(6, "Sensor 1B", 0, 1023, true, 1);
+const SENSOR_2A = new Sensor(3, "Sensor 2A", 0, 1023, true, 2);
+const SENSOR_2B = new Sensor(4, "Sensor 2B", 0, 1023, true, 2);
+const SENSOR_3A = new Sensor(1, "Sensor 3A", 0, 1023, true, 3);
+const SENSOR_3B = new Sensor(2, "Sensor 3B", 0, 1023, true, 3);
+const SENSOR_USB = new Sensor(7, "USB Input ", 0, 255, false, 0);
+const SENSOR_ACCEL_X = new Sensor(8, "Accel-X", -16000, 16000, true, 0);
+const SENSOR_ACCEL_Y = new Sensor(9, "Accel-Y", -16000, 16000, true, 0) ;
+const SENSOR_ACCEL_Z = new Sensor(10, "Accel-Z", -16000, 16000, true, 0);
+const SENSOR_GYRO_X = new Sensor(11, "Gyro-X", -15000, 15000, true, 0);
+const SENSOR_GYRO_Y = new Sensor(12, "Gyro-Y", -15000, 15000, true, 0);
+const SENSOR_GYRO_Z = new Sensor(13, "Gyro-Z", -15000, 15000, true, 0);
+const SENSOR_GYRO_ANY = new Sensor(14, "Gyro-Any", 0, 13000, true, 0);
 
 // createSensorList runs once -after the version number is discovered.
 // It creates the list of sensors.
@@ -95,6 +96,13 @@ function loadPorts() {
     portOptions.push( new portValue("Port 1", SENSOR_1A, SENSOR_1B));
     portOptions.push( new portValue("Port 2", SENSOR_2A, SENSOR_2B));
     portOptions.push( new portValue("Port 3", SENSOR_3A, SENSOR_3B));
+}
+
+function getPortBySensor(sensor) {
+    for(var op of portOptions) {
+        if (op.sensorA === sensor) return op;
+        if (op.sensorB === sensor) return op;
+    }
 }
 
 // ======= ACTIONS =============================

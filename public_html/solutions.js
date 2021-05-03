@@ -40,6 +40,18 @@ let SolutionList = {
         }       
     },
     
+    removeAll: function() {
+        var idList = [];
+        var i;
+        for(i=0; i<this.list.length; i++) {
+            idList.push(this.list[i].id);
+        }
+        
+        for(i=0; i<idList.length; i++) {
+           removeTab(idList[i]); 
+        }
+    },
+    
     // This function limits the show-message / promise stuff to 
     // the highest possible level in the code.
     doPortCheck: async function() {
@@ -147,12 +159,6 @@ let SolutionList = {
     },
     
     compile: function() {
- /*       tmpList = [];
-        for (var sol of this.list) {
-            tmpList.push(sol.getParams());
-        } */
- //       var string = JSON.stringify(this.list);
- //       console.log(string);
         Triggers.clear();
         for (var sol of this.list) {
             sol.compile();
@@ -226,6 +232,11 @@ class ConnectionType {
 }
 const connectionOptions = [];
 
+function getConnection(name) {
+    for(var op of connectionOptions) {
+        if (op.name === name) return op;
+    }
+}
 function createConnectionOptions() {
     connectionOptions.push( new ConnectionType("Wired", ACT_WIRED_MOUSE, ACT_WIRED_KEYBOARD,
     (keyid) => {return(keyid.wiredCode);} ));
@@ -260,6 +271,13 @@ class OneButtonMouse extends SolutionBase {
     
     getPortUsed() {
         return this.settings[1].getValue();
+    }
+    
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.delay);
+        this.options[1].setValue(parameters.buzzerLength);
     }
     
     compile() {
@@ -344,6 +362,11 @@ class TwoButtonMouse extends SolutionBase {
         return this.settings[1].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+    }
+    
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
@@ -383,7 +406,8 @@ class TwoButtonMouse extends SolutionBase {
         Triggers.add(btnBRelease, 3, 3000, nothing,  1);
         Triggers.add(btnBPressed, 3,    0, nothing,   4);
         Triggers.add(btnBPressed, 4,    0, mouseRight,4);
-        Triggers.add(btnBRelease, 4,  500, buzz,      1);       }
+        Triggers.add(btnBRelease, 4,  500, buzz,      1);       
+    }
  }
 
 function makeTwoButtonMouse(solreg) {
@@ -411,6 +435,13 @@ class JoystickMouse1 extends SolutionBase {
         return this.settings[1].getValue();
     }
 
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.clicks);
+        this.options[1].setValue(parameters.audio);
+    }
+    
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
@@ -514,6 +545,15 @@ class JoystickMouse2 extends SolutionBase {
         return this.settings[2].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.settings[2].setValue(getPortBySensor(parameters.singleButtonSensor));
+        this.options[0].setValue(parameters.clicks);
+        this.options[1].setValue(parameters.audio);
+        this.options[2].setValue(parameters.singleButtonAudio);
+    }
+    
     compile() {
         var connection = this.settings[0].getValue();
         var joystickPort = this.settings[1].getValue();
@@ -521,6 +561,8 @@ class JoystickMouse2 extends SolutionBase {
         var doClicks = this.options[0].getValue();
         var doAudioClicks = this.options[1].getValue();
         var doAudioToggle = this.options[2].getValue();
+        
+//        if (!doClicks) doAudioClicks = false;
 /*        
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
@@ -640,8 +682,11 @@ const GM_HEAD_TILT_OPTION = "A head tilt can be used to turn the gyro on and off
 const LEFT_SIDE = "left side";
 const RIGHT_SIDE = "right side";
 const gyroPositions = [];
-gyroPositions.push( new GyroPosition(LEFT_SIDE) );
-gyroPositions.push( new GyroPosition(RIGHT_SIDE) );
+const LEFT_POSITION = new GyroPosition(LEFT_SIDE);
+const RIGHT_POSITION = new GyroPosition(RIGHT_SIDE);
+gyroPositions.push( LEFT_POSITION );
+gyroPositions.push( RIGHT_POSITION );
+
 
 class GyroMouse extends SolutionBase {
     constructor(solreg) {
@@ -665,6 +710,28 @@ class GyroMouse extends SolutionBase {
         this.tiltIsNegative = false;
     }
     
+    setParameters(parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        var side = parameters.headSide;
+        if (side === "Left") {
+            this.settings[1].setValue(LEFT_POSITION);
+        } else {
+            this.settings[1].setValue(RIGHT_POSITION);            
+        }
+        this.settings[2].setValue(parameters.sensitivity);
+        this.options[0].setValue(parameters.leftClick);
+        this.options[1].setValue(parameters.rightClick);
+        this.options[2].setValue(parameters.tiltSwitch);
+        
+        this.yBias = parameters.yBias;
+        this.zBias = parameters.zBias;
+        this.tiltIsNegative = parameters.tiltIsNegative;
+        
+        if (parameters.tiltThreshold) {
+            this.tiltThreshold = parameters.tiltThreshold;
+        }
+    }
+    
     compile() {
         var connection  = this.settings[0].getValue();
         var side        = this.settings[1].getValue();
@@ -683,7 +750,7 @@ class GyroMouse extends SolutionBase {
         // Default thresholds.
         var z_threshold = 2500 - (sensitivity-50) * 30;
         var y_threshold = 3500 - (sensitivity-50) * 30;
-/*
+
         console.log("Compile " + this.name);
         console.log("  Connection: " + connection.name);
         console.log("  Side: " + side.name);
@@ -695,7 +762,9 @@ class GyroMouse extends SolutionBase {
         console.log("  zBias: " + this.zBias);
         console.log("  tilt threshold: " + this.tiltThreshold);
         console.log("  tilt is negative: " + this.tiltIsNegative);
- */       
+        console.log("  z_threshold: " + z_threshold);
+        console.log("  y_threshold: " + y_threshold);
+        
         var mouseAction = connection.mouseAction;
         var mouseUp    = new TAction(mouseAction, MOUSE_UP, true);
         var mouseDown  = new TAction(mouseAction, MOUSE_DOWN, true);
@@ -835,6 +904,12 @@ class LeftClickButton extends SolutionBase {
         return this.settings[1].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.audio);
+    }
+
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
@@ -880,6 +955,12 @@ class RightClickButton extends SolutionBase {
         return this.settings[1].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.audio);
+    }
+
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
@@ -928,6 +1009,12 @@ class LeftPressReleaseToggle extends SolutionBase {
         return this.settings[1].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.audio);
+    }
+
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
@@ -982,6 +1069,11 @@ class LeftButtonEmulation extends SolutionBase {
         return this.settings[1].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+   }
+
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
@@ -1026,7 +1118,12 @@ class ThreeFunctionButton extends SolutionBase {
         return this.settings[1].getValue();
     }
     
-    compile() {
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+   }
+
+     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
 /*        
@@ -1076,6 +1173,12 @@ class LeftRightClick extends SolutionBase {
     
     getPortUsed() {
         return this.settings[1].getValue();
+    }
+    
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.audio);
     }
     
     compile() {
@@ -1144,7 +1247,12 @@ class ScrollUpDownToggle extends SolutionBase {
         return this.settings[1].getValue();
     }
     
-    compile() {
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+   }
+
+     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
  /*       
@@ -1193,6 +1301,12 @@ class ScrollUpDownButtons extends SolutionBase {
     
     getPortUsed() {
         return this.settings[1].getValue();
+    }
+    
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.audio);
     }
     
     compile() {
@@ -1252,6 +1366,13 @@ class KeyboardText extends SolutionBase {
         return this.settings[1].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.settings[2].setValue(parameters.text);
+        this.options[0].setValue(parameters.endsWithReturn);
+    }
+
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
@@ -1310,6 +1431,12 @@ class KeyboardSpecial extends SolutionBase {
         return this.settings[1].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.settings[2].setValue(parameters.keyCode);
+   }
+
     compile() {
         var connection = this.settings[0].getValue();
         var port = this.settings[1].getValue();
@@ -1353,6 +1480,12 @@ class KeyboardModifier extends SolutionBase {
         return this.settings[0].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getPortBySensor(sensor));
+        this.settings[1].setValue(parameters.modKey);
+        this.settings[2].setValue(parameters.keyCode);
+   }
+
     compile() {
         var port = this.settings[0].getValue();
         var modifier  = this.settings[1].getValue();
@@ -1396,6 +1529,11 @@ class KeyboardUpDownArrowToggle extends SolutionBase {
     getPortUsed() {
         return this.settings[1].getValue();
     }
+    
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+   }
     
     compile() {
         var connection = this.settings[0].getValue();
@@ -1447,6 +1585,11 @@ class KeyboardShift extends SolutionBase {
         return this.settings[0].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.audio);
+   }
+
     compile() {
         var port = this.settings[0].getValue();
         var doAudio = this.options[0].getValue();
@@ -1501,6 +1644,11 @@ class KeyboardControl extends SolutionBase {
         return this.settings[0].getValue();
     }
     
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.audio);
+   }
+
     compile() {
         var port = this.settings[0].getValue();
         

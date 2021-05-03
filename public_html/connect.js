@@ -38,6 +38,7 @@ var connection = {
     theWriter: null,
     version: null,
     onNewSensorData: null,
+    onTriggerLoad: null,
     
     isSupported: function() {
         return ("serial" in navigator);
@@ -92,6 +93,9 @@ var connection = {
                   } else if (buffer[0] === START_OF_TRIGGER_BLOCK) {
                       inputStream.init(buffer);
                       loadTriggers(inputStream);
+                      if (this.onTriggerLoad != null) {
+                          this.onTriggerLoad();
+                      }
                   } else if (buffer[0] === START_OF_SENSOR_DATA) {
                       if (this.onNewSensorData !== null) {
                           inputStream.init(buffer);

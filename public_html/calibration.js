@@ -53,7 +53,7 @@ var CalibrationData = {
     
     processNewData: function(stream) {
         this.dataCount++;
-        if (this.dataCount >= 30) {
+        if (this.dataCount >= 20) {
             this.onCollectionComplete();
         }       
         stream.getByte();  // Get rid of the leading 'S'

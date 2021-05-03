@@ -20,6 +20,7 @@ and open the template in the editor.
         <script type="text/javascript" src="connect.js"></script>
         <script type="text/javascript" src="triggers.js"></script>
         <script type="text/javascript" src="cursorSpeed.js"></script>
+        <script type="text/javascript" src="recreate.js"></script>
         <script type="text/javascript" src="main.js"></script>
         <script type="text/javascript" src="calibration.js"></script>
     </head>
@@ -28,9 +29,11 @@ and open the template in the editor.
         <div id="nav">
             <button onclick="showSolutionDlg();">Add Solution</button>
             <button onclick="download();">Download</button>
+            <button onclick="upload();">Upload</button>
             <button onclick="showCursorSpeed();">Cursor Speed</button>
-<!--            <button onclick="generateTrigs();">Generate</button>
-            <button onclick="getHash();">Test</button>
+ <!--           <button onclick="generateTrigs();">Generate</button>
+            <button onclick="getHash();">Get Hash</button>
+            <button onclick="Recreate.rebuildAll();">Recreate</button>
             <button onclick="getConnected(()=>{});">Connect</button>
             <button onclick="closeConnection();">Close Connection</button>
             <button onclick="getConfig();">Get Config</button>
