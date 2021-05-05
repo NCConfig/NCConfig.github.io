@@ -24,6 +24,8 @@ class WidgetBase {
         this.label.className = "setting";
     }
     
+    getLabel() { return this.label; }
+
     // Return false if the label should go after the widget (e.g. radio buttons)
     isLabelFirst() { return true; }
 }
@@ -50,7 +52,6 @@ class SelectionBox extends WidgetBase {
         }    
     }
     
-    getLabel() { return this.label; }
     getWidget() { return this.dropDown; }
     
     getValue() {
@@ -80,7 +81,6 @@ class KeySets extends WidgetBase {
         super(label);
     }
     
-    getLabel() { return this.label; }
     getWidget() { return this.dropDown; }
     
     getValue() {
@@ -203,7 +203,6 @@ class NumericSelector extends WidgetBase {
         };
     }
     
-    getLabel() { return this.label;}
     getWidget() { return this.num;}
     
     getValue() {return parseInt( this.num.value );}
@@ -222,7 +221,6 @@ class CheckBox extends WidgetBase {
         this.checkBox.checked = defaultValue;
     }
     
-    getLabel() { return this.label; }
     getWidget() { return this.checkBox; }
     isLabelFirst() { return false; }
     
@@ -251,7 +249,6 @@ class TextBox extends WidgetBase {
         };
     }
     
-    getLabel() { return this.label; }
     getWidget() { return this.textBox; }
     
     getValue() { return this.textBox.value; }
@@ -269,7 +266,6 @@ class Slider extends WidgetBase {
         this.slider.max = max;
         this.slider.value = dft;
     }
-    getLabel() { return this.label; }
     getWidget() { return this.slider; }
     
     // Meaningless
@@ -286,7 +282,6 @@ class Button extends WidgetBase {
         this.button.className = "setting button";
         this.button.value = text;
     }
-    getLabel() { return this.label; }
     getWidget() { return this.button; }
     
     // Meaningless
@@ -294,4 +289,20 @@ class Button extends WidgetBase {
     setValue(val) { }  
 }
 
+// This is for putting text in the settings area.
+class TextOnlyWidget extends WidgetBase {
+    constructor(labelText) {
+        super(labelText);
+        
+        this.span = document.createElement("span");
+        this.span.className = "setting span";
+        this.span.value = '';
+    }
+    getLabel() { return this.label; }
+    getWidget() { return this.span; }
+    
+    // Meaningless
+    getValue() { return 0; }
+    setValue(val) { }  
+}
 

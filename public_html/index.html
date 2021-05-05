@@ -27,11 +27,27 @@ and open the template in the editor.
     <body onload="startup();">
         <div id="header"><h1>netClé Configuration Tool</h1></div>
         <div id="nav">
-            <button onclick="showSolutionDlg();">Add Solution</button>
-            <button onclick="download();">Download</button>
-            <button onclick="upload();">Upload</button>
-            <button onclick="showCursorSpeed();">Cursor Speed</button>
-            <button onclick="generateTrigs();">Generate</button>
+            <div class="tooltipdiv">
+                <button onclick="Chooser.showSolutionDlg();">Add Solution</button>
+                <span class="tooltip">Select another solution to add to this configuration.</span>
+            </div>
+
+            <div class="tooltipdiv">
+                <button onclick="download();">Set</button>
+                <span class="tooltip">Write this configuration to the hub.  This will overwrite what is currently on the hub.</span>
+            </div>
+            
+            <div class="tooltipdiv">
+                <button onclick="upload();">Get</button>
+                <span class="tooltip">Read the configuration on the hub and display it here.  This will overwrite what is currently here.</span>
+            </div>
+
+            <div class="tooltipdiv">
+                <button onclick="showCursorSpeed();">Cursor Speed</button>
+                <span class="tooltip">Adjust the cursor speed.</span>
+            </div>
+
+<!--            <button onclick="generateTrigs();">Generate</button>
             <button onclick="getHash();">Get Hash</button>
             <button onclick="Recreate.rebuildAll();">Recreate</button>
  <!--           <button onclick="getConnected(()=>{});">Connect</button>
@@ -47,7 +63,7 @@ and open the template in the editor.
             <div id="tabContents"></div>
         </div>
         <div id="solutionsDlg">
-            <span onclick="closeIt()" class="close">&times;</span>
+            <span onclick="Chooser.closeIt()" class="close">&times;</span>
             <h2>Add a Solution</h2>
             <div id="solutionContent"></div>
         </div>

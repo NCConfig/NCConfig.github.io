@@ -2,7 +2,7 @@
 "use strict"
 
 const MSG_NOT_SUPPORTED = "Unfortunately, this browser does not support connection to a serial device.\
-Supported browers are Chrome, Edge and Opera.  In addition, on these browsers you must enable experimental features.\
+  Supported browers are Chrome, Edge and Opera.  In addition, on these browsers you must enable experimental features.\
  To do this copy one of:\
 <ul>\
 <li><code>chrome://flags/#enable-experimental-web-platform-features</code>\
@@ -21,6 +21,7 @@ function startup() {
     createActionList();
     loadPorts();
     LoadSolutionList();
+    Chooser.init();
     createConnectionOptions();
     
    if (!connection.isSupported()) {

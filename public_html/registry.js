@@ -83,7 +83,7 @@ function LoadSolutionList() {
     SolList.push(SolUnknown);
 };
 
-function findByName(name) {
+function findSolutionByName(name) {
     for(ref of SolList) {
         if (ref.name === name) {
             return ref;

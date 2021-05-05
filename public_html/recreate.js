@@ -96,7 +96,7 @@ var Recreate = {
                 console.log(tset.sensor.name + " unresolved.");
                 var solution = SolUnknown.createFunc(SolUnknown);
                 solution.loadTriggers(tset.list);
-                addTab(solution);
+                Chooser.addTab(solution);
             }
         }
     },
@@ -432,7 +432,7 @@ var Recreate = {
         }
         var theSolution = SolGyroMouse.createFunc(SolGyroMouse);
         theSolution.setParameters(parameters);
-        addTab(theSolution); 
+        Chooser.addTab(theSolution); 
     }
 };
 
@@ -536,7 +536,7 @@ function buildIt(triggerSet, solutionReg, parameters) {
     
     var theSolution = solutionReg.createFunc(solutionReg);
     theSolution.setParameters(triggerSet.sensor, parameters);
-    addTab(theSolution);
+    Chooser.addTab(theSolution);
     triggerSet.isResolved();
 }
 
@@ -548,7 +548,7 @@ function buildIt2(triggerSetA, triggerSetB, solutionReg, parameters) {
     
     var theSolution = solutionReg.createFunc(solutionReg);
     theSolution.setParameters(triggerSetA.sensor, parameters);
-    addTab(theSolution); 
+    Chooser.addTab(theSolution); 
     triggerSetA.isResolved();
     triggerSetB.isResolved();
 }

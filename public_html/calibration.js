@@ -132,7 +132,7 @@ var CalibrationData = {
             if (result === 'Continue') {
                showMessageBox("Calibration", "Measuring ...", []);
                CalibrationData.startDataCollection();
-               return new Promise(function(myResolve,) {
+               return new Promise(function(myResolve) {
                    CalibrationData.onCollectionComplete = function() {
                        CalibrationData.stopDataCollection();
                        

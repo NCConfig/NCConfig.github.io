@@ -48,7 +48,7 @@ let SolutionList = {
         }
         
         for(i=0; i<idList.length; i++) {
-           removeTab(idList[i]); 
+           Chooser.removeTab(idList[i]); 
         }
     },
     
@@ -1691,12 +1691,12 @@ function makeKeyboardControl(solreg) {
     return sol;;
 }
 
-const LDS_UNKNOWN  = "The settings for this port are not recognized, but they will be preserved. \
-You may change the port settings but the consequences of this are unknown.";
+const LDS_UNKNOWN  = "The settings for this port are not recognized as a known solution. \
+They will, however, be preserved as part of the next download.."
+
 class UnknownSolution extends SolutionBase {
     constructor(solreg) {
         super(solreg, LDS_UNKNOWN);
-        this.addSetting( new SelectionBox ("This configuration is using ", portOptions, portOptions[0], "setting"));
     }
     
     getPortUsed() {
@@ -1705,24 +1705,35 @@ class UnknownSolution extends SolutionBase {
     
     loadTriggers(tList) {
         this.tList = tList;
-        this.originalSensor = tList.get(0).sensor;
-        this.settings[0].setValue(getPortBySensor(this.originalSensor));
+        var sensor = tList.get(0).sensor;
+        this.originalPort = getPortBySensor(sensor);
+        
+        if (this.originalPort === null) {
+            this.addSetting( new TextOnlyWidget ("This configuration is for a gyroscope or for USB input.  The sensor assignment cannot be changed."));
+            
+        } else {
+            this.addSetting( new SelectionBox ("This configuration is using ", portOptions, portOptions[0], "setting"));
+            this.addSetting( new TextOnlyWidget ("Because this is an unrecognized configuration, the consequences of changing the port setting are unknown."));
+            this.settings[0].setValue(getPortBySensor(this.originalSensor));
+            
+        }
     }
 
     compile() {
-        var selectedPort = this.settings[0].getValue();
-        var originalPort = getPortBySensor(this.originalSensor);
+        if (this.originalPort !== null) {
+            var selectedPort = this.settings[0].getValue();
         
-        if (selectedPort != originalPort) {
-            // The damn fool changed the port on an unknown config!
-            console.log("Change pf port.");
-            var newSensor = selectedPort.getSensor(this.subPort);
-            for(let trig of this.tList.theList) {
-                trig.sensor = newSensor;
+            if (selectedPort !== this.originalPort) {
+                // The damn fool changed the port on an unknown config!
+                console.log("Change of port.");
+                var newSensor = selectedPort.getSensor(this.subPort);
+                for(let trig of this.tList.theList) {
+                    trig.sensor = newSensor;
+                }
             }
-        }
-        for(let trig of this.tList.theList) {
-            Triggers.addTrigger(trig);
+            for(let trig of this.tList.theList) {
+                Triggers.addTrigger(trig);
+            }
         }
     }
 }

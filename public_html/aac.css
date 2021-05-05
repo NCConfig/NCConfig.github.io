@@ -215,7 +215,7 @@ p.devicesTitle {
     width: 240px;
     position: absolute;
     top: -10px;
-    left: 75%;
+    left: 85%;
     z-index: 3;   
     padding: 5px;
     background-color: white;
@@ -274,7 +274,7 @@ select.setting {
     border-radius: 10px;
     padding: 20px;
     width: fit-content;
-    max-width: 600px;
+    max-width: 650px;
     height: fit-content;
     box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
 }

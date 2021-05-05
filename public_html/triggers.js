@@ -103,6 +103,7 @@ function getPortBySensor(sensor) {
         if (op.sensorA === sensor) return op;
         if (op.sensorB === sensor) return op;
     }
+    return null;  // Must be gyro or usb.
 }
 
 // ======= ACTIONS =============================
