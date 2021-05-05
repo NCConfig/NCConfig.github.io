@@ -617,7 +617,7 @@ class JoystickMouse2 extends SolutionBase {
             Triggers.add(jsANotLow, 3,   0, nothing,    1);
             if (doAudioClicks) {
                 Triggers.add(jsANotLow, 2, 20, rightClick, 5);
-                Triggers.add(jsANotLow, 5,  0, buzzlow,    1);
+                Triggers.add(jsANotLow, 5,  0, buzzhigh,    1);
             } else {
                 Triggers.add(jsANotLow, 2, 20, rightClick, 1);                
             }
@@ -707,7 +707,7 @@ class GyroMouse extends SolutionBase {
         this.yBias = 0;
         this.zBias = 0;
         this.tiltThreshold = -2000;
-        this.tiltIsNegative = false;
+        this.tiltIsNegative = true;
     }
     
     setParameters(parameters) {
@@ -1687,6 +1687,48 @@ class KeyboardControl extends SolutionBase {
 
 function makeKeyboardControl(solreg) {
     var sol = new KeyboardControl(solreg);
+    SolutionList.add(sol);
+    return sol;;
+}
+
+const LDS_UNKNOWN  = "The settings for this port are not recognized, but they will be preserved. \
+You may change the port settings but the consequences of this are unknown.";
+class UnknownSolution extends SolutionBase {
+    constructor(solreg) {
+        super(solreg, LDS_UNKNOWN);
+        this.addSetting( new SelectionBox ("This configuration is using ", portOptions, portOptions[0], "setting"));
+    }
+    
+    getPortUsed() {
+        return this.settings[0].getValue();
+    }
+    
+    loadTriggers(tList) {
+        this.tList = tList;
+        this.originalSensor = tList.get(0).sensor;
+        this.settings[0].setValue(getPortBySensor(this.originalSensor));
+    }
+
+    compile() {
+        var selectedPort = this.settings[0].getValue();
+        var originalPort = getPortBySensor(this.originalSensor);
+        
+        if (selectedPort != originalPort) {
+            // The damn fool changed the port on an unknown config!
+            console.log("Change pf port.");
+            var newSensor = selectedPort.getSensor(this.subPort);
+            for(let trig of this.tList.theList) {
+                trig.sensor = newSensor;
+            }
+        }
+        for(let trig of this.tList.theList) {
+            Triggers.addTrigger(trig);
+        }
+    }
+}
+ 
+function makeUnknownSolution(solreg) {
+    var sol = new UnknownSolution(solreg);
     SolutionList.add(sol);
     return sol;;
 }

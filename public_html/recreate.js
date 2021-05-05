@@ -94,6 +94,9 @@ var Recreate = {
         for(var tset of this.AllSensors) {
             if (!tset.resolved) {
                 console.log(tset.sensor.name + " unresolved.");
+                var solution = SolUnknown.createFunc(SolUnknown);
+                solution.loadTriggers(tset.list);
+                addTab(solution);
             }
         }
     },
@@ -524,7 +527,7 @@ function keyLockExtra(triggerSet, solutionReg, parameters) {
 function buildIt(triggerSet, solutionReg, parameters) {
     console.log(triggerSet.sensor.name + ": " + solutionReg.name);
     for(var x in parameters) {
-        if (parameters[x] instanceof keyCode) {
+        if (parameters[x] instanceof KeyCode) {
             console.log("    " + x + ": " + parameters[x].name);            
         } else {
             console.log("    " + x + ": " + parameters[x]);

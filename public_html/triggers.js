@@ -307,6 +307,10 @@ class TriggerList {
         this.theList.push(t);
     }
     
+    addTrigger(trig) {
+        this.theList.push(trig);
+    }
+    
     getSubSet(sensor) {
         var subset = new TriggerList();
         for(let t of this.theList) {

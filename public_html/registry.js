@@ -51,6 +51,8 @@ const SolUpDownArrowToggle = new SolBase("Up-Down arrow toggle",                
 const SolKeyboardShift    = new SolBase("Press-Release toggle for shift key",   makeKeyboardShift);
 const SolKeyboardControl  = new SolBase("Press-Release toggle for control key", makeKeyboardControl);
 
+const SolUnknown          = new SolBase("Unknown", makeUnknownSolution);
+
 var SolList = [];
 
 function LoadSolutionList() {
@@ -77,6 +79,8 @@ function LoadSolutionList() {
     SolList.push(SolUpDownArrowToggle);
     SolList.push(SolKeyboardShift);
     SolList.push(SolKeyboardControl);
+    
+    SolList.push(SolUnknown);
 };
 
 function findByName(name) {
