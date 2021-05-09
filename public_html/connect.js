@@ -49,7 +49,7 @@ var connection = {
             { usbVendorId: 0x2341, usbProductId: 0x8036 },
             { usbVendorId: 0x10c4, usbProductId: 0xea60 }
             ]; 
-        this.thePort = await navigator.serial.requestPort(filters);
+        this.thePort = await navigator.serial.requestPort({filters});
         await this.thePort.open({baudRate: 9600});
         this.theReader = this.thePort.readable.getReader();
         this.theWriter = this.thePort.writable.getWriter();
