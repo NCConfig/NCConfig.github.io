@@ -23,6 +23,7 @@ and open the template in the editor.
         <script type="text/javascript" src="recreate.js"></script>
         <script type="text/javascript" src="main.js"></script>
         <script type="text/javascript" src="calibration.js"></script>
+        <script type="text/javascript" src="levels.js"></script>
     </head>
     <body onload="startup();">
         <div id="header"><h1>netClé Configuration Tool</h1></div>
@@ -47,7 +48,12 @@ and open the template in the editor.
                 <span class="tooltip">Adjust the cursor speed.</span>
             </div>
 
-<!--            <button onclick="generateTrigs();">Generate</button>
+            <div class="tooltipdiv">
+                <button onclick="startLevels();">Levels</button>
+                <span class="tooltip">Monitor signal levels on the hub.</span>
+            </div>
+
+ <!--           <button onclick="generateTrigs();">Generate</button>
             <button onclick="getHash();">Get Hash</button>
             <button onclick="Recreate.rebuildAll();">Recreate</button>
  <!--           <button onclick="getConnected(()=>{});">Connect</button>
@@ -55,8 +61,7 @@ and open the template in the editor.
             <button onclick="getConfig();">Get Config</button>
             <button onclick="getVersion();">Get Version</button>
             <button onclick="sendTriggers();">Send Config</button>
-            <button onclick="getValueTest();">Get Value</button>
-            <button onclick="setValueTest();">Set Value</button> -->
+ -->
         </div>
         <div id="content">
             <div id="tabButtons"></div>
@@ -106,10 +111,20 @@ and open the template in the editor.
                 <input id="csspeed3" class="csspeed" type="range" min="350" max="650" value="540"/>
                 <span class="cstag">fast</span>
             </div>
-            <div id="csbuttons">
+            <div class="panelButtons">
                 <button onclick="saveCursorSpeed();">Save</button>
                 <button onclick="cancelCursorSpeed();">Cancel</button>
             </div>
         </div>
+        <div id="levels">
+            <h2>Signal Level Monitor</h2>
+            <canvas id="levelsCanvas" height="500" width="700">
+                
+            </canvas>
+            <div class="panelButtons">
+                <button onclick="Levels.close();">Close</button>
+            </div>
+        </div>
+             
     </body>
 </html>

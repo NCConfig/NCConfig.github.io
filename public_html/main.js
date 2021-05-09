@@ -180,16 +180,15 @@ async function showMessageBox(title, message, buttonList) {
     return p;
 }
 
-function getValueTest() {
-    let slider = document.getElementById("csspeed1");
-
-    var value = parseInt( slider.value );
-    alert(value);
-    alert( 10 + value );
-}
-
-function setValueTest() {
-    let slider = document.getElementById("csspeed1");
-    
-    slider.value = "600";
+function startLevels() {
+    if (!connection.isSupported()) {
+        showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
+        return;
+    } else {
+        if (connection.connected) {
+            Levels.startLevels();
+        } else {
+            getConnected( Levels.startLevels ); 
+        }      
+    }    
 }
