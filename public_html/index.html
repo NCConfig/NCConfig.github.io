@@ -39,7 +39,7 @@ and open the template in the editor.
             </div>
             
             <div class="tooltipdiv">
-                <button onclick="upload();">Get</button>
+                <button onclick="connectAndRun(Recreate.doAll);">Get</button>
                 <span class="tooltip">Read the configuration on the hub and display it here.  This will overwrite what is currently here.</span>
             </div>
 
@@ -49,17 +49,21 @@ and open the template in the editor.
             </div>
 
             <div class="tooltipdiv">
-                <button onclick="startLevels();">Levels</button>
+                <button onclick="connectAndRun(Levels.startLevels );">Levels</button>
                 <span class="tooltip">Monitor signal levels on the hub.</span>
             </div>
 
- <!--           <button onclick="generateTrigs();">Generate</button>
+            <div class="tooltipdiv">
+                <button onclick="connectAndRun(showVersion);">Check Version</button>
+                <span class="tooltip">Check the hub's software version.</span>
+            </div>
+<!--            <button onclick='window.location.href="./helptext.html";'>Help</button>
+
+<!--           <button onclick="generateTrigs();">Generate</button>
             <button onclick="getHash();">Get Hash</button>
             <button onclick="Recreate.rebuildAll();">Recreate</button>
  <!--           <button onclick="getConnected(()=>{});">Connect</button>
             <button onclick="closeConnection();">Close Connection</button>
-            <button onclick="getConfig();">Get Config</button>
-            <button onclick="getVersion();">Get Version</button>
             <button onclick="sendTriggers();">Send Config</button>
  -->
         </div>

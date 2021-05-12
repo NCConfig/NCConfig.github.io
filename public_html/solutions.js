@@ -473,8 +473,8 @@ class JoystickMouse1 extends SolutionBase {
         var rightClick =  new TAction(mouseAction, MOUSE_RIGHT_CLICK, false);
                 
         var nothing = new TAction(ACT_NONE, 0, false);
-        var leftBuzz    = getBuzzerAction(400, 150);
-        var rightBuzz    = getBuzzerAction(800, 150);
+        var leftBuzz    = getBuzzerAction(400, 100);
+        var rightBuzz    = getBuzzerAction(400, 100);
         
         if (!doClicks) {
             // Simple Joystick
@@ -521,7 +521,8 @@ const LDS_JOYSTICK_MOUSE2 = "Allows a joystick and a button to control mouse mot
     When the button is pressed once the joystick up- down-motion will control scrolling.<br/>\
     Pressing the button again returns the joystick to cursor control mode.<br/>\
     If you are using the light box it will indicate whether you are in mouse-moving or scrolling mode.<br/>\
-    You can optionally add the ability to generate a left- or right-mouse click by giving the joystick a quick left or right tap.";
+    You can optionally add the ability to generate a left- or right-mouse click by giving the joystick a quick left or right tap.<br/> \
+    If you have the light box connected light #4 will be lit when in scroll mode.";
 
 class JoystickMouse2 extends SolutionBase {
     constructor(solreg) {
@@ -598,10 +599,11 @@ class JoystickMouse2 extends SolutionBase {
                 
         // Other actions
         var nothing = new TAction(ACT_NONE, 0, false);
-        var buzzlow    = getBuzzerAction(400, 150);
-        var buzzhigh   = getBuzzerAction(800, 150);                
-        var light6    = getLightBoxAction(LBO_ONLY, 6);
-        var light7    = getLightBoxAction(LBO_ONLY, 7);
+        var buzzclick  = getBuzzerAction(400, 100);
+        var buzzpress   = getBuzzerAction(200, 100);
+        var buzzrelease = getBuzzerAction(800, 100);                
+        var lightOn   = getLightBoxAction(LBO_ADD, 4);
+        var lightOff  = getLightBoxAction(LBO_REMOVE, 4);
         var setState1 = getSetStateAction(joystickB, 1);
         var setState2 = getSetStateAction(joystickB, 2);
         
@@ -617,7 +619,7 @@ class JoystickMouse2 extends SolutionBase {
             Triggers.add(jsANotLow, 3,   0, nothing,    1);
             if (doAudioClicks) {
                 Triggers.add(jsANotLow, 2, 20, rightClick, 5);
-                Triggers.add(jsANotLow, 5,  0, buzzhigh,    1);
+                Triggers.add(jsANotLow, 5,  0, buzzclick,    1);
             } else {
                 Triggers.add(jsANotLow, 2, 20, rightClick, 1);                
             }
@@ -627,7 +629,7 @@ class JoystickMouse2 extends SolutionBase {
             Triggers.add(jsANotHigh, 7,   0, nothing,   1);
             if (doAudioClicks) {
                 Triggers.add(jsANotHigh, 6, 20, leftClick, 8);
-                Triggers.add(jsANotHigh, 8,  0, buzzlow,   1);
+                Triggers.add(jsANotHigh, 8,  0, buzzclick,   1);
             } else {
                 Triggers.add(jsANotHigh, 6, 20, leftClick, 1);                
             }
@@ -640,18 +642,18 @@ class JoystickMouse2 extends SolutionBase {
         
         // Toggle Button
         if (doAudioToggle) {
-            Triggers.add(btnPressed, 1, 0, buzzlow, 2);
-            Triggers.add(btnPressed, 2, 0, light6,  3);
+            Triggers.add(btnPressed, 1, 0, buzzpress, 2);
+            Triggers.add(btnPressed, 2, 0, lightOn,  3);
         } else {
-            Triggers.add(btnPressed, 1, 0, light6,  3);
+            Triggers.add(btnPressed, 1, 0, lightOn,  3);
         }
         Triggers.add(btnPressed,     3, 0, setState2, 4);
         Triggers.add(btnRelease,     4, 0, nothing,   5);
         if (doAudioToggle) {
-            Triggers.add(btnPressed, 5, 0, buzzhigh, 6);
-            Triggers.add(btnPressed, 6, 0, light7,   7);            
+            Triggers.add(btnPressed, 5, 0, buzzrelease, 6);
+            Triggers.add(btnPressed, 6, 0, lightOff,   7);            
         } else {
-            Triggers.add(btnPressed, 5, 0, light7,   7);
+            Triggers.add(btnPressed, 5, 0, lightOff,   7);
         }
         Triggers.add(btnPressed,     7, 0, setState1, 8);
         Triggers.add(btnRelease,     8, 0, nothing,   1);
@@ -996,7 +998,8 @@ function makeRightClickButton(solreg) {
 const LDS_LEFT_PRESS_RELEASE_TOGGLE = "When the button is pressed a left-button press-and-hold action is generated.<br/>\
 Pressing the button again generates a left-button release.<br/>\
 Thus, you can tap the button, move the cursor and then tap the button again to perform a drag and drop operation.<br/>\
-This enables drag and drop for someone who has difficulty pressing and holding a button.";
+This enables drag and drop for someone who has difficulty pressing and holding a button.  If you have the light box connected light #3 will be lit \
+when the button is being held.";
 class LeftPressReleaseToggle extends SolutionBase {
     constructor(solreg) {
         super(solreg, LDS_LEFT_PRESS_RELEASE_TOGGLE);
@@ -1032,6 +1035,8 @@ class LeftPressReleaseToggle extends SolutionBase {
         var press   = new TAction(connection.mouseAction, MOUSE_PRESS, false);
         var release = new TAction(connection.mouseAction, MOUSE_RELEASE, false);
         var nothing = new TAction(ACT_NONE, 0, false);
+        var lightOn   = getLightBoxAction(LBO_ADD, 3);
+        var lightOff  = getLightBoxAction(LBO_REMOVE, 3);
         var buzz = getBuzzerAction(200, 100);
         var hibuzz = getBuzzerAction(800, 100);
         
@@ -1039,12 +1044,12 @@ class LeftPressReleaseToggle extends SolutionBase {
             Triggers.add(btnPressed, 1, 0, buzz,      1);
         }
         Triggers.add(btnPressed, 1,   0, press,     2);            
-        Triggers.add(btnRelease, 2,   0, nothing,   3);
+        Triggers.add(btnRelease, 2,   0, lightOn,   3);
         if ( doAudio ) {
             Triggers.add(btnPressed, 3, 0, hibuzz ,   3);
         }
         Triggers.add(btnPressed, 3,   0, release,   4);
-        Triggers.add(btnRelease, 4,   0, nothing,   1);        
+        Triggers.add(btnRelease, 4,   0, lightOff,   1);        
     }
  }
 
@@ -1198,7 +1203,7 @@ class LeftRightClick extends SolutionBase {
         
         var mouseLClick = new TAction(connection.mouseAction, MOUSE_CLICK, false);
         var mouseRClick = new TAction(connection.mouseAction, MOUSE_RIGHT_CLICK, false);
-        var buzz = getBuzzerAction(200, 100);
+        var buzz = getBuzzerAction(400, 100);
         
         Triggers.add(btnAPressed, 1, 0, mouseLClick, 1);
         Triggers.add(btnBPressed, 1, 0, mouseRClick, 1);
@@ -1268,12 +1273,11 @@ class ScrollUpDownToggle extends SolutionBase {
         var scrollDown = new TAction(connection.mouseAction, MOUSE_WHEEL_DOWN, true);
         var nothing = new TAction(ACT_NONE, 0, false);
         var buzz   = getBuzzerAction(200, 100);
-        var hibuzz = getBuzzerAction(800, 100);
         
         Triggers.add(btnPressed, 1,    0, nothing,   2);
         Triggers.add(btnPressed, 2,    0, scrollDown,2);
         Triggers.add(btnRelease, 2,  800, buzz,      3);
-        Triggers.add(btnRelease, 3, 3000, hibuzz,    1);
+        Triggers.add(btnRelease, 3, 3000, nothing,   1);
         Triggers.add(btnPressed, 3,    0, nothing,   4);
         Triggers.add(btnPressed, 4,    0, scrollUp,  4);
         Triggers.add(btnRelease, 4,  800, buzz,      1);
@@ -1551,12 +1555,11 @@ class KeyboardUpDownArrowToggle extends SolutionBase {
         var downArrow = new TAction(connection.keybdAction, connection.getKeyCode(DOWN_ARROW_KEY), true);
         var nothing = new TAction(ACT_NONE, 0, false);
         var buzz   = getBuzzerAction(200, 100);
-        var hibuzz = getBuzzerAction(800, 100);
         
         Triggers.add(btnPressed, 1,    0, nothing,   2);
         Triggers.add(btnPressed, 2,    0, downArrow, 2);
         Triggers.add(btnRelease, 2,  800, buzz,      3);
-        Triggers.add(btnRelease, 3, 3000, hibuzz,    1);
+        Triggers.add(btnRelease, 3, 3000, nothing,   1);
         Triggers.add(btnPressed, 3,    0, nothing,   4);
         Triggers.add(btnPressed, 4,    0, upArrow,   4);
         Triggers.add(btnRelease, 4,  800, buzz,      1);    
@@ -1573,7 +1576,8 @@ function makeKeyboardUpDownArrowToggle(solreg) {
 // -- Keyboard Shift -----------------------------------
 const LDS_KEYBOARD_SHIFT    = "One button which generates a shift-key press event when pressed once, \
 and generates the release when pressed a second time.  Allows a user to 'hold' the shift key \
-without having the actually hold a key.";
+without having the actually hold a key. If you have the light box connected light #2 will be lit \
+when the shift key is being held.";
 class KeyboardShift extends SolutionBase {
     constructor(solreg) {
         super(solreg, LDS_KEYBOARD_SHIFT);
@@ -1605,6 +1609,8 @@ class KeyboardShift extends SolutionBase {
         var press   = new TAction(ACT_WIRED_KEYBOARD, LEFT_SHIFT_KEY.wiredCode + KEY_PRESS, false);
         var release = new TAction(ACT_WIRED_KEYBOARD, LEFT_SHIFT_KEY.wiredCode + KEY_RELEASE, false);
         var nothing = new TAction(ACT_NONE, 0, false);
+        var lightOn   = getLightBoxAction(LBO_ADD, 2);
+        var lightOff  = getLightBoxAction(LBO_REMOVE, 2);
         var buzz = getBuzzerAction(200, 100);
         var hibuzz = getBuzzerAction(800, 100);
         
@@ -1612,12 +1618,12 @@ class KeyboardShift extends SolutionBase {
             Triggers.add(btnPressed, 1, 0, buzz,    1);
         }
         Triggers.add(btnPressed, 1,   0, press,     2);            
-        Triggers.add(btnRelease, 2,   0, nothing,   3);
+        Triggers.add(btnRelease, 2,   0, lightOn,   3);
         if ( doAudio ) {
             Triggers.add(btnPressed, 3, 0, hibuzz , 3);
         }
         Triggers.add(btnPressed, 3,   0, release,   4);
-        Triggers.add(btnRelease, 4,   0, nothing,   1);        
+        Triggers.add(btnRelease, 4,   0, lightOff,   1);        
     }
 }
 
@@ -1632,7 +1638,8 @@ function makeKeyboardShift(solreg) {
 // -- Keyboard Control -----------------------------------
 const LDS_KEYBOARD_CONTROL  = "One button which generates a control-key press event when pressed once, \
 and generates the release when pressed a second time.  Allows a user to 'hold' the control key \
-without having the actually hold a key.";
+without having the actually hold a key. If you have the light box connected light #1 will be lit \
+when the control key is being held.";
 class KeyboardControl extends SolutionBase {
     constructor(solreg) {
         super(solreg, LDS_KEYBOARD_CONTROL);
@@ -1669,6 +1676,8 @@ class KeyboardControl extends SolutionBase {
         var press   = new TAction(ACT_WIRED_KEYBOARD, LEFT_CONTROL_KEY.wiredCode + KEY_PRESS, false);
         var release = new TAction(ACT_WIRED_KEYBOARD, LEFT_CONTROL_KEY.wiredCode + KEY_RELEASE, false);
         var nothing = new TAction(ACT_NONE, 0, false);
+        var lightOn   = getLightBoxAction(LBO_ADD, 1);
+        var lightOff  = getLightBoxAction(LBO_REMOVE, 1);
         var buzz = getBuzzerAction(200, 100);
         var hibuzz = getBuzzerAction(800, 100);
         
@@ -1676,12 +1685,12 @@ class KeyboardControl extends SolutionBase {
             Triggers.add(btnPressed, 1, 0, buzz,      1);
         }
         Triggers.add(btnPressed, 1,   0, press,     2);            
-        Triggers.add(btnRelease, 2,   0, nothing,   3);
+        Triggers.add(btnRelease, 2,   0, lightOn,   3);
         if ( doAudio ) {
             Triggers.add(btnPressed, 3, 0, hibuzz ,   3);
         }
         Triggers.add(btnPressed, 3,   0, release,   4);
-        Triggers.add(btnRelease, 4,   0, nothing,   1);        
+        Triggers.add(btnRelease, 4,   0, lightOff,   1);        
    }
  }
 
@@ -1714,7 +1723,7 @@ class UnknownSolution extends SolutionBase {
         } else {
             this.addSetting( new SelectionBox ("This configuration is using ", portOptions, portOptions[0], "setting"));
             this.addSetting( new TextOnlyWidget ("Because this is an unrecognized configuration, the consequences of changing the port setting are unknown."));
-            this.settings[0].setValue(getPortBySensor(this.originalSensor));
+            this.settings[0].setValue(this.originalPort);
             
         }
     }

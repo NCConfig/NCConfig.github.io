@@ -34,8 +34,7 @@ function startup() {
 
 function generateTrigs() {
     SolutionList.doPortCheck().then( (val) => {
-        if (val === true) {  // Port check passed    
-            
+        if (val === true) {  // Port check passed               
             SolutionList.compile();
         }
     });
@@ -43,6 +42,7 @@ function generateTrigs() {
 
 function getHash() {
 //    var sensorList = [SENSOR_1A, SENSOR_1B, SENSOR_2A, SENSOR_2B, SENSOR_3A, SENSOR_3B];
+
     var text = "";
     
     for(let s of sensors) {
@@ -53,6 +53,16 @@ function getHash() {
         }
     }
     showMessageBox("Hash", text, ["OK"]);
+}
+
+function printHash(hash) {
+    var value = 'H';
+    for(let i=7; i>=0; i--) {
+        var nibble = (hash >> (4 * i)) & 0xf;
+        if (nibble < 10) value += String.fromCharCode(nibble + 0x30);
+        else value += String.fromCharCode(nibble - 9 + 0x40);
+    }
+    return value;
 }
 
 function download() {
@@ -73,22 +83,18 @@ function download() {
     }
 }
 
-function upload() {
+// A lot like download - but without the port check.
+function connectAndRun( callbackFunc ) {
     if (!connection.isSupported()) {
         showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
         return;
     } else {
-        // doPortCheck may put up a dialog, and thus returns a promise.
-        SolutionList.doPortCheck().then( (val) => {
-            if (val === true) {  // Port check passed
-                if (connection.connected) {
-                    Recreate.doAll();
-                } else {
-                    getConnected( Recreate.doAll );
-                } 
-            }
-        });
-    }
+        if (connection.connected) {
+            callbackFunc();
+        } else {
+            getConnected( callbackFunc ); 
+        }      
+    }            
 }
 
 // Establish the connections to the hub.  If successful call the callback function.
@@ -131,18 +137,15 @@ function sendTriggers() {
     sendTriggersToSensact();
 }
 
-function getVersion() {
-    let p = showMessageBox("Question", "Send version request?", ["Yes", "No", "Maybe"]);
-    p.then( (value) => {
-        console.log(value);
-        if (value == "Yes") {
-            connection.sendCommand(GET_VERSION);
-        }
-    });
-}
-
-function getConfig() {
-    connection.sendCommand(REQUEST_TRIGGERS);
+function showVersion() {
+    var message = "Your hub software version is " + connection.version + ". ";
+    
+    if (connection.version === '1.04' || connection.version === '2.04') {
+        message += "<br/>Your software is up to date."
+    } else {
+        message += "<br/>Your software is out of date."        
+    }
+    showMessageBox("Version", message, ['OK']);
 }
 
 function closeConnection() {
@@ -180,15 +183,3 @@ async function showMessageBox(title, message, buttonList) {
     return p;
 }
 
-function startLevels() {
-    if (!connection.isSupported()) {
-        showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
-        return;
-    } else {
-        if (connection.connected) {
-            Levels.startLevels();
-        } else {
-            getConnected( Levels.startLevels ); 
-        }      
-    }    
-}

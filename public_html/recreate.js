@@ -332,10 +332,10 @@ var Recreate = {
         [      991791, buildIt, SolRightClick, {connection: "Bluetooth", audio: false}],
         [  1111813994, buildIt, SolRightClick, {connection: "Bluetooth", audio: true }],
         
-        [   713241277, buildIt, SolLeftPressReleaseToggle, {connection: "Wired",     audio: false}],
-        [   602311453, buildIt, SolLeftPressReleaseToggle, {connection: "Wired",     audio: true }],
-        [ -2073848003, buildIt, SolLeftPressReleaseToggle, {connection: "Bluetooth", audio: false}],
-        [ -1777938019, buildIt, SolLeftPressReleaseToggle, {connection: "Bluetooth", audio: true }],
+        [ -1873354147, buildIt, SolLeftPressReleaseToggle, {connection: "Wired",     audio: false}],
+        [     5512509, buildIt, SolLeftPressReleaseToggle, {connection: "Wired",     audio: true }],
+        [  -365476131, buildIt, SolLeftPressReleaseToggle, {connection: "Bluetooth", audio: false}],
+        [  1920230333, buildIt, SolLeftPressReleaseToggle, {connection: "Bluetooth", audio: true }],
 
         [ -1738641404, buildIt, SolLeftEmulation, {connection: "Wired"}],
         [   937636484, buildIt, SolLeftEmulation, {connection: "Bluetooth"}],
@@ -343,11 +343,11 @@ var Recreate = {
         [  -711621658, buildIt, SolThreeFuncMouseButton, {connection: "Wired"}],
         [   650116714, buildIt, SolThreeFuncMouseButton, {connection: "Bluetooth"}],
 
-        [  1364774659, buildIt, SolScrollToggle, {connection: "Wired"}],
-        [   351795075, buildIt, SolScrollToggle, {connection: "Bluetooth"}],
+        [  -598153412, buildIt, SolScrollToggle, {connection: "Wired"}],
+        [ -1611132996, buildIt, SolScrollToggle, {connection: "Bluetooth"}],
         
-        [  -690020372, buildIt, SolUpDownArrowToggle, {connection: "Wired"}],
-        [  1319406766, buildIt, SolUpDownArrowToggle, {connection: "Bluetooth"}],
+        [ -1446077293, buildIt, SolUpDownArrowToggle, {connection: "Wired"}],
+        [   563349845, buildIt, SolUpDownArrowToggle, {connection: "Bluetooth"}],
         
         // Keyboard extra is needed to distinguish text, special and modifier options.
         [       31838, keyboardExtra, SolKeyboardText, {connection: "Wired",     length: 1}],
@@ -365,8 +365,8 @@ var Recreate = {
         [  -188700422, keyboardExtra, SolKeyboardText, {connection: "Bluetooth", length: 6}],
         
         // Keylock - could be Shift-lock or Control-lock
-        [    56148798, keyLockExtra, SolKeyboardShift, {audio: false}],
-        [ -1108658572, keyLockExtra, SolKeyboardShift, {audio: true}]
+        [ -2105499416, keyLockExtra, SolKeyboardShift, {audio: false}],
+        [  1920131486, keyLockExtra, SolKeyboardShift, {audio: true}]
     ],
     
     lookForOnePortMatch: function(triggerSet) {
@@ -516,7 +516,15 @@ function oneBtnMouseEx(triggerSet, solutionReg, parameters) {
 
 function keyLockExtra(triggerSet, solutionReg, parameters) {
     var trigList = triggerSet.list;
-    if ((trigList.get(0).actionParam & 0x0ff) === LEFT_SHIFT_KEY.wiredCode) {
+    var param;
+    if (trigList.get(0).action === ACT_WIRED_KEYBOARD) {
+        param = trigList.get(0).actionParam;
+    } else {
+        // Audio is on - keyboard action is 2nd.
+        // Trusting the hash to keep this right.
+        param = trigList.get(1).actionParam;
+    }
+    if ((param & 0x0ff) === LEFT_SHIFT_KEY.wiredCode) {
         solutionReg = SolKeyboardShift;
     } else {
         solutionReg = SolKeyboardControl;
