@@ -57,7 +57,8 @@ var Recreate = {
             }           
             connection.sendCommand(REQUEST_TRIGGERS);
         });
-        p.then( () => {Recreate.rebuildAll();} );        
+        p.then( () => {Recreate.rebuildAll();} );  
+        connection.sendCommand(RUN_SENSACT);
    },
     
     rebuildAll: function() {

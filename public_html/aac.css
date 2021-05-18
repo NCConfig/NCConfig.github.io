@@ -194,6 +194,7 @@ p.devicesTitle {
 .close:hover,
 .close:focus {
     color: black;
+    cursor: pointer;
 }
 
 .activityButton:hover, 
@@ -210,12 +211,13 @@ p.devicesTitle {
     display: block;
 }
 
+/* .tooltip is used for display of solution short descriptions */
 .tooltipdiv .tooltip {
     visibility: hidden;
     width: 240px;
     position: absolute;
     top: -10px;
-    left: 85%;
+    left: 75%;
     z-index: 3;   
     padding: 5px;
     background-color: white;
@@ -225,6 +227,25 @@ p.devicesTitle {
 }
 
 .tooltipdiv:hover .tooltip {
+    visibility: visible;
+}
+
+/* buttontip is tooltip data for buttons. */
+.tooltipdiv .buttontip {
+    visibility: hidden;
+    width: 240px;
+    position: absolute;
+    top: -10px;
+    left: 90%;
+    z-index: 1;   
+    padding: 5px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px; 
+    font-size: 1.1em;
+}
+
+.tooltipdiv:hover .buttontip {
     visibility: visible;
 }
 
@@ -298,7 +319,7 @@ select.setting {
     display: none;
     position: fixed;
     top: 100px;
-    left: 150px;
+    left: 200px;
     z-index: 1;
     padding: 20px;
     font-size: 1.2em;
@@ -384,7 +405,7 @@ select.setting {
     display: none;
     position: fixed;
     top: 100px;
-    left: 150px;
+    left: 200px;
     z-index: 1;
     padding: 20px;
     font-size: 1.2em;
