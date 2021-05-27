@@ -112,7 +112,7 @@ function doDownload() {
 }
  
 function showVersion() {
-    var message = "Your hub software version is " + connection.version + ". ";
+    var message = "Your hub software version is " + Connection.version + ". ";
     
     var message = "Your hub software version is " + Connection.version + ". ";
     
