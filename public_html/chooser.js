@@ -197,7 +197,7 @@ let Chooser = {
             b.value = act.text;
             chooserBase.appendChild(b);
             this.activityButtonAction(b, act);
-            if (act.id == this.activitySelection) {
+            if (act.id === this.activitySelection) {
                 b.style.backgroundColor = "lightblue";
                 var newDiv = document.createElement("div");
                 chooserBase.appendChild(newDiv);
@@ -214,12 +214,12 @@ let Chooser = {
         deviceDiv.appendChild(title);
 
         for(let device of this.Devices) {        
-            if (device.parentid == parentID) {
+            if (device.parentid === parentID) {
                 var b = document.createElement("input");
                 b.type = "button";
                 b.className = "deviceButton";
                 b.value = device.text;
-                if (device.id == this.deviceSelection) {
+                if (device.id === this.deviceSelection) {
                     b.style.backgroundColor = "lightblue";
                 }
                 this.deviceButtonAction(b, device);
@@ -350,7 +350,7 @@ let Chooser = {
         tabClose.onclick = function() {
             showMessageBox("Please confirm", "Do you want to delete " + theSolution.name + "?", ["Yes", "No"])
                 .then( (response) => {
-                    if (response == "Yes") {
+                    if (response === "Yes") {
                         thisRef.removeTab(currentID);
                     }
                 });
@@ -380,7 +380,7 @@ let Chooser = {
         }
         var cont = document.getElementsByClassName("tabContent");
         for(let c of cont) {
-            if (c.myID == selectedID) {
+            if (c.myID === selectedID) {
                 c.style.display = "block";
             } else {
                 c.style.display = "none";

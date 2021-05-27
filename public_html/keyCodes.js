@@ -5,7 +5,7 @@
  * Codes for all possible keys.
  */ 
 
-"use strict"
+"use strict";
 
 let KeyCode = function(name, wiredCode, btCode, isMod, isSpecial) {
     this.name = name;
@@ -13,7 +13,7 @@ let KeyCode = function(name, wiredCode, btCode, isMod, isSpecial) {
     this.btCode = btCode;
     this.isModifier = isMod;
     this.isSpecial = isSpecial;
-}
+};
 
 let keyCodeList = [];
 

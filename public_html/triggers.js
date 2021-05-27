@@ -237,7 +237,7 @@ class Trigger {
         value = ((value << 5) - value) + this.actionState;
         value |= 0;
         // For these actions the parameter is really the action identifier. 
-        if (this.action == ACT_WIRED_MOUSE ||
+        if (this.action === ACT_WIRED_MOUSE ||
                 this.action === ACT_BT_MOUSE ||
                 this.action === ACT_IR) {
             value = ((value << 5) - value) + this.actionParam;
@@ -266,7 +266,7 @@ class Trigger {
         let sensorID = stream.getID(2);
         this.sensor = getSensorByID(sensorID);
         if (this.sensor === null) {
-            throw ("Invalid Sensor ID");
+            throw "Invalid Sensor ID";
         }
         this.reqdState = stream.getID(1);
         this.triggerValue = stream.getNum(2);
@@ -277,7 +277,7 @@ class Trigger {
         let actionID = stream.getID(2);
         this.action = getActionByID(actionID);
         if (this.action === null) {
-            throw ("Invalid Action ID");
+            throw "Invalid Action ID";
         }
         this.actionState = stream.getID(1);
         this.actionParam = stream.getNum(4);
@@ -353,89 +353,95 @@ class TriggerList {
 
 const Triggers = new TriggerList();
 
-// --- Sending to device or display --- //
-function sendTriggersToSensact() {
-    outputStream.init( toSensact );
-    putTriggers(outputStream);
-}
-
-function writeTriggersToSaveDiv() {
-    outputStream.init( writeToSaveDiv );
-    putTriggers(outputStream);
-}
-
-function writeToSaveDiv(data) {
-    var savePre = document.getElementById("savepre");
-    savePre.innerHTML = data;
-}
-
-function toSensact(data) {
-    connection.write(data);
-}
-
-function putTriggers(ostream) {
-    ostream.putByte(START_OF_TRIGGER_BLOCK);
-    ostream.putByte('1'.charCodeAt(0));
-    var ntrig = Triggers.length();
-    ostream.putNum(ntrig, 1);
-
-    for(var i=0; i<ntrig; i++) {
-        Triggers.get(i).toStream(ostream);
-    }
+// Functions for loading and unloading triggers.
+var TFunc = {
+    onLoadingCursorSpeed: null,
+    onSendingCursorSpeed: null,
     
-    // Send cursor speed data.
-    rawCursorSpeed.toStream(ostream);
-    
-    ostream.putByte(END_OF_BLOCK);  // Write end of transmission block byte
-    ostream.flush();
-}
+    // Send triggers to either the hub
+    // or to clipboard - depending on targetFunc.
+    sendTriggers: function(targetFunc) {      // PUBLIC ENTRY POINT
+        outputStream.init( targetFunc );
+        this.putTriggers(outputStream);
+    },
 
-// -- Loading from device ---
-function loadTriggers(stream) {
-    var tmpTriggers = [];
+    putTriggers: function(ostream) {
+        ostream.putByte(START_OF_TRIGGER_BLOCK);
+        ostream.putByte('1'.charCodeAt(0));
+        var ntrig = Triggers.length();
+        ostream.putNum(ntrig, 1);
 
-    try {
-        readTriggers(tmpTriggers, stream);
-
-        // Now that data has been safely received ...
-        Triggers.replaceTriggers(tmpTriggers); //This updates the storage
-//        reloadTriggers();		// This updates the UI
-
-    } catch(err) {
-        alert("Trigger load failed: " + err);
-    }
-}
-	
-function readTriggers (tmpTriggers, stream) {
-    if (stream.getByte() !== START_OF_TRIGGER_BLOCK) {
-        throw("Invalid start of transmission");
-    }
-    // Version check
-    if (stream.getByte() !== '1'.charCodeAt(0)) {
-         throw("Invalid protocol version");
-    }
-    var triggerCount = stream.getNum(1);
-    for(var i=0; i<triggerCount; i++) {
-        var t = new Trigger(); 
-        t.fromStream(stream);
-        tmpTriggers.push(t);
-    }
-    var nextByte = stream.getByte();
-    if (nextByte === MOUSE_SPEED_DATA) {
-        var dataCount = stream.getNum(2);
-        if (dataCount == 20) {
-            rawCursorSpeed.fromStream(stream);
-        } else {
-            for(let i=0; i<dataCount; i++) {
-                stream.getByte();
-            }
+        for(var i=0; i<ntrig; i++) {
+            Triggers.get(i).toStream(ostream);
         }
-        nextByte = stream.getByte();
+
+        // Send cursor speed data.
+        if (this.onSendingCursorSpeed != null) {
+            this.onSendingCursorSpeed(ostream);
+        }
+
+        ostream.putByte(END_OF_BLOCK);  // Write end of transmission block byte
+        ostream.flush();
+    },
+
+    // -- Loading from the hub ---
+    getTriggers: function() {            // PUBLIC ENTRY POINT
+        let p = new Promise((resolve) => {
+             Connection.onTriggerLoad = (stream) => {
+                TFunc.loadTriggers(stream);
+                resolve();
+            };          
+            Connection.sendCommand(REQUEST_TRIGGERS);
+        });
+        return p;
+    },
+
+    loadTriggers: function(stream) {
+        var tmpTriggers = [];
+
+        try {
+            this.readTriggers(tmpTriggers, stream);
+
+            // Now that data has been safely received ...
+            Triggers.replaceTriggers(tmpTriggers); //This updates the storage
+
+        } catch(error) {
+            showMessageBox("Error", "Invalid configuration data: " + error, ['OK']);
+        }
+    },
+
+    readTriggers: function(tmpTriggers, stream) {
+        if (stream.getByte() !== START_OF_TRIGGER_BLOCK) {
+            throw "Invalid start of transmission";
+        }
+        // Version check
+        if (stream.getByte() !== '1'.charCodeAt(0)) {
+             throw "Invalid protocol version";
+        }
+        var triggerCount = stream.getNum(1);
+        for(var i=0; i<triggerCount; i++) {
+            var t = new Trigger(); 
+            t.fromStream(stream);
+            tmpTriggers.push(t);
+        }
+        var nextByte = stream.getByte();
+        if (nextByte === MOUSE_SPEED_DATA) {
+            var dataCount = stream.getNum(2);
+            if (dataCount === 20 && this.onLoadingCursorSpeed != null) {
+                this.onLoadingCursorSpeed(stream);
+            } else {
+                // Unrecognized data - skip it.
+                for(let i=0; i<dataCount; i++) {
+                    stream.getByte();
+                }
+            }
+            nextByte = stream.getByte();
+        }
+        if (nextByte !== END_OF_BLOCK) {
+            throw "Invalid end of transmission";
+        }
+        // console.log("Loaded ", triggerCount, "triggers.");
     }
-    if (nextByte !== END_OF_BLOCK) {
-        throw("Invalid end of transmission");
-    }
-    console.log("Loaded ", triggerCount, "triggers.");
 }
 
 

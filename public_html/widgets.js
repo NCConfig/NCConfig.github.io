@@ -4,7 +4,7 @@
  * Widgets needed in solution areas.
  */
 
-"use strict"
+"use strict";
 
 
 
@@ -257,7 +257,7 @@ class TextBox extends WidgetBase {
 
 class Slider extends WidgetBase {
     constructor(label, min, max, dft) {
-        super(label)
+        super(label);
         
         this.slider = document.createElement("input");
         this.slider.type = "range";

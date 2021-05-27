@@ -17,11 +17,11 @@ const TRIGGER_START = 't'.charCodeAt(0);
 const TRIGGER_END   = 'z'.charCodeAt(0);
 const END_OF_BLOCK  = 'Z'.charCodeAt(0);
 
-var NUMBER_MASK	= 0x60;
-var ID_MASK		= 0x40;
-var CONDITION_MASK = '0'.charCodeAt(0);
-var BOOL_TRUE	= 'p'.charCodeAt(0);
-var BOOL_FALSE	= 'q'.charCodeAt(0);
+const NUMBER_MASK	= 0x60;
+const ID_MASK		= 0x40;
+const CONDITION_MASK = '0'.charCodeAt(0);
+const BOOL_TRUE  = 'p'.charCodeAt(0);
+const BOOL_FALSE = 'q'.charCodeAt(0);
 
 // Concatination for 2 Uint8Array structures.
 var concat = function(buffer1, buffer2) {
@@ -31,7 +31,7 @@ var concat = function(buffer1, buffer2) {
   return tmp;
 };
 
-var connection = {
+var Connection = {
     connected: false,
     thePort: null,
     theReader: null,
@@ -92,9 +92,8 @@ var connection = {
                       this.processVersion(buffer);
                   } else if (buffer[0] === START_OF_TRIGGER_BLOCK) {
                       inputStream.init(buffer);
-                      loadTriggers(inputStream);
-                      if (this.onTriggerLoad != null) {
-                          this.onTriggerLoad();
+                      if (this.onTriggerLoad !== null) {
+                          this.onTriggerLoad(inputStream);
                       }
                   } else if (buffer[0] === START_OF_SENSOR_DATA) {
                       if (this.onNewSensorData !== null) {
@@ -122,6 +121,10 @@ var connection = {
  //       console.log("Send command", cmd);
         var data = new Uint8Array([cmd]);
         this.write(data);
+    },
+    
+    informDataToSend(data) {
+        Connection.write(data);
     },
     
     write: async function(data) {
@@ -161,7 +164,7 @@ var inputStream = {
         let tmp = this.dataStream.next().value;
         // Filter out newlines  and CR that may have been added for readability.
         while(tmp === 10 || tmp === 13) {  
-            tmp = this.dataStream.next();
+            tmp = this.dataStream.next().value;
         }
         return tmp;
     },
@@ -177,12 +180,12 @@ var inputStream = {
             }
             value = (value << 4) + tmp;
             
-            if (i==0 && (tmp & 0x8) == 0x8) {
+            if (i===0 && (tmp & 0x8) === 0x8) {
                 isNegative = true;
             }
         }
         
-        if (isNegative && count == 2) {
+        if (isNegative && count === 2) {
             value -= 0x10000;
         }
         return value;
@@ -212,11 +215,11 @@ var inputStream = {
 // === General Purpose Output Stream === //
 var outputStream = {
   data: null,
-  outputFunction: null,
+  onFlush: null,
   
-  init: function(outFunc) {
+  init: function(outputFunc) {
     this.data = [];
-    this.outputFunction = outFunc;
+    this.onFlush = outputFunc;
   },
   
   putByte: function(aByte) {
@@ -256,7 +259,7 @@ var outputStream = {
    
    flush: function() {
         var output = new Uint8Array(this.data);
-        this.outputFunction(output);
+        this.onFlush(output);
    }
 
 };

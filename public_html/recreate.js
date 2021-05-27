@@ -8,7 +8,7 @@ class TriggerSet {
     constructor(sensor) {
         this.sensor = sensor;
         this.list = Triggers.getSubSet(sensor);
-        if (this.list.length() == 0) {
+        if (this.list.length() === 0) {
             this.hash = 0;
             this.resolved = true;
         } else {
@@ -50,16 +50,12 @@ var Recreate = {
     AllSensors: [],
 
     doAll: function() {
-        // TODO - Load triggers from hub
-        let p = new Promise((resolve) => {
-             connection.onTriggerLoad = () => {
-                resolve();
-            }           
-            connection.sendCommand(REQUEST_TRIGGERS);
-        });
-        p.then( () => {Recreate.rebuildAll();} );  
-        connection.sendCommand(RUN_SENSACT);
-   },
+        TFunc.getTriggers()
+        .then( () => {
+            Recreate.rebuildAll();
+            Connection.sendCommand(RUN_SENSACT);
+        });  
+    },
     
     rebuildAll: function() {
         SolutionList.removeAll();
@@ -94,7 +90,7 @@ var Recreate = {
         // Deal with remaining unknowns
         for(var tset of this.AllSensors) {
             if (!tset.resolved) {
-                console.log(tset.sensor.name + " unresolved.");
+                // console.log(tset.sensor.name + " unresolved.");
                 var solution = SolUnknown.createFunc(SolUnknown);
                 solution.loadTriggers(tset.list);
                 Chooser.addTab(solution);
@@ -211,10 +207,10 @@ var Recreate = {
             }            
         }
         
-        if (this.Sen_ACCEL_Z.hash == -212167185) {
+        if (this.Sen_ACCEL_Z.hash === -212167185) {
             tiltSwitch = true;
             tiltIsNegative = false;
-        } else if (this.Sen_ACCEL_Z.hash == -495752465) {
+        } else if (this.Sen_ACCEL_Z.hash === -495752465) {
             tiltSwitch = true;
             tiltIsNegative = true;          
         } // ELSE, maybe ACCEL_Z is being used for something else.
@@ -419,11 +415,12 @@ var Recreate = {
         parameters.zBias = zbias;
         parameters.sensitivity = sensitivity;
 
+/*
         console.log("Gyro Mouse: ");
         for(var x in parameters) {
             console.log("    " + x + ": " + parameters[x]);
         } 
-        
+ */       
         this.Sen_GYRO_Y.isResolved();
         this.Sen_GYRO_Z.isResolved();
         if (tiltSwitch) {
@@ -452,7 +449,7 @@ function keyboardExtra(triggerSet, solutionReg, parameters) {
             parameters.modKey = getWiredKey( (param >> 8) & 0xff);
 
         } else if (param & 0x80000000) {
-            console.log("Keypress/release found in keyboard action.");
+            // console.log("Keypress/release found in keyboard action.");
             return;  // keypress or keyrelease - we should not get here.
 
         } else if (parameters.connection === "Wired") {
@@ -534,14 +531,14 @@ function keyLockExtra(triggerSet, solutionReg, parameters) {
 }
 
 function buildIt(triggerSet, solutionReg, parameters) {
-    console.log(triggerSet.sensor.name + ": " + solutionReg.name);
+    /* console.log(triggerSet.sensor.name + ": " + solutionReg.name);
     for(var x in parameters) {
         if (parameters[x] instanceof KeyCode) {
             console.log("    " + x + ": " + parameters[x].name);            
         } else {
             console.log("    " + x + ": " + parameters[x]);
         }
-    } 
+    } */
     
     var theSolution = solutionReg.createFunc(solutionReg);
     theSolution.setParameters(triggerSet.sensor, parameters);
@@ -550,10 +547,10 @@ function buildIt(triggerSet, solutionReg, parameters) {
 }
 
 function buildIt2(triggerSetA, triggerSetB, solutionReg, parameters) {
-    console.log(triggerSetA.sensor.name + " & B: " + solutionReg.name);
+/*    console.log(triggerSetA.sensor.name + " & B: " + solutionReg.name);
     for(var x in parameters) {
         console.log("    " + x + ": " + parameters[x]);
-    } 
+    } */
     
     var theSolution = solutionReg.createFunc(solutionReg);
     theSolution.setParameters(triggerSetA.sensor, parameters);

@@ -5,7 +5,7 @@
  * 
  */
 
-"use strict"
+"use strict";
 
 class PortUsage {
     constructor(thePort) {
@@ -30,7 +30,7 @@ let SolutionList = {
         var i;
         var found = -1;
         for(i=0; i<this.list.length; i++) {
-            if (this.list[i].id == id) {
+            if (this.list[i].id === id) {
                 found = i;
                 break;
             }
@@ -96,7 +96,7 @@ let SolutionList = {
         // If we get this far there are no show-stopper errors.
         // We may still need to put out warnings about ports with two singles.
         if (portsWithTwoSingles.length > 0) {
-            portName = portsWithTwoSingles[0]
+            portName = portsWithTwoSingles[0];
             pu = portMap[ portName ];
             this.messageTitle = "Information";
             this.messageBody = "The solutions '" + pu.firstUser.name + "' and '" + 
@@ -140,7 +140,7 @@ let SolutionList = {
                     this.messageTitle = "Port Overuse Error";
                     this.messageBody = "You have assigned three things to " + portName + ":<br/>" +
     "'" + pu.firstUser.name + "', '" + pu.secondUser.name + "' and '" + sol.name + "'.<br/>" +
-    "The maximum allowed is two simple buttons.  Please re-assign one of the solutions."
+    "The maximum allowed is two simple buttons.  Please re-assign one of the solutions.";
                     return false;
                 }
             } else { 
@@ -281,13 +281,13 @@ class OneButtonMouse extends SolutionBase {
     }
     
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var delay = this.options[0].getValue();
         var buzzDuration = this.options[1].getValue() ;
 /*        
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
         console.log("  Delay: " + delay);
         console.log("  Beep: " +  buzzDuration);
@@ -297,7 +297,7 @@ class OneButtonMouse extends SolutionBase {
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
 
         // Actions
-        var mouseAction = connection.mouseAction;
+        var mouseAction = connectionType.mouseAction;
         var mouseUp = new TAction(mouseAction, MOUSE_UP, true);
         var mouseDown = new TAction(mouseAction, MOUSE_DOWN, true);
         var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
@@ -368,11 +368,11 @@ class TwoButtonMouse extends SolutionBase {
     }
     
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
 /*         
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
   */      
         var sensorA = port.getSensor(SENSOR_A);
@@ -383,7 +383,7 @@ class TwoButtonMouse extends SolutionBase {
         var btnBPressed = new TSignal(sensorB, 500, TRIGGER_ON_HIGH);
         var btnBRelease = new TSignal(sensorB, 500, TRIGGER_ON_LOW);
         
-        var mouseAction = connection.mouseAction;
+        var mouseAction = connectionType.mouseAction;
         var mouseUp = new TAction(mouseAction, MOUSE_UP, true);
         var mouseDown = new TAction(mouseAction, MOUSE_DOWN, true);
         var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
@@ -443,13 +443,13 @@ class JoystickMouse1 extends SolutionBase {
     }
     
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doClicks = this.options[0].getValue();
         var doAudio = this.options[1].getValue();
 /*        
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
         console.log("  Do Clicks: " + doClicks);
         console.log("  Do Audio: " + doAudio);   
@@ -464,7 +464,7 @@ class JoystickMouse1 extends SolutionBase {
         var sBHigh    = new TSignal(sensorB, 700, TRIGGER_ON_HIGH);
         var sBLow     = new TSignal(sensorB, 250, TRIGGER_ON_LOW);
         
-        var mouseAction = connection.mouseAction;
+        var mouseAction = connectionType.mouseAction;
         var mouseUp = new TAction(mouseAction, MOUSE_UP, true);
         var mouseDown = new TAction(mouseAction, MOUSE_DOWN, true);
         var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
@@ -556,7 +556,7 @@ class JoystickMouse2 extends SolutionBase {
     }
     
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var joystickPort = this.settings[1].getValue();
         var buttonPort = this.settings[2].getValue();
         var doClicks = this.options[0].getValue();
@@ -566,7 +566,7 @@ class JoystickMouse2 extends SolutionBase {
 //        if (!doClicks) doAudioClicks = false;
 /*        
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Joystick Port: " + joystickPort.name);
         console.log("  Button Port: " + buttonPort.name);
         console.log("  Do Clicks: " + doClicks);
@@ -587,7 +587,7 @@ class JoystickMouse2 extends SolutionBase {
         var btnRelease = new TSignal(btnSensor, 500, TRIGGER_ON_LOW);
         
         // Mouse actions
-        var mouseAction = connection.mouseAction;
+        var mouseAction = connectionType.mouseAction;
         var mouseUp    = new TAction(mouseAction, MOUSE_UP, true);
         var mouseDown  = new TAction(mouseAction, MOUSE_DOWN, true);
         var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
@@ -735,7 +735,7 @@ class GyroMouse extends SolutionBase {
     }
     
     compile() {
-        var connection  = this.settings[0].getValue();
+        var connectionType  = this.settings[0].getValue();
         var side        = this.settings[1].getValue();
         var sensitivity = this.settings[2].getValue();
         var leftClickOp  = this.options[0].getValue();
@@ -752,9 +752,9 @@ class GyroMouse extends SolutionBase {
         // Default thresholds.
         var z_threshold = 2500 - (sensitivity-50) * 30;
         var y_threshold = 3500 - (sensitivity-50) * 30;
-
+/*
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Side: " + side.name);
         console.log("  Sensitivity: " + sensitivity);
         console.log("  Left Click: " + leftClickOp);
@@ -766,8 +766,8 @@ class GyroMouse extends SolutionBase {
         console.log("  tilt is negative: " + this.tiltIsNegative);
         console.log("  z_threshold: " + z_threshold);
         console.log("  y_threshold: " + y_threshold);
-        
-        var mouseAction = connection.mouseAction;
+*/        
+        var mouseAction = connectionType.mouseAction;
         var mouseUp    = new TAction(mouseAction, MOUSE_UP, true);
         var mouseDown  = new TAction(mouseAction, MOUSE_DOWN, true);
         var mouseRight = new TAction(mouseAction, MOUSE_RIGHT, true);
@@ -913,19 +913,19 @@ class LeftClickButton extends SolutionBase {
     }
 
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
  /*                       
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
    */     
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
-        var leftClick  = new TAction(connection.mouseAction, MOUSE_CLICK, false);
+        var leftClick  = new TAction(connectionType.mouseAction, MOUSE_CLICK, false);
          
         Triggers.add(btnPressed, 1,  0, leftClick, 1); 
         
@@ -964,19 +964,19 @@ class RightClickButton extends SolutionBase {
     }
 
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
 /*        
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
         */
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
-        var rightClick = new TAction(connection.mouseAction, MOUSE_RIGHT_CLICK, false);
+        var rightClick = new TAction(connectionType.mouseAction, MOUSE_RIGHT_CLICK, false);
          
         Triggers.add(btnPressed, 1,  0, rightClick, 1); 
         
@@ -1019,12 +1019,12 @@ class LeftPressReleaseToggle extends SolutionBase {
     }
 
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
  /*               
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
 */
@@ -1032,8 +1032,8 @@ class LeftPressReleaseToggle extends SolutionBase {
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
         
-        var press   = new TAction(connection.mouseAction, MOUSE_PRESS, false);
-        var release = new TAction(connection.mouseAction, MOUSE_RELEASE, false);
+        var press   = new TAction(connectionType.mouseAction, MOUSE_PRESS, false);
+        var release = new TAction(connectionType.mouseAction, MOUSE_RELEASE, false);
         var nothing = new TAction(ACT_NONE, 0, false);
         var lightOn   = getLightBoxAction(LBO_ADD, 3);
         var lightOff  = getLightBoxAction(LBO_REMOVE, 3);
@@ -1080,19 +1080,19 @@ class LeftButtonEmulation extends SolutionBase {
    }
 
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
 /*        
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
   */      
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
 
-        var press   = new TAction(connection.mouseAction, MOUSE_PRESS, false);
-        var release = new TAction(connection.mouseAction, MOUSE_RELEASE, false);
+        var press   = new TAction(connectionType.mouseAction, MOUSE_PRESS, false);
+        var release = new TAction(connectionType.mouseAction, MOUSE_RELEASE, false);
                 
         Triggers.add(btnPressed, 1, 0, press,   2); 
         Triggers.add(btnRelease, 2, 0, release, 1);         
@@ -1129,18 +1129,18 @@ class ThreeFunctionButton extends SolutionBase {
    }
 
      compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
 /*        
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
   */      
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
         
-        var mouseAction = connection.mouseAction;
+        var mouseAction = connectionType.mouseAction;
         var mouseLClick = new TAction(mouseAction, MOUSE_CLICK, false);
         var mouseRClick = new TAction(mouseAction, MOUSE_RIGHT_CLICK, false);
         var mouseLPress = new TAction(mouseAction, MOUSE_PRESS, false);
@@ -1187,12 +1187,12 @@ class LeftRightClick extends SolutionBase {
     }
     
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
 /*        
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
   */      
@@ -1201,8 +1201,8 @@ class LeftRightClick extends SolutionBase {
         var btnAPressed = new TSignal(sensorA, 500, TRIGGER_ON_HIGH);
         var btnBPressed = new TSignal(sensorB, 500, TRIGGER_ON_HIGH);
         
-        var mouseLClick = new TAction(connection.mouseAction, MOUSE_CLICK, false);
-        var mouseRClick = new TAction(connection.mouseAction, MOUSE_RIGHT_CLICK, false);
+        var mouseLClick = new TAction(connectionType.mouseAction, MOUSE_CLICK, false);
+        var mouseRClick = new TAction(connectionType.mouseAction, MOUSE_RIGHT_CLICK, false);
         var buzz = getBuzzerAction(400, 100);
         
         Triggers.add(btnAPressed, 1, 0, mouseLClick, 1);
@@ -1258,19 +1258,19 @@ class ScrollUpDownToggle extends SolutionBase {
    }
 
      compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
  /*       
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
    */     
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
                 
-        var scrollUp = new TAction(connection.mouseAction, MOUSE_WHEEL_UP, true);
-        var scrollDown = new TAction(connection.mouseAction, MOUSE_WHEEL_DOWN, true);
+        var scrollUp = new TAction(connectionType.mouseAction, MOUSE_WHEEL_UP, true);
+        var scrollDown = new TAction(connectionType.mouseAction, MOUSE_WHEEL_DOWN, true);
         var nothing = new TAction(ACT_NONE, 0, false);
         var buzz   = getBuzzerAction(200, 100);
         
@@ -1314,12 +1314,12 @@ class ScrollUpDownButtons extends SolutionBase {
     }
     
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var doAudio = this.options[0].getValue();
 /*       
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
         console.log("  Do Audio: " + doAudio);
   */      
@@ -1328,8 +1328,8 @@ class ScrollUpDownButtons extends SolutionBase {
         var btnAPressed = new TSignal(sensorA, 500, TRIGGER_ON_HIGH);
         var btnBPressed = new TSignal(sensorB, 500, TRIGGER_ON_HIGH);
         
-        var scrollUp   = new TAction(connection.mouseAction, MOUSE_WHEEL_UP, true);
-        var scrollDown = new TAction(connection.mouseAction, MOUSE_WHEEL_DOWN, true);
+        var scrollUp   = new TAction(connectionType.mouseAction, MOUSE_WHEEL_UP, true);
+        var scrollDown = new TAction(connectionType.mouseAction, MOUSE_WHEEL_DOWN, true);
         var buzz = getBuzzerAction(200, 100);
         
         Triggers.add(btnAPressed, 1, 0, scrollUp, 1);
@@ -1378,13 +1378,13 @@ class KeyboardText extends SolutionBase {
     }
 
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var text = this.settings[2].getValue();
         var addReturn = this.options[0].getValue();
 /*        
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
         console.log("  Text: " + text);
         console.log("  Return: " + addReturn);
@@ -1402,13 +1402,13 @@ class KeyboardText extends SolutionBase {
             for(let j=0; j < data.length; j++) {
                 value = (value << 8) + data.charCodeAt(j);
             }
-            var keys = new TAction(connection.keybdAction, value, false);
+            var keys = new TAction(connectionType.keybdAction, value, false);
             i = end;
             Triggers.add(btnPressed, 1, 0, keys, 1);
         }
         
         if ( addReturn ) {
-            var returnKey = new TAction(connection.keybdAction, connection.getKeyCode(RETURN_KEY), false);
+            var returnKey = new TAction(connectionType.keybdAction, connectionType.getKeyCode(RETURN_KEY), false);
             Triggers.add(btnPressed, 1,  0, returnKey, 1);            
         }        
     }
@@ -1442,19 +1442,19 @@ class KeyboardSpecial extends SolutionBase {
    }
 
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
         var key = this.settings[2].getValue();
  /*       
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
         console.log("  Key:  " + key.name);
    */     
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
 
-        var action = new TAction(connection.keybdAction, connection.getKeyCode(key), false);
+        var action = new TAction(connectionType.keybdAction, connectionType.getKeyCode(key), false);
         
         Triggers.add(btnPressed, 1,  0, action, 1);         
     }
@@ -1540,19 +1540,19 @@ class KeyboardUpDownArrowToggle extends SolutionBase {
    }
     
     compile() {
-        var connection = this.settings[0].getValue();
+        var connectionType = this.settings[0].getValue();
         var port = this.settings[1].getValue();
 /*        
         console.log("Compile " + this.name);
-        console.log("  Connection: " + connection.name);
+        console.log("  Connection: " + connectionType.name);
         console.log("  Port: " + port.name);
   */      
         var sensor = port.getSensor(this.subPort);
         var btnPressed = new TSignal(sensor, 500, TRIGGER_ON_HIGH);
         var btnRelease = new TSignal(sensor, 500, TRIGGER_ON_LOW);
                 
-        var upArrow   = new TAction(connection.keybdAction, connection.getKeyCode(UP_ARROW_KEY), true);
-        var downArrow = new TAction(connection.keybdAction, connection.getKeyCode(DOWN_ARROW_KEY), true);
+        var upArrow   = new TAction(connectionType.keybdAction, connectionType.getKeyCode(UP_ARROW_KEY), true);
+        var downArrow = new TAction(connectionType.keybdAction, connectionType.getKeyCode(DOWN_ARROW_KEY), true);
         var nothing = new TAction(ACT_NONE, 0, false);
         var buzz   = getBuzzerAction(200, 100);
         
@@ -1734,7 +1734,7 @@ class UnknownSolution extends SolutionBase {
         
             if (selectedPort !== this.originalPort) {
                 // The damn fool changed the port on an unknown config!
-                console.log("Change of port.");
+                // console.log("Change of port.");
                 var newSensor = selectedPort.getSensor(this.subPort);
                 for(let trig of this.tList.theList) {
                     trig.sensor = newSensor;

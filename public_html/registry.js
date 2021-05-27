@@ -84,7 +84,7 @@ function LoadSolutionList() {
 };
 
 function findSolutionByName(name) {
-    for(ref of SolList) {
+    for(let ref of SolList) {
         if (ref.name === name) {
             return ref;
         }

@@ -172,18 +172,18 @@ var Levels = {
         
         document.getElementById("levels").style.display = "block";
 
-        connection.onNewSensorData = Levels.newData;
-        connection.sendCommand(REPORT_MODE);
+        Connection.onNewSensorData = Levels.informNewSensorData;
+        Connection.sendCommand(REPORT_MODE);
     },
     
     close: function() {
-        connection.sendCommand(RUN_SENSACT);
+        Connection.sendCommand(RUN_SENSACT);
         document.getElementById("levels").style.display = "none";    
-        connection.onNewSensorData = null;
+        Connection.onNewSensorData = null;
     },
     
-    newData: function(stream) {
-        Levels.processData(stream);  // Make 'this' refer to this.
+    informNewSensorData: function(stream) {
+        Levels.processData(stream);  
     },
     
     processData: function(stream) {

@@ -14,16 +14,17 @@ and open the template in the editor.
         <script type="text/javascript" src="const.js"></script>
         <script type="text/javascript" src="keyCodes.js"></script>
         <script type="text/javascript" src="widgets.js"></script>
+        <script type="text/javascript" src="connect.js"></script>
+        <script type="text/javascript" src="triggers.js"></script>
+        <script type="text/javascript" src="candp.js"></script>
         <script type="text/javascript" src="solutions.js"></script>
         <script type="text/javascript" src="registry.js"></script>
         <script type="text/javascript" src="chooser.js"></script>
-        <script type="text/javascript" src="connect.js"></script>
-        <script type="text/javascript" src="triggers.js"></script>
         <script type="text/javascript" src="cursorSpeed.js"></script>
         <script type="text/javascript" src="recreate.js"></script>
-        <script type="text/javascript" src="main.js"></script>
         <script type="text/javascript" src="calibration.js"></script>
         <script type="text/javascript" src="levels.js"></script>
+        <script type="text/javascript" src="main.js"></script>
     </head>
     <body onload="startup();">
         <div id="header"><h1>netClé Configuration Tool</h1></div>
@@ -57,6 +58,16 @@ and open the template in the editor.
                 <button onclick="connectAndRun(showVersion);">Check Version</button>
                 <span class="buttontip">Check the hub's software version.</span>
             </div>
+            <hr>
+            <div class="tooltipdiv">
+                <button onclick="toClipboard();">Copy</button>
+                <span class="buttontip">Copy configuration data to the clipboard.</span>
+            </div>
+            
+            <div class="tooltipdiv">
+                <button onclick="CandP.fromClipBoard();">Paste</button>
+                <span class="buttontip">Get configuration data from the clipboard.</span>
+            </div>
 <!--            <button onclick='window.location.href="./helptext.html";'>Help</button>
 
 <!--           <button onclick="generateTrigs();">Generate</button>
@@ -64,8 +75,11 @@ and open the template in the editor.
             <button onclick="Recreate.rebuildAll();">Recreate</button>
  <!--           <button onclick="getConnected(()=>{});">Connect</button>
             <button onclick="closeConnection();">Close Connection</button>
-            <button onclick="sendTriggers();">Send Config</button>
- -->
+  -->
+            <div class="tooltipdiv">
+                <p id="dropzone" ondrop="CandP.dropZoneDrop(event);" ondragover="CandP.dropZoneDragOver(event);">DROP ZONE</p>
+                <span class="buttontip">Drop configuration files here to upload to the hub.</span>
+            </div>
         </div>
         <div id="content">
             <div id="tabButtons"></div>

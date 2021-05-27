@@ -24,7 +24,7 @@ function startup() {
     Chooser.init();
     createConnectionOptions();
     
-   if (!connection.isSupported()) {
+   if (!Connection.isSupported()) {
         let p = showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
         p.then( () => {
             
@@ -32,48 +32,17 @@ function startup() {
     }
 }
 
-function generateTrigs() {
-    SolutionList.doPortCheck().then( (val) => {
-        if (val === true) {  // Port check passed               
-            SolutionList.compile();
-        }
-    });
-}
 
-function getHash() {
-//    var sensorList = [SENSOR_1A, SENSOR_1B, SENSOR_2A, SENSOR_2B, SENSOR_3A, SENSOR_3B];
-
-    var text = "";
-    
-    for(let s of sensors) {
-        var subset = Triggers.getSubSet(s);
-        if (subset.length() > 0) {
-            let hash = subset.getHash()
-            text += "Value for " + s.name + "(" + subset.length() + ") is " + hash.toString(10) + "<br/>";
-        }
-    }
-    showMessageBox("Hash", text, ["OK"]);
-}
-
-function printHash(hash) {
-    var value = 'H';
-    for(let i=7; i>=0; i--) {
-        var nibble = (hash >> (4 * i)) & 0xf;
-        if (nibble < 10) value += String.fromCharCode(nibble + 0x30);
-        else value += String.fromCharCode(nibble - 9 + 0x40);
-    }
-    return value;
-}
 
 function download() {
-    if (!connection.isSupported()) {
+    if (!Connection.isSupported()) {
         showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
         return;
     } else {
         // doPortCheck may put up a dialog, and thus returns a promise.
         SolutionList.doPortCheck().then( (val) => {
             if (val === true) {  // Port check passed
-                if (connection.connected) {
+                if (Connection.connected) {
                     doDownload();
                 } else {
                     getConnected( doDownload );
@@ -82,14 +51,24 @@ function download() {
         });
     }
 }
+function toClipboard() {
+    // doPortCheck may put up a dialog, and thus returns a promise.
+    SolutionList.doPortCheck().then( (val) => {
+        if (val === true) {  // Port check passed
+            TFunc.sendTriggers(CandP.informDataForClipBoard);
+            showMessageBox("Information", "Configuration data copied to clipboard.", ["OK"]);    
+        }
+    }); 
+}
 
 // A lot like download - but without the port check.
+// Used when launching a Get or Levels or version check.
 function connectAndRun( callbackFunc ) {
-    if (!connection.isSupported()) {
+    if (!Connection.isSupported()) {
         showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
         return;
     } else {
-        if (connection.connected) {
+        if (Connection.connected) {
             callbackFunc();
         } else {
             getConnected( callbackFunc ); 
@@ -101,22 +80,22 @@ function connectAndRun( callbackFunc ) {
 function getConnected( callbackFunc ) {
     showMessageBox("Information", MSG_MUST_CONNECT, ["OK"])
     .then( () => {  // after message box is closed ...
-        return connection.open();
+        return Connection.open();
 
     }).then( () => {  // after connection is complete ...
-        return connection.checkVersion();
+        return Connection.checkVersion();
 
     }).then( (version) => {  // after version check is complete.
         if (version == null) {
              showMessageBox("Error", "You are not connected to a netClé device.", ["OK"]);
-             connection.close();
-         } else if (version == "1.04" || version == "2.04") {
+             Connection.close();
+         } else if (version === "1.04" || version === "2.04") {
              callbackFunc();
          } else {
              showMessageBox("Error", "Your netClé hub firmware is version " + version + 
                 ". This is out-of-date. \
 In order to use this tool you will need a firmware upgrade.", ["OK"]);
-             connection.close();
+             Connection.close();
          }        
 
     }).catch( (error) => {  // if connection.open fails
@@ -127,29 +106,23 @@ In order to use this tool you will need a firmware upgrade.", ["OK"]);
 
 function doDownload() {
     SolutionList.compile();
-    sendTriggersToSensact();
-    connection.sendCommand(RUN_SENSACT);
+    TFunc.sendTriggers(Connection.informDataToSend);
+    Connection.sendCommand(RUN_SENSACT);
     showMessageBox("Information", "Download complete", ["OK"]);    
 }
-
-
-function sendTriggers() {
-    sendTriggersToSensact();
-}
-
+ 
 function showVersion() {
     var message = "Your hub software version is " + connection.version + ". ";
     
-    if (connection.version === '1.04' || connection.version === '2.04') {
-        message += "<br/>Your software is up to date."
+    var message = "Your hub software version is " + Connection.version + ". ";
+    
+    if (Connection.version === '1.04' || Connection.version === '2.04') {
+        message += "<br/>Your software is up to date.";
     } else {
-        message += "<br/>Your software is out of date."        
+        message += "<br/>Your software is out of date.";      
     }
     showMessageBox("Version", message, ['OK']);
-}
-
-function closeConnection() {
-    connection.close();
+    Connection.sendCommand(RUN_SENSACT);
 }
 
 
@@ -158,7 +131,7 @@ async function showMessageBox(title, message, buttonList) {
         let box = document.getElementById("infoBox");
         let heading = document.getElementById("infoHeading");
         let content = document.getElementById("infoContent");
-        var buttons = document.getElementById("infoButtons");
+        let buttons = document.getElementById("infoButtons");
         
         heading.innerHTML = title;
         content.innerHTML = message;
@@ -175,11 +148,54 @@ async function showMessageBox(title, message, buttonList) {
             btn.onclick = function() {
                 box.style.display = "none";
                 resolve(b);
-            }
+            };
             buttons.appendChild(btn);
         }
         box.style.display = "block";
     });
     return p;
+}
+
+/* ========= TESTING SUPPORT ================= */
+
+// Generate the triggers into the Trggers Cache, but do not send to the hub.
+function generateTrigs() {
+    SolutionList.doPortCheck().then( (val) => {
+        if (val === true) {  // Port check passed               
+            SolutionList.compile();
+        }
+    });
+}
+
+// Get the hash value for the triggers in the Triggers Cache
+function getHash() {
+//    var sensorList = [SENSOR_1A, SENSOR_1B, SENSOR_2A, SENSOR_2B, SENSOR_3A, SENSOR_3B];
+
+    var text = "";
+    
+    for(let s of sensors) {
+        var subset = Triggers.getSubSet(s);
+        if (subset.length() > 0) {
+            let hash = subset.getHash()
+            text += "Value for " + s.name + "(" + subset.length() + ") is " + hash.toString(10) + "<br/>";
+        }
+    }
+    showMessageBox("Hash", text, ["OK"]);
+}
+
+// Convert a trigger number into a string - so that it could be used as an
+// object key.
+function printHash(hash) {
+    var value = 'H';
+    for(let i=7; i>=0; i--) {
+        var nibble = (hash >> (4 * i)) & 0xf;
+        if (nibble < 10) value += String.fromCharCode(nibble + 0x30);
+        else value += String.fromCharCode(nibble - 9 + 0x40);
+    }
+    return value;
+}
+
+function closeConnection() {
+    Connection.close();
 }
 

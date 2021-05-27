@@ -4,7 +4,7 @@
  * Constant values for trigger parameters.
  */
 
-"use strict"
+"use strict";
 
 // Mouse Action values
 const MOUSE_UP = 1;

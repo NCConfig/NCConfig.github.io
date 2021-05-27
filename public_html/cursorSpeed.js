@@ -5,12 +5,12 @@
  */
 
 /*
- * rawCursorSpeed - holds the values set to and received from the hub.
+ * RawCursorSpeed - holds the values set to and received from the hub.
  * Data is stored in rawCursor speed.  displayCursorSpeed is populated
  * from raw when the cursor speed dialog is opened, and copied back
  * to raw when cursor speed is saved.
  */
-var rawCursorSpeed = {
+var RawCursorSpeed = {
     delay1: 59,
     jump1:  5,
     delay2: 59,
@@ -20,6 +20,10 @@ var rawCursorSpeed = {
     interval1: 500,
     interval2: 500,
 
+    informStreamingDataOut: function(oStream) {
+        RawCursorSpeed.toStream(oStream);
+    },
+    
     toStream: function(oStream) {
         oStream.putByte(MOUSE_SPEED_DATA);
         oStream.putNum(20, 2);
@@ -33,6 +37,10 @@ var rawCursorSpeed = {
         oStream.putNum(this.interval2, 2);
     },
 
+    informStreamingDataIn: function(inStream) {
+        RawCursorSpeed.fromStream(inStream);
+    },
+    
     fromStream: function(inStream) {
         this.delay1 = inStream.getID(2);
         this.jump1 = inStream.getID(2);
@@ -45,12 +53,15 @@ var rawCursorSpeed = {
     }
 };
 
+TFunc.onSendingCursorSpeed = RawCursorSpeed.informStreamingDataOut;
+TFunc.onLoadingCursorSpeed = RawCursorSpeed.informStreamingDataIn;
+
 /*
  * displayMouseSpeed - holds the values displayed to the user.
  * This displayss the speed on a logarithmic scale.
  * Initialized with default values.
  */
-var displayCursorSpeed = {
+var DisplayCursorSpeed = {
     firstSpeed:     420,
     secondSpeed:    480,
     thirdSpeed:     540,
@@ -58,28 +69,28 @@ var displayCursorSpeed = {
     secondInterval: 500,
 
     loadFromRaw: function() {
-        this.firstSpeed = convertFromRaw(rawCursorSpeed.delay1, rawCursorSpeed.jump1);
-        this.secondSpeed = convertFromRaw(rawCursorSpeed.delay2, rawCursorSpeed.jump2);
-        this.thirdSpeed = convertFromRaw(rawCursorSpeed.delay3, rawCursorSpeed.jump3);
-        this.firstInterval = rawCursorSpeed.interval1;
-        this.secondInterval = rawCursorSpeed.interval2;
+        this.firstSpeed = convertFromRaw(RawCursorSpeed.delay1, RawCursorSpeed.jump1);
+        this.secondSpeed = convertFromRaw(RawCursorSpeed.delay2, RawCursorSpeed.jump2);
+        this.thirdSpeed = convertFromRaw(RawCursorSpeed.delay3, RawCursorSpeed.jump3);
+        this.firstInterval = RawCursorSpeed.interval1;
+        this.secondInterval = RawCursorSpeed.interval2;
     },
 
     putToRaw: function() {
         var delay, jump;
         [delay, jump] = convertToRaw(this.firstSpeed);
-        rawCursorSpeed.delay1 = delay;
-        rawCursorSpeed.jump1 = jump;
+        RawCursorSpeed.delay1 = delay;
+        RawCursorSpeed.jump1 = jump;
         [delay, jump] = convertToRaw(this.secondSpeed);
-        rawCursorSpeed.delay2 = delay;
-        rawCursorSpeed.jump2 = jump;
+        RawCursorSpeed.delay2 = delay;
+        RawCursorSpeed.jump2 = jump;
         [delay, jump] = convertToRaw(this.thirdSpeed);
-        rawCursorSpeed.delay3 = delay;
-        rawCursorSpeed.jump3 = jump;
-        rawCursorSpeed.interval1 = this.firstInterval;
-        rawCursorSpeed.interval2 = this.secondInterval;
+        RawCursorSpeed.delay3 = delay;
+        RawCursorSpeed.jump3 = jump;
+        RawCursorSpeed.interval1 = this.firstInterval;
+        RawCursorSpeed.interval2 = this.secondInterval;
     }
-}
+};
 
 /*
  Convert the logarithmic value for pixels/second from the Widget
@@ -121,17 +132,17 @@ function limitNumericRange(event) {
 }
 
 function showCursorSpeed() {
-    displayCursorSpeed.loadFromRaw();
+    DisplayCursorSpeed.loadFromRaw();
     var cs = document.getElementById("cursorSpeed");
     cs.style.display = "block";
     document.getElementById("csinterval1").onchange = limitNumericRange;
     document.getElementById("csinterval2").onchange = limitNumericRange;
 
-    document.getElementById("csspeed1").value = displayCursorSpeed.firstSpeed;
-    document.getElementById("csspeed2").value = displayCursorSpeed.secondSpeed;
-    document.getElementById("csspeed3").value = displayCursorSpeed.thirdSpeed;
-    document.getElementById("csinterval1").value = displayCursorSpeed.firstInterval;
-    document.getElementById("csinterval2").value = displayCursorSpeed.secondInterval;
+    document.getElementById("csspeed1").value = DisplayCursorSpeed.firstSpeed;
+    document.getElementById("csspeed2").value = DisplayCursorSpeed.secondSpeed;
+    document.getElementById("csspeed3").value = DisplayCursorSpeed.thirdSpeed;
+    document.getElementById("csinterval1").value = DisplayCursorSpeed.firstInterval;
+    document.getElementById("csinterval2").value = DisplayCursorSpeed.secondInterval;
 }
 
 
@@ -142,17 +153,17 @@ function hideCursorSpeed() {
 
 // Called by Save button
 function saveCursorSpeed() {
-    displayCursorSpeed.firstSpeed =
+    DisplayCursorSpeed.firstSpeed =
             parseInt( document.getElementById("csspeed1").value );
-    displayCursorSpeed.secondSpeed =
+    DisplayCursorSpeed.secondSpeed =
             parseInt( document.getElementById("csspeed2").value );
-    displayCursorSpeed.thirdSpeed =
+    DisplayCursorSpeed.thirdSpeed =
             parseInt( document.getElementById("csspeed3").value );
-    displayCursorSpeed.firstInterval =
+    DisplayCursorSpeed.firstInterval =
             parseInt( document.getElementById("csinterval1").value );
-    displayCursorSpeed.secondInterval =
+    DisplayCursorSpeed.secondInterval =
             parseInt( document.getElementById("csinterval2").value );
-    displayCursorSpeed.putToRaw();
+    DisplayCursorSpeed.putToRaw();
     hideCursorSpeed();
 }
 

@@ -80,12 +80,12 @@ var CalibrationData = {
         this.gyroYAcc.reset();
         this.gyroZAcc.reset();
         this.dataCount = 0;
-        connection.onNewSensorData = this.newSensorData;
-        connection.sendCommand(REPORT_MODE);
+        Connection.onNewSensorData = this.newSensorData;
+        Connection.sendCommand(REPORT_MODE);
     },
     
     stopDataCollection: function() {
-        connection.sendCommand(RUN_SENSACT);        
+        Connection.sendCommand(RUN_SENSACT);        
     },
     
     runCalibration: function() {
@@ -117,7 +117,7 @@ var CalibrationData = {
                        console.log("Gyro Y Bias: " + this.gyroYBias);
                        console.log("Gyro Z Bias: " + this.gyroZBias);
                        console.log("Accel Z Resting: " + this.accelZRestingPoint);
-                       */
+  */
                        myResolve("Continue");
                    }
                 });
@@ -171,7 +171,7 @@ var CalibrationData = {
 }
 
 function doCalibration() {
-    if(connection.connected) {
+    if(Connection.connected) {
         CalibrationData.runCalibration();
     } else {
         getConnected(CalibrationData.runCalibration);
