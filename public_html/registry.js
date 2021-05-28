@@ -42,6 +42,7 @@ const SolLeftRightClick = new SolBase("Left-Right Click", makeLeftRightClick);
 // Scrolling
 const SolScrollToggle  = new SolBase("Scroll Up-Down Toggle",  makeScrollUpDownToggle);
 const SolScrollButtons = new SolBase("Scroll Up-Down Buttons", makeScrollUpDownButtons);
+const SolScrollJoystick = new SolBase("Scroll with Joystick", makeScrollWithJoystick);
 
 // Keyboard
 const SolKeyboardText     = new SolBase("Send a text string",                   makeKeyboardText);
@@ -52,7 +53,7 @@ const SolKeyboardShift    = new SolBase("Press-Release toggle for shift key",   
 const SolKeyboardControl  = new SolBase("Press-Release toggle for control key", makeKeyboardControl);
 
 const SolUnknown          = new SolBase("Unknown", makeUnknownSolution);
-
+/**
 var SolList = [];
 
 function LoadSolutionList() {
@@ -72,6 +73,7 @@ function LoadSolutionList() {
     
     SolList.push(SolScrollToggle);
     SolList.push(SolScrollButtons);
+    SolList.push(SolScrollJoystick);
     
     SolList.push(SolKeyboardText);
     SolList.push(SolKeyboardSpecial);
@@ -91,4 +93,4 @@ function findSolutionByName(name) {
     }
     return null;
 };
-
+**/

@@ -299,7 +299,13 @@ var Recreate = {
         [    987959,     987960, buildIt2, SolScrollButtons, {connection: "Wired", audio:  false}],
         [1867848818, 1868772339, buildIt2, SolScrollButtons, {connection: "Wired", audio:  true}],
         [    991803,     991804, buildIt2, SolScrollButtons, {connection: "Bluetooth", audio:  false}],
-        [1122896246, 1123819767, buildIt2, SolScrollButtons, {connection: "Bluetooth", audio:  true}]
+        [1122896246, 1123819767, buildIt2, SolScrollButtons, {connection: "Bluetooth", audio:  true}],
+        
+        [1639269540, -573099553, buildIt2, SolScrollJoystick, {connection: "Wired", clicks: true, audio: false}],
+        [  20580132,  934778463, buildIt2, SolScrollJoystick, {connection: "Bluetooth", clicks: true, audio: false}],
+        [-474578727, -573099553, buildIt2, SolScrollJoystick, {connection: "Wired", clicks: true, audio: true}],
+        [-1114586279, 934778463, buildIt2, SolScrollJoystick, {connection: "Bluetooth", clicks: true, audio: true}],
+        
     ],
     
     lookForTwoPortMatch: function(triggerSetA, triggerSetB) {
@@ -345,6 +351,10 @@ var Recreate = {
         
         [ -1446077293, buildIt, SolUpDownArrowToggle, {connection: "Wired"}],
         [   563349845, buildIt, SolUpDownArrowToggle, {connection: "Bluetooth"}],
+        
+        // Simple Scrolling Joystick - without click options so the A-side does nothing.
+        [  -573099553, buildIt, SolScrollJoystick, {connection: "Wired", clicks: false, audio: false}],
+        [   934778463, buildIt, SolScrollJoystick, {connection: "Bluetooth", clicks: false, audio: false}],
         
         // Keyboard extra is needed to distinguish text, special and modifier options.
         [       31838, keyboardExtra, SolKeyboardText, {connection: "Wired",     length: 1}],

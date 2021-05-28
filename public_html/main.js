@@ -20,7 +20,7 @@ function startup() {
     createSensorList();
     createActionList();
     loadPorts();
-    LoadSolutionList();
+//    LoadSolutionList();
     Chooser.init();
     createConnectionOptions();
     

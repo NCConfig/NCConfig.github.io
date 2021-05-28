@@ -1346,6 +1346,82 @@ function makeScrollUpDownButtons(solreg) {
     SolutionList.add(sol);
     return sol;;
 }
+
+// -----------------------------------------------------------------
+// -- Scroll Up Down Buttons -----------------------------------
+const LDS_SCROLL_WITH_JOYSTICK  = "A joystick is used to scroll up and down. \
+You can optionally have left and right joystick motions generate left and right clicks."
+class ScrollWithJoystick extends SolutionBase {
+    constructor(solreg) {
+        super(solreg, LDS_SCROLL_WITH_JOYSTICK);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
+        this.addSetting( new SelectionBox (Q_JOYSTICK_LOCATION, portOptions, portOptions[0]));
+        this.addOption( new CheckBox (Q_ENABLE_L_AND_R_CLICKS, false));
+        this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
+        
+        this.sensorCount = 2;
+    }
+    
+    getPortUsed() {
+        return this.settings[1].getValue();
+    }
+    
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        this.options[0].setValue(parameters.clicks);
+        this.options[1].setValue(parameters.audio);
+    }
+    
+    compile() {
+        var connectionType = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
+        var doClicks = this.options[0].getValue();
+        var doAudio = this.options[1].getValue();
+/*       
+        console.log("Compile " + this.name);
+        console.log("  Connection: " + connectionType.name);
+        console.log("  Port: " + port.name);
+        console.log("  Do Audio: " + doAudio);
+  */      
+        var joystickA = port.getSensor(SENSOR_A);
+        var joystickB = port.getSensor(SENSOR_B);
+        var jsAHigh    = new TSignal(joystickA, 700, TRIGGER_ON_HIGH);
+        var jsALow     = new TSignal(joystickA, 250, TRIGGER_ON_LOW);
+        var jsBHigh    = new TSignal(joystickB, 700, TRIGGER_ON_HIGH);
+        var jsBNotHigh = new TSignal(joystickB, 700, TRIGGER_ON_LOW);
+        var jsBLow     = new TSignal(joystickB, 250, TRIGGER_ON_LOW);
+        var jsBNotLow  = new TSignal(joystickB, 250, TRIGGER_ON_HIGH);
+        
+        var nothing = new TAction(ACT_NONE, 0, false);
+        var scrollUp   = new TAction(connectionType.mouseAction, MOUSE_WHEEL_UP, true);
+        var scrollDown = new TAction(connectionType.mouseAction, MOUSE_WHEEL_DOWN, true);
+        var buzz = getBuzzerAction(400, 100);
+        var mouseLClick = new TAction(connectionType.mouseAction, MOUSE_CLICK, false);
+        var mouseRClick = new TAction(connectionType.mouseAction, MOUSE_RIGHT_CLICK, false);
+        
+        Triggers.add(jsBLow, 1, 0, scrollUp, 1);
+        Triggers.add(jsBNotLow, 1, 0, nothing, 1);
+        Triggers.add(jsBHigh, 1, 0, scrollDown, 1);
+        Triggers.add(jsBNotHigh, 1, 0, nothing, 1);
+        
+        if (doClicks) {
+            Triggers.add(jsAHigh, 1, 0, mouseLClick, 1);
+            Triggers.add(jsALow, 1, 0, mouseRClick, 1);
+            if (doAudio) {
+                Triggers.add(jsAHigh, 1, 0, buzz, 1);
+                Triggers.add(jsALow, 1, 0, buzz, 1);            
+            }
+        }
+    }
+ }
+
+function makeScrollWithJoystick(solreg) {
+    var sol = new ScrollWithJoystick(solreg);
+    SolutionList.add(sol);
+    return sol;;
+}
+
 // -----------------------------------------------------------------
 // -- Redirect -----------------------------------
 const LDS_JOYSTICK_SCROLL = "<i>Joystick Plus</i> (under <i>Control Cursor Motion</i>) \

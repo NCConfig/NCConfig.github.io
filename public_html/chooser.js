@@ -45,8 +45,9 @@ const DS_GYRO_CLICKS     = "Generate left- and right-clicks as part of a \
 // -- scrolling
 const DS_SCROLL_UP_DOWN_TOGGLE  = "Control scrolling up and down with a single button.";
 const DS_SCROLL_UP_DOWN  = "Create two buttons, one button scrolls up, the other scrolls down.";
+const DS_JOYSTICK_SCROLL_ONLY = "Simple scrolling using a joystick.";
 // Reference
-const DS_JOYSTICK_SCROLL = "Control scrolling with a <i>Joystick Mouse</i>.";
+const DS_JOYSTICK_SCROLL = "Control scrolling as part of a <i>Joystick Mouse</i> solution.";
 
 // -- keyboard
 const DS_KEYBOARD_TEXT     = "Type up to 20 characters by pressing a single button";
@@ -152,7 +153,8 @@ let Chooser = {
         this.SolutionRef.push (new this.Selection(21, DS_SCROLL_UP_DOWN_TOGGLE, SolScrollToggle));
         this.SolutionRef.push (new this.Selection(22, DS_SCROLL_UP_DOWN,        SolScrollButtons));
         //Reference
-        this.SolutionRef.push (new this.Reference(23, "Scroll With Joystick", DS_JOYSTICK_SCROLL, LDS_JOYSTICK_SCROLL));
+        this.SolutionRef.push (new this.Selection(23, DS_JOYSTICK_SCROLL_ONLY,  SolScrollJoystick));
+        this.SolutionRef.push (new this.Reference(23, "Scroll with Joystick Mouse", DS_JOYSTICK_SCROLL, LDS_JOYSTICK_SCROLL));
 
         // -- keyboard
         this.SolutionRef.push (new this.Selection(31, DS_KEYBOARD_TEXT, SolKeyboardText));
