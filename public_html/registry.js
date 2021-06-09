@@ -23,74 +23,33 @@ class SolBase {
 }
 
 // Mouse motion solutions
-const SolOneBtnMouse    = new SolBase("One Button Mouse", makeOneButtonMouse);
-const SolTwoBtnMouse    = new SolBase("Two Button Mouse", makeTwoButtonMouse);
-const SolJoystickMouse1 = new SolBase("Joystick Mouse",   makeJoystickMouse1);
-const SolJoystickMouse2 = new SolBase("Joystick Plus",    makeJoystickMouse2);
-const SolGyroMouse      = new SolBase("Gyro Mouse",       makeGyroMouse);
+const SolOneBtnMouse    = new SolBase("One Button Mouse", 0);
+const SolTwoBtnMouse    = new SolBase("Two Button Mouse", 0);
+const SolJoystickMouse1 = new SolBase("Joystick Mouse",   0);
+const SolJoystickMouse2 = new SolBase("Joystick Plus",    0);
+const SolGyroMouse      = new SolBase("Gyro Mouse",       0);
 
 // Mouse clicks - one button
-const SolLeftClick              = new SolBase("Left Click Button",          makeLeftClickButton);
-const SolRightClick             = new SolBase("Right Click Button",         makeRightClickButton);
-const SolLeftPressReleaseToggle = new SolBase("Left Press-Release Toggle",  makeLeftPressReleaseToggle);
-const SolLeftEmulation          = new SolBase("Left Button Emulation",      makeLeftButtonEmulation);
-const SolThreeFuncMouseButton   = new SolBase("Three Function Mouse Button", makeThreeFunctionButton);
+const SolLeftClick              = new SolBase("Left Click Button",          0);
+const SolRightClick             = new SolBase("Right Click Button",         0);
+const SolLeftPressReleaseToggle = new SolBase("Left Press-Release Toggle",  0);
+const SolLeftEmulation          = new SolBase("Left Button Emulation",      0);
+const SolThreeFuncMouseButton   = new SolBase("Three Function Mouse Button", 0);
 
 // Mouse clicks - two buttons
-const SolLeftRightClick = new SolBase("Left-Right Click", makeLeftRightClick);
+const SolLeftRightClick = new SolBase("Left-Right Click", 0);
 
 // Scrolling
-const SolScrollToggle  = new SolBase("Scroll Up-Down Toggle",  makeScrollUpDownToggle);
-const SolScrollButtons = new SolBase("Scroll Up-Down Buttons", makeScrollUpDownButtons);
-const SolScrollJoystick = new SolBase("Scroll with Joystick", makeScrollWithJoystick);
+const SolScrollToggle  = new SolBase("Scroll Up-Down Toggle",  0);
+const SolScrollButtons = new SolBase("Scroll Up-Down Buttons", 0);
+const SolScrollJoystick = new SolBase("Scroll with Joystick", 0);
 
 // Keyboard
-const SolKeyboardText     = new SolBase("Send a text string",                   makeKeyboardText);
-const SolKeyboardSpecial  = new SolBase("Send a special character",             makeKeyboardSpecial);
-const SolKeyboardModifier = new SolBase("Send a character plus a modifier",     makeKeyboardModifier);
-const SolUpDownArrowToggle = new SolBase("Up-Down arrow toggle",                makeKeyboardUpDownArrowToggle);
-const SolKeyboardShift    = new SolBase("Press-Release toggle for shift key",   makeKeyboardShift);
-const SolKeyboardControl  = new SolBase("Press-Release toggle for control key", makeKeyboardControl);
+const SolKeyboardText     = new SolBase("Send a text string",                   0);
+const SolKeyboardSpecial  = new SolBase("Send a special character",             0);
+const SolKeyboardModifier = new SolBase("Send a character plus a modifier",     0);
+const SolUpDownArrowToggle = new SolBase("Up-Down arrow toggle",                0);
+const SolKeyboardShift    = new SolBase("Press-Release toggle for shift key",   0);
+const SolKeyboardControl  = new SolBase("Press-Release toggle for control key", 0);
 
-const SolUnknown          = new SolBase("Unknown", makeUnknownSolution);
-/**
-var SolList = [];
-
-function LoadSolutionList() {
-    SolList.push(SolOneBtnMouse);
-    SolList.push(SolTwoBtnMouse);
-    SolList.push(SolJoystickMouse1);
-    SolList.push(SolJoystickMouse2);
-    SolList.push(SolGyroMouse);
-    
-    SolList.push(SolLeftClick);
-    SolList.push(SolRightClick);
-    SolList.push(SolLeftPressReleaseToggle);
-    SolList.push(SolLeftEmulation);
-    SolList.push(SolThreeFuncMouseButton);
-    
-    SolList.push(SolLeftRightClick);
-    
-    SolList.push(SolScrollToggle);
-    SolList.push(SolScrollButtons);
-    SolList.push(SolScrollJoystick);
-    
-    SolList.push(SolKeyboardText);
-    SolList.push(SolKeyboardSpecial);
-    SolList.push(SolKeyboardModifier);
-    SolList.push(SolUpDownArrowToggle);
-    SolList.push(SolKeyboardShift);
-    SolList.push(SolKeyboardControl);
-    
-    SolList.push(SolUnknown);
-};
-
-function findSolutionByName(name) {
-    for(let ref of SolList) {
-        if (ref.name === name) {
-            return ref;
-        }
-    }
-    return null;
-};
-**/
+const SolUnknown          = new SolBase("Unknown", 0);

@@ -21,9 +21,11 @@ let portsWithTwoSingles = [];
 
 let SolutionList = {
     list: [],
-    
-    add: function(sol) {
-        this.list.push(sol);
+        
+    add: function(solReg) {
+        var solution = solReg.createMethod();
+        this.list.push(solution);
+        return solution;
     },
     
     remove: function(id) {
@@ -167,13 +169,9 @@ let SolutionList = {
 };
 
 class SolutionBase {
-    constructor(solReg, description) {
-        // solReg is a pointer to an entry in registry.js
-        // This is a location where commonly used constant solution 
-        // values can be stored.  For now, this is only name, but
-        // descriptions and other stuff may be moved there in the future.
+    constructor(solReg) {
         this.name = solReg.name;
-        this.description = description;
+        this.description = solReg.description;
         this.id = 0;    // This matches the myID member of the content div and the tag button.
                         // It is used when a solution is deleted to find and delete
                         // all related HTML element and objects.
@@ -249,18 +247,9 @@ function createConnectionOptions() {
 
 // -----------------------------------------------------------------
 // -- One Button Mouse ------------------------
-const LDS_ONE_BTN_MOUSE   = "Control a mouse with a single button. A quick click generates a mouse left-click.<br/>\
-Press and hold the button to select cursor control.<br/>\
-Releasing after one beep puts the netClé into mouse-up mode. In this mode pressing the button will move the cursor up.<br/>\
-You may press and hold to move the cursor quickly, or use quick taps to nudge the cursor to the desired location.<br/>\
-Release the button after two beeps and netClé will enter mouse-down mode.<br/>\
-Three beeps gets you to mouse-left mode and four gives you mouse-right.<br/>\
-When in one of the cursor control modes stop touching the button for 2 seconds and a low beep will announce<br/>\
-that the system has reset and you may choose a new mouse direction.";
-
 class OneButtonMouse extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_ONE_BTN_MOUSE);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new NumericSelector("Length of delay between beeps (in milliseconds):",
@@ -331,28 +320,13 @@ class OneButtonMouse extends SolutionBase {
     }
 }
 
-function makeOneButtonMouse(solreg) {
-    var sol = new OneButtonMouse(solreg);
-    SolutionList.add(sol);
-    return sol;
-}
-
-
-// ----------------------------------------------------
-
 
 // -----------------------------------------------------------------
 // -- Two Button Mouse -------------------------------
-const LDS_TWO_BTN_MOUSE   = "Control cursor motion with two toggle buttons.<br/>\
-    One button controls up & down cursor motion the other controls left & right.<br/>\
-    Press a button to move the cursor in one direction. Release the button until you hear a beep and then <br/>\
-    press the button again to move the cursor in the opposite direction.<br/>\
-    There is a half-second delay before the change of direction takes place.  This makes it possible to use<br/>\
-    repeated quick taps to finely adjust the cursor position. "; 
 
 class TwoButtonMouse extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_TWO_BTN_MOUSE);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_TWO_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.sensorCount = 2;
@@ -410,20 +384,11 @@ class TwoButtonMouse extends SolutionBase {
     }
  }
 
-function makeTwoButtonMouse(solreg) {
-    var sol = new TwoButtonMouse(solreg);
-    SolutionList.add(sol);
-    return sol;
-}
-
 // -----------------------------------------------------------------
 // -- Joystick 1 ----------------------------------
-const LDS_JOYSTICK_MOUSE1 = "This is a simple control which uses a joystick to move the mouse up, down left and right.<br/>\
-    You can optionally add the ability to generate a left- or right-mouse click by giving the joystick a quick left or right tap.";
-
 class JoystickMouse1 extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_JOYSTICK_MOUSE1);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_JOYSTICK_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ENABLE_L_AND_R_CLICKS, false));
@@ -509,24 +474,11 @@ class JoystickMouse1 extends SolutionBase {
     }
 }
 
-function makeJoystickMouse1(solreg) {
-    var sol = new JoystickMouse1(solreg);
-    SolutionList.add(sol);
-    return sol;
-}
-
 // -----------------------------------------------------------------
 // -- Joystick 2 --------------------------------
-const LDS_JOYSTICK_MOUSE2 = "Allows a joystick and a button to control mouse motion and scrolling.<br/>\
-    When the button is pressed once the joystick up- down-motion will control scrolling.<br/>\
-    Pressing the button again returns the joystick to cursor control mode.<br/>\
-    If you are using the light box it will indicate whether you are in mouse-moving or scrolling mode.<br/>\
-    You can optionally add the ability to generate a left- or right-mouse click by giving the joystick a quick left or right tap.<br/> \
-    If you have the light box connected light #4 will be lit when in scroll mode.";
-
 class JoystickMouse2 extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_JOYSTICK_MOUSE2);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_JOYSTICK_LOCATION, portOptions, portOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
@@ -660,18 +612,8 @@ class JoystickMouse2 extends SolutionBase {
     }
 }
 
-function makeJoystickMouse2(solreg) {
-    var sol = new JoystickMouse2(solreg);
-    SolutionList.add(sol);
-    return sol;
-}
-
 // -----------------------------------------------------------------
 // -- Gyro Mouse --------------------------------
-const LDS_GYRO_MOUSE      = "Allows the use of head motions to control the cursor.<br/>\
-    Attach the cursor to side of the head using a head band, the arm of a pair of glassed or a cap<br/>\
-    with the wire hanging straight down.<br/>\
-    Before using press the <i>Calibrate</i> button and follow the instructions.";
 class GyroPosition {
     constructor(name) { 
         this.name = name; 
@@ -692,7 +634,7 @@ gyroPositions.push( RIGHT_POSITION );
 
 class GyroMouse extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_GYRO_MOUSE);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox ("I will place the gyro on the ", gyroPositions, gyroPositions[0]));
         this.addSetting( new Slider("Sensitivity", 0, 100, 50) );
@@ -883,20 +825,12 @@ class GyroMouse extends SolutionBase {
         Triggers.add(notHigh, 8, 250, this.nothing, 1);
     }
 }
-    
-
-function makeGyroMouse(solreg) {
-    var sol = new GyroMouse(solreg);
-    SolutionList.add(sol);
-    return sol;
-}
 
 // -----------------------------------------------------------------
 // -- Left Click Button -----------------------------------
-const LDS_LEFT_CLICK       = "The button generates a left-click when pressed.";
 class LeftClickButton extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_LEFT_CLICK);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
@@ -936,18 +870,11 @@ class LeftClickButton extends SolutionBase {
    }
 }
 
-function makeLeftClickButton(solreg) {
-    var sol = new LeftClickButton(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Right Click Button -----------------------------------
-const LDS_RIGHT_CLICK      = "The button generates a right-click when pressed.";
 class RightClickButton extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_RIGHT_CLICK);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
@@ -987,22 +914,11 @@ class RightClickButton extends SolutionBase {
     }
  }
 
-function makeRightClickButton(solreg) {
-    var sol = new RightClickButton(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Left Press-Release Toggle -----------------------------------
-const LDS_LEFT_PRESS_RELEASE_TOGGLE = "When the button is pressed a left-button press-and-hold action is generated.<br/>\
-Pressing the button again generates a left-button release.<br/>\
-Thus, you can tap the button, move the cursor and then tap the button again to perform a drag and drop operation.<br/>\
-This enables drag and drop for someone who has difficulty pressing and holding a button.  If you have the light box connected light #3 will be lit \
-when the button is being held.";
 class LeftPressReleaseToggle extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_LEFT_PRESS_RELEASE_TOGGLE);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
@@ -1034,7 +950,6 @@ class LeftPressReleaseToggle extends SolutionBase {
         
         var press   = new TAction(connectionType.mouseAction, MOUSE_PRESS, false);
         var release = new TAction(connectionType.mouseAction, MOUSE_RELEASE, false);
-        var nothing = new TAction(ACT_NONE, 0, false);
         var lightOn   = getLightBoxAction(LBO_ADD, 3);
         var lightOff  = getLightBoxAction(LBO_REMOVE, 3);
         var buzz = getBuzzerAction(200, 100);
@@ -1053,19 +968,11 @@ class LeftPressReleaseToggle extends SolutionBase {
     }
  }
 
-function makeLeftPressReleaseToggle(solreg) {
-    var sol = new LeftPressReleaseToggle(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Left Button Emulation -----------------------------------
-const LDS_LEFT_EMULATION   = "The button acts exactly like the left-mouse button.<br/>\
-It is pressed when pressed, remains pressed when held and is released when released.";
 class LeftButtonEmulation extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_LEFT_EMULATION);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
     }
@@ -1099,22 +1006,11 @@ class LeftButtonEmulation extends SolutionBase {
     }
 }
 
-function makeLeftButtonEmulation(solreg) {
-    var sol = new LeftButtonEmulation(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Three Function Button -----------------------------------
-const LDS_THREE_FUNC_BUTTON  = "This provides the most useful mouse-click functions in a single button.<br/>\
-Tap it once to generate a left-click.<br/>\
-Press and hold the button, releasing after one beep to generate a right-click.<br/>\
-Release after two beeps to generate a left-mouse press-and-hold, initiating drag and drop.<br/>\
-Use a quick tap to release the held button.";
 class ThreeFunctionButton extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_THREE_FUNC_BUTTON, solreg);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
     }
@@ -1156,16 +1052,8 @@ class ThreeFunctionButton extends SolutionBase {
     }
  }
 
-function makeThreeFunctionButton(solreg) {
-    var sol = new ThreeFunctionButton(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Left-Right click buttons -----------------------------------
-const LDS_LEFT_RIGHT_CLICK     = "One button generates a left-click, the other generates a right-click.";
-
 class LeftRightClick extends SolutionBase {
     constructor(solreg) {
         super(solreg, LDS_LEFT_RIGHT_CLICK);
@@ -1214,36 +1102,14 @@ class LeftRightClick extends SolutionBase {
     }
  }
 
-function makeLeftRightClick(solreg) {
-    var sol = new LeftRightClick(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
-// -----------------------------------------------------------------
-// -- Redirects -----------------------------------
-const LDS_JOYSTICK_CLICKS = "There is an option to generate left- and right-clicks using quick \
-left and right motions with the <i>Joystick Mouse.</i> \
-To enable this select <i>Joystick Mouse</i> or <i>Joystick Plus</i> \
-under <i>Control Cursor Motion</i> and then select the \
-<i>Enable left & right mouse clicks</i> option.";
-const LDS_GYRO_CLICKS     = "There is an option to generate left- and right-clicks using quick \
-head motions with the <i>Gyro Mouse</i>. \
-To enable this select <i>Gyro Mouse</i> under <i>Control Cursor Motion</i> \
-and then select the appropriate options.";
 
 // -- SCROLLING
 // 
 // -----------------------------------------------------------------
-// -- Scroll Up Down Toggle  -----------------------------------
-const LDS_SCROLL_UP_DOWN_TOGGLE  = "One button toggles between scrolling up and scrolling down.<br/>\
-Press the button to move scroll down. Release the button until you hear a beep and then \
-press the button again to scroll up.<br/>\
-There is a half-second delay before the change of direction takes place.  This makes it possible to use \
-repeated quick taps to finely adjust the scroll position.";               
+// -- Scroll Up Down Toggle  -----------------------------------           
 class ScrollUpDownToggle extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_SCROLL_UP_DOWN_TOGGLE);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
     }
@@ -1284,18 +1150,11 @@ class ScrollUpDownToggle extends SolutionBase {
     }
  }
 
-function makeScrollUpDownToggle(solreg) {
-    var sol = new ScrollUpDownToggle(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Scroll Up Down Buttons -----------------------------------
-const LDS_SCROLL_UP_DOWN  = "One button scrolls up, the other scrolls down.";
 class ScrollUpDownButtons extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_LEFT_RIGHT_CLICK);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_TWO_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_FOR_BTN, false));
@@ -1341,19 +1200,12 @@ class ScrollUpDownButtons extends SolutionBase {
     }
  }
 
-function makeScrollUpDownButtons(solreg) {
-    var sol = new ScrollUpDownButtons(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Scroll Up Down Buttons -----------------------------------
-const LDS_SCROLL_WITH_JOYSTICK  = "A joystick is used to scroll up and down. \
-You can optionally have left and right joystick motions generate left and right clicks."
+
 class ScrollWithJoystick extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_SCROLL_WITH_JOYSTICK);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_JOYSTICK_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ENABLE_L_AND_R_CLICKS, false));
@@ -1416,26 +1268,12 @@ class ScrollWithJoystick extends SolutionBase {
     }
  }
 
-function makeScrollWithJoystick(solreg) {
-    var sol = new ScrollWithJoystick(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
-// -----------------------------------------------------------------
-// -- Redirect -----------------------------------
-const LDS_JOYSTICK_SCROLL = "<i>Joystick Plus</i> (under <i>Control Cursor Motion</i>) \
-allows the joystick to be used for both cursor control and scrolling.";
-
-
 // -- KEYBOARD
 // -----------------------------------------------------------------
 // -- Keyboard Text -----------------------------------
-const LDS_KEYBOARD_TEXT     = "Send up to 20 characters (optionally ending with RETURN) \
-by pressing a single button.";
 class KeyboardText extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_KEYBOARD_TEXT);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addSetting( new TextBox ("Text: ", 20));
@@ -1490,18 +1328,11 @@ class KeyboardText extends SolutionBase {
     }
  }
 
-function makeKeyboardText(solreg) {
-    var sol = new KeyboardText(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Keyboard Special -----------------------------------
-const LDS_KEYBOARD_SPECIAL  = "Send a special character (e.g. Page Up, Home or F3).";
 class KeyboardSpecial extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_KEYBOARD_SPECIAL);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addSetting( new SpecialKeys("Special Key "));
@@ -1536,21 +1367,11 @@ class KeyboardSpecial extends SolutionBase {
     }
  }
 
-function makeKeyboardSpecial(solreg) {
-    var sol = new KeyboardSpecial(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Keyboard Modifier -----------------------------------
-const LDS_KEYBOARD_MODIFIER = "Sometimes it can be difficult to press two keys at the same time.<br/>\
-This can make it impossible to type things like control+C.<br/>\
-This solution allows you to create a button that will send a modifier key (like shift or control) \
-and a regular key with a single press.";
 class KeyboardModifier extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_KEYBOARD_MODIFIER);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0], "setting"));
         this.addSetting( new ModifierKeys("Modifier Key "));
         this.addSetting( new NotModifierKeys("Key Press "));
@@ -1586,22 +1407,11 @@ class KeyboardModifier extends SolutionBase {
     }
  }
 
-function makeKeyboardModifier(solreg) {
-    var sol = new KeyboardModifier(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Up-Down Arrow Toggle -----------------------------------
-const LDS_UP_DOWN_ARROW_TOGGLE    = "One button which generates up- and down- arrow keystrokes.<br/>\
-Press the button to send a down-arrow. Release the button until you hear a beep and then \
-press the button again to send an up-arrow.<br/>\
-There is a half-second delay before the change of direction takes place, allowing the use of \
-repeated quick taps to make fine adjustments."; 
 class KeyboardUpDownArrowToggle extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_UP_DOWN_ARROW_TOGGLE);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0], "setting"));
     }
@@ -1642,21 +1452,11 @@ class KeyboardUpDownArrowToggle extends SolutionBase {
     }
 }
 
-function makeKeyboardUpDownArrowToggle(solreg) {
-    var sol = new KeyboardUpDownArrowToggle(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 // -----------------------------------------------------------------
 // -- Keyboard Shift -----------------------------------
-const LDS_KEYBOARD_SHIFT    = "One button which generates a shift-key press event when pressed once, \
-and generates the release when pressed a second time.  Allows a user to 'hold' the shift key \
-without having the actually hold a key. If you have the light box connected light #2 will be lit \
-when the shift key is being held.";
 class KeyboardShift extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_KEYBOARD_SHIFT);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0], "setting"));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_FOR_BTN, false));
     }
@@ -1684,7 +1484,6 @@ class KeyboardShift extends SolutionBase {
         
         var press   = new TAction(ACT_WIRED_KEYBOARD, LEFT_SHIFT_KEY.wiredCode + KEY_PRESS, false);
         var release = new TAction(ACT_WIRED_KEYBOARD, LEFT_SHIFT_KEY.wiredCode + KEY_RELEASE, false);
-        var nothing = new TAction(ACT_NONE, 0, false);
         var lightOn   = getLightBoxAction(LBO_ADD, 2);
         var lightOff  = getLightBoxAction(LBO_REMOVE, 2);
         var buzz = getBuzzerAction(200, 100);
@@ -1703,22 +1502,12 @@ class KeyboardShift extends SolutionBase {
     }
 }
 
-function makeKeyboardShift(solreg) {
-    var sol = new KeyboardShift(solreg);
-    SolutionList.add(sol);
-    return sol;;
-}
-
 
 // -----------------------------------------------------------------
 // -- Keyboard Control -----------------------------------
-const LDS_KEYBOARD_CONTROL  = "One button which generates a control-key press event when pressed once, \
-and generates the release when pressed a second time.  Allows a user to 'hold' the control key \
-without having the actually hold a key. If you have the light box connected light #1 will be lit \
-when the control key is being held.";
 class KeyboardControl extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_KEYBOARD_CONTROL);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_ONE_BTN_PORT_LOCATION, portOptions, portOptions[0], "setting"));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_FOR_BTN, false));
     }
@@ -1751,7 +1540,6 @@ class KeyboardControl extends SolutionBase {
         
         var press   = new TAction(ACT_WIRED_KEYBOARD, LEFT_CONTROL_KEY.wiredCode + KEY_PRESS, false);
         var release = new TAction(ACT_WIRED_KEYBOARD, LEFT_CONTROL_KEY.wiredCode + KEY_RELEASE, false);
-        var nothing = new TAction(ACT_NONE, 0, false);
         var lightOn   = getLightBoxAction(LBO_ADD, 1);
         var lightOff  = getLightBoxAction(LBO_REMOVE, 1);
         var buzz = getBuzzerAction(200, 100);
@@ -1768,20 +1556,11 @@ class KeyboardControl extends SolutionBase {
         Triggers.add(btnPressed, 3,   0, release,   4);
         Triggers.add(btnRelease, 4,   0, lightOff,   1);        
    }
- }
-
-function makeKeyboardControl(solreg) {
-    var sol = new KeyboardControl(solreg);
-    SolutionList.add(sol);
-    return sol;;
 }
-
-const LDS_UNKNOWN  = "The settings for this port are not recognized as a known solution. \
-They will, however, be preserved as part of the next download.."
 
 class UnknownSolution extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_UNKNOWN);
+        super(solreg);
     }
     
     getPortUsed() {
@@ -1821,10 +1600,4 @@ class UnknownSolution extends SolutionBase {
             }
         }
     }
-}
- 
-function makeUnknownSolution(solreg) {
-    var sol = new UnknownSolution(solreg);
-    SolutionList.add(sol);
-    return sol;;
 }

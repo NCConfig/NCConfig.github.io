@@ -18,7 +18,7 @@ and open the template in the editor.
         <script type="text/javascript" src="triggers.js"></script>
         <script type="text/javascript" src="candp.js"></script>
         <script type="text/javascript" src="solutions.js"></script>
-        <script type="text/javascript" src="registry.js"></script>
+        <script type="text/javascript" src="reg.js"></script>
         <script type="text/javascript" src="chooser.js"></script>
         <script type="text/javascript" src="cursorSpeed.js"></script>
         <script type="text/javascript" src="recreate.js"></script>
@@ -53,11 +53,20 @@ and open the template in the editor.
                 <button onclick="connectAndRun(Levels.startLevels );">Levels</button>
                 <span class="buttontip">Monitor signal levels on the hub.</span>
             </div>
-
+            <button onclick="window.open('./help.html', '_blank');">Help</button>
+<!-- 
             <div class="tooltipdiv">
                 <button onclick="connectAndRun(showVersion);">Check Version</button>
                 <span class="buttontip">Check the hub's software version.</span>
             </div>
+           <button onclick='window.location.href="./helptext.html";'>Help</button> -->
+
+<!--          <button onclick="generateTrigs();">Generate</button>
+            <button onclick="getHash();">Get Hash</button>
+            <button onclick="Recreate.rebuildAll();">Recreate</button>
+ <!--           <button onclick="getConnected(()=>{});">Connect</button>
+            <button onclick="closeConnection();">Close Connection</button>
+  -->  
             <hr>
             <div class="tooltipdiv">
                 <button onclick="toClipboard();">Copy</button>
@@ -68,14 +77,6 @@ and open the template in the editor.
                 <button onclick="CandP.fromClipBoard();">Paste</button>
                 <span class="buttontip">Get configuration data from the clipboard.</span>
             </div>
-<!--            <button onclick='window.location.href="./helptext.html";'>Help</button>
-
-<!--           <button onclick="generateTrigs();">Generate</button>
-            <button onclick="getHash();">Get Hash</button>
-            <button onclick="Recreate.rebuildAll();">Recreate</button>
- <!--           <button onclick="getConnected(()=>{});">Connect</button>
-            <button onclick="closeConnection();">Close Connection</button>
-  -->
             <div class="tooltipdiv">
                 <p id="dropzone" ondrop="CandP.dropZoneDrop(event);" ondragover="CandP.dropZoneDragOver(event);">DROP ZONE</p>
                 <span class="buttontip">Drop configuration files here to upload to the hub.</span>

@@ -11,51 +11,29 @@ const SolutionPrompt = "Possible solutions";
 
 // ----------------------------------------------------------
 // Solution Descriptions 
-const DS_ONE_BTN_MOUSE   = "Enable left-click and control of cursor motion \
-with a single button.";
-const DS_TWO_BTN_MOUSE   = "Enable cursor control with two buttons. \
-One button controls left-right cursor motion and the other controls \
-up-down motion.";
-const DS_JOYSTICK_MOUSE1 = "Control the cursor with a joystick. \
-Left- and right-click capability can be added.";
-const DS_JOYSTICK_MOUSE2 = "Enable cursor and scrolling control with \
-the joystick and a button.";
-const DS_GYRO_MOUSE      = "Using the gyroscope, control the cursor \
-with head motions.";
 
-// -- mouse buttons - one button
-const DS_LEFT_CLICK       = "Create a button which generates a left-click when pressed.";
-const DS_RIGHT_CLICK      = "Create a button which generates a right-click when pressed.";
-const DS_LEFT_PRESS_RELEASE_TOGGLE = "Allow drag and drop without having to hold a button.";
-const DS_LEFT_EMULATION   = "Create a button which acts like the left mouse button. \
-It is pressed when pressed and released when released.";
-const DS_THREE_FUNC_BUTTON = "Provide left-click, right-click and left press and hold \
-with a single button.";
 
-// -- mouse buttons - two button
-const DS_LEFT_RIGHT_CLICK     = "Create two buttons.  One  does a left-click \
-and the other does a right-click.";
 
 // -- mouse buttons - references to other solutions
 const DS_JOYSTICK_CLICKS = "Generate left- and right-clicks as part of a \
 <i>Joystick Mouse</i> solution.";
+const LDS_JOYSTICK_CLICKS = "There is an option to generate left- and right-clicks using quick \
+left and right motions with the <i>Joystick Mouse.</i> \
+To enable this select <i>Joystick Mouse</i> or <i>Joystick Plus</i> \
+under <i>Control Cursor Motion</i> and then select the \
+<i>Enable left & right mouse clicks</i> option.";
+
 const DS_GYRO_CLICKS     = "Generate left- and right-clicks as part of a \
 <i>Gyro Mouse</i> solution.";
+const LDS_GYRO_CLICKS     = "There is an option to generate left- and right-clicks using quick \
+head motions with the <i>Gyro Mouse</i>. \
+To enable this select <i>Gyro Mouse</i> under <i>Control Cursor Motion</i> \
+and then select the appropriate options.";
 
-// -- scrolling
-const DS_SCROLL_UP_DOWN_TOGGLE  = "Control scrolling up and down with a single button.";
-const DS_SCROLL_UP_DOWN  = "Create two buttons, one button scrolls up, the other scrolls down.";
-const DS_JOYSTICK_SCROLL_ONLY = "Simple scrolling using a joystick.";
-// Reference
+// Scrolling Reference
 const DS_JOYSTICK_SCROLL = "Control scrolling as part of a <i>Joystick Mouse</i> solution.";
-
-// -- keyboard
-const DS_KEYBOARD_TEXT     = "Type up to 20 characters by pressing a single button";
-const DS_KEYBOARD_SPECIAL  = "Type a special character (e.g. Page Up, Home or F3).";
-const DS_KEYBOARD_MODIFIER = "Type a character plus a modifier key (e.g. control + c) with a single button.";
-const DS_UP_DOWN_ARROW_TOGGLE    = "Send up- and down-arrow keystrokes with a single button.";
-const DS_KEYBOARD_SHIFT    = "Press and hold the shift key by touching a button.";
-const DS_KEYBOARD_CONTROL  = "Press and hold the control key by touching a button.";
+const LDS_JOYSTICK_SCROLL = "<i>Joystick Plus</i> (under <i>Control Cursor Motion</i>) \
+allows the joystick to be used for both cursor control and scrolling.";
 
 let Chooser = {
     // PUBLIC ENTRY POINT - to initialize chooser tables.
@@ -115,10 +93,9 @@ let Chooser = {
     
     // --------------------------------------------------------
     // Solution References
-    Selection: function(deviceid, description, reg) {
+    Selection: function(deviceid, reg) {
         this.deviceid = deviceid;
-        this.description = description;
-        this.solreg = reg;  // Solution registry. Holds name and createFunc
+        this.solreg = reg;  // Solution registry. Holds name, summary, description and createFunc
     },
 
     Reference: function(deviceid, name, shortD, longD) {
@@ -130,39 +107,40 @@ let Chooser = {
     SolutionRef: [],
 
     initSolutions: function() {
-        this.SolutionRef.push (new this.Selection(1, DS_ONE_BTN_MOUSE, SolOneBtnMouse));
-        this.SolutionRef.push (new this.Selection(2, DS_TWO_BTN_MOUSE, SolTwoBtnMouse));
-        this.SolutionRef.push (new this.Selection(3, DS_JOYSTICK_MOUSE1, SolJoystickMouse1));
-        this.SolutionRef.push (new this.Selection(3, DS_JOYSTICK_MOUSE2, SolJoystickMouse2));
-        this.SolutionRef.push (new this.Selection(4, DS_GYRO_MOUSE, SolGyroMouse));
+        this.SolutionRef.push (new this.Selection(1, Reg.SolOneBtnMouse));
+        this.SolutionRef.push (new this.Selection(2, Reg.SolTwoBtnMouse));
+        this.SolutionRef.push (new this.Selection(3, Reg.SolJoystickMouse1));
+        this.SolutionRef.push (new this.Selection(3, Reg.SolJoystickMouse2));
+        this.SolutionRef.push (new this.Selection(4, Reg.SolGyroMouse));
 
-        this.SolutionRef.push (new this.Selection(10, DS_LEFT_CLICK, SolLeftClick));
-        this.SolutionRef.push (new this.Selection(10, DS_RIGHT_CLICK, SolRightClick));
-        this.SolutionRef.push (new this.Selection(10, DS_LEFT_PRESS_RELEASE_TOGGLE, SolLeftPressReleaseToggle));
-        this.SolutionRef.push (new this.Selection(10, DS_LEFT_EMULATION, SolLeftEmulation));
-        this.SolutionRef.push (new this.Selection(10, DS_THREE_FUNC_BUTTON, SolThreeFuncMouseButton));
+        this.SolutionRef.push (new this.Selection(10, Reg.SolLeftClick));
+        this.SolutionRef.push (new this.Selection(10, Reg.SolRightClick));
+        this.SolutionRef.push (new this.Selection(10, Reg.SolLeftPressReleaseToggle));
+        this.SolutionRef.push (new this.Selection(10, Reg.SolLeftEmulation));
+        this.SolutionRef.push (new this.Selection(10, Reg.SolThreeFuncMouseButton));
 
         // -- mouse buttons - two button
-        this.SolutionRef.push (new this.Selection(11, DS_LEFT_RIGHT_CLICK, SolLeftRightClick));
+        this.SolutionRef.push (new this.Selection(11, Reg.SolLeftRightClick));
 
         // -- mouse buttons - references to other solutions
         this.SolutionRef.push (new this.Reference(12, "Joystick Clicks", DS_JOYSTICK_CLICKS, LDS_JOYSTICK_CLICKS));
         this.SolutionRef.push (new this.Reference(13, "Gyro Clicks",     DS_GYRO_CLICKS,     LDS_GYRO_CLICKS));
 
         // -- scrolling
-        this.SolutionRef.push (new this.Selection(21, DS_SCROLL_UP_DOWN_TOGGLE, SolScrollToggle));
-        this.SolutionRef.push (new this.Selection(22, DS_SCROLL_UP_DOWN,        SolScrollButtons));
+        this.SolutionRef.push (new this.Selection(21, Reg.SolScrollToggle));
+        this.SolutionRef.push (new this.Selection(22, Reg.SolScrollButtons));
+        this.SolutionRef.push (new this.Selection(23, Reg.SolScrollJoystick));
+
         //Reference
-        this.SolutionRef.push (new this.Selection(23, DS_JOYSTICK_SCROLL_ONLY,  SolScrollJoystick));
         this.SolutionRef.push (new this.Reference(23, "Scroll with Joystick Mouse", DS_JOYSTICK_SCROLL, LDS_JOYSTICK_SCROLL));
 
         // -- keyboard
-        this.SolutionRef.push (new this.Selection(31, DS_KEYBOARD_TEXT, SolKeyboardText));
-        this.SolutionRef.push (new this.Selection(31, DS_KEYBOARD_SPECIAL, SolKeyboardSpecial));
-        this.SolutionRef.push (new this.Selection(31, DS_KEYBOARD_MODIFIER, SolKeyboardModifier));
-        this.SolutionRef.push (new this.Selection(31, DS_UP_DOWN_ARROW_TOGGLE, SolUpDownArrowToggle));
-        this.SolutionRef.push (new this.Selection(31, DS_KEYBOARD_SHIFT, SolKeyboardShift));
-        this.SolutionRef.push (new this.Selection(31, DS_KEYBOARD_CONTROL, SolKeyboardControl));        
+        this.SolutionRef.push (new this.Selection(31, Reg.SolKeyboardText));
+        this.SolutionRef.push (new this.Selection(31, Reg.SolKeyboardSpecial));
+        this.SolutionRef.push (new this.Selection(31, Reg.SolKeyboardModifier));
+        this.SolutionRef.push (new this.Selection(31, Reg.SolUpDownArrowToggle));
+        this.SolutionRef.push (new this.Selection(31, Reg.SolKeyboardShift));
+        this.SolutionRef.push (new this.Selection(31, Reg.SolKeyboardControl));        
     },
     
     // PUBLIC ENTRY POINT to show solution choice dialogs
@@ -265,7 +243,7 @@ let Chooser = {
 
                     if (solRef instanceof thisRef.Selection) {
                         name = solRef.solreg.name;
-                        toolTipText = solRef.description;
+                        toolTipText = solRef.solreg.summary;
                     } else {
                         name = solRef.name;
                         toolTipText = solRef.shortD;
@@ -311,7 +289,7 @@ let Chooser = {
                 showMessageBox("Information", solRef.longD, ["OK"]);
             } else {
                 var solreg = solRef.solreg;  // Get solution registry
-                var theSolution = solreg.createFunc(solreg); // Create solution
+                var theSolution = SolutionList.add(solreg);
                 thisRef.addTab(theSolution);
                 thisRef.closeIt();
             }
@@ -328,6 +306,7 @@ let Chooser = {
         this.nextID++;
         var currentID = this.nextID;
         theSolution.id = currentID;  // This id is attached to the solution, tab and content-div.
+                                     // This makes it possible to remove all three when requested.
         let buttonHolder = document.getElementById("tabButtons");
         let contentHolder = document.getElementById("tabContents");
 

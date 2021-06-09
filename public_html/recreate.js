@@ -91,7 +91,7 @@ var Recreate = {
         for(var tset of this.AllSensors) {
             if (!tset.resolved) {
                 // console.log(tset.sensor.name + " unresolved.");
-                var solution = SolUnknown.createFunc(SolUnknown);
+                var solution = SolutionList.add(Reg.SolUnknown);
                 solution.loadTriggers(tset.list);
                 Chooser.addTab(solution);
             }
@@ -272,7 +272,8 @@ var Recreate = {
                 parameters = match[2];
                 parameters.singleButtonSensor = singleBtnTset.sensor;
                 parameters.singleButtonAudio = singleButtonAudio;
-                buildIt2(triggerSetA, triggerSetB, SolJoystickMouse2, parameters);
+                buildIt2(triggerSetA, triggerSetB, Reg.SolJoystickMouse2, parameters);
+                singleBtnTset.isResolved();
                 return true;
             }
         }
@@ -281,30 +282,30 @@ var Recreate = {
 
     twoPortHashTable: [
         //HashA, HashB, build-func,    solution-reg,    parameters
-        [1491643326, 1712345086, buildIt2, SolTwoBtnMouse, {connection: "Wired"}],
-        [ 478663742,  699365502, buildIt2, SolTwoBtnMouse, {connection: "Bluetooth"}],
+        [1491643326, 1712345086, buildIt2, Reg.SolTwoBtnMouse, {connection: "Wired"}],
+        [ 478663742,  699365502, buildIt2, Reg.SolTwoBtnMouse, {connection: "Bluetooth"}],
         
-        [1582011234, 1553382080, buildIt2, SolJoystickMouse1, {connection: "Wired", clicks: false, audio: false}],
-        [-552848382, 1553382080, buildIt2, SolJoystickMouse1, {connection: "Wired", clicks:  true, audio: false}],
-        [2108447451, 1553382080, buildIt2, SolJoystickMouse1, {connection: "Wired", clicks:  true, audio:  true}],
-        [ -36678174,  -65307328, buildIt2, SolJoystickMouse1, {connection: "Bluetooth", clicks: false, audio: false}],
-        [1069178754,  -65307328, buildIt2, SolJoystickMouse1, {connection: "Bluetooth", clicks:  true, audio: false}],
-        [2057300059,  -65307328, buildIt2, SolJoystickMouse1, {connection: "Bluetooth", clicks:  true, audio:  true}],
+        [1582011234, 1553382080, buildIt2, Reg.SolJoystickMouse1, {connection: "Wired", clicks: false, audio: false}],
+        [-552848382, 1553382080, buildIt2, Reg.SolJoystickMouse1, {connection: "Wired", clicks:  true, audio: false}],
+        [2108447451, 1553382080, buildIt2, Reg.SolJoystickMouse1, {connection: "Wired", clicks:  true, audio:  true}],
+        [ -36678174,  -65307328, buildIt2, Reg.SolJoystickMouse1, {connection: "Bluetooth", clicks: false, audio: false}],
+        [1069178754,  -65307328, buildIt2, Reg.SolJoystickMouse1, {connection: "Bluetooth", clicks:  true, audio: false}],
+        [2057300059,  -65307328, buildIt2, Reg.SolJoystickMouse1, {connection: "Bluetooth", clicks:  true, audio:  true}],
         
-        [    987944,     987947, buildIt2, SolLeftRightClick, {connection: "Wired", audio:  false}],
-        [1853996003, 1856766566, buildIt2, SolLeftRightClick, {connection: "Wired", audio:  true}],
-        [    991788,     991791, buildIt2, SolLeftRightClick, {connection: "Bluetooth", audio:  false}],
-        [1109043431, 1111813994, buildIt2, SolLeftRightClick, {connection: "Bluetooth", audio:  true}],
+        [    987944,     987947, buildIt2, Reg.SolLeftRightClick, {connection: "Wired", audio:  false}],
+        [1853996003, 1856766566, buildIt2, Reg.SolLeftRightClick, {connection: "Wired", audio:  true}],
+        [    991788,     991791, buildIt2, Reg.SolLeftRightClick, {connection: "Bluetooth", audio:  false}],
+        [1109043431, 1111813994, buildIt2, Reg.SolLeftRightClick, {connection: "Bluetooth", audio:  true}],
 
-        [    987959,     987960, buildIt2, SolScrollButtons, {connection: "Wired", audio:  false}],
-        [1867848818, 1868772339, buildIt2, SolScrollButtons, {connection: "Wired", audio:  true}],
-        [    991803,     991804, buildIt2, SolScrollButtons, {connection: "Bluetooth", audio:  false}],
-        [1122896246, 1123819767, buildIt2, SolScrollButtons, {connection: "Bluetooth", audio:  true}],
+        [    987959,     987960, buildIt2, Reg.SolScrollButtons, {connection: "Wired", audio:  false}],
+        [1867848818, 1868772339, buildIt2, Reg.SolScrollButtons, {connection: "Wired", audio:  true}],
+        [    991803,     991804, buildIt2, Reg.SolScrollButtons, {connection: "Bluetooth", audio:  false}],
+        [1122896246, 1123819767, buildIt2, Reg.SolScrollButtons, {connection: "Bluetooth", audio:  true}],
         
-        [1639269540, -573099553, buildIt2, SolScrollJoystick, {connection: "Wired", clicks: true, audio: false}],
-        [  20580132,  934778463, buildIt2, SolScrollJoystick, {connection: "Bluetooth", clicks: true, audio: false}],
-        [-474578727, -573099553, buildIt2, SolScrollJoystick, {connection: "Wired", clicks: true, audio: true}],
-        [-1114586279, 934778463, buildIt2, SolScrollJoystick, {connection: "Bluetooth", clicks: true, audio: true}],
+        [1639269540, -573099553, buildIt2, Reg.SolScrollJoystick, {connection: "Wired", clicks: true, audio: false}],
+        [  20580132,  934778463, buildIt2, Reg.SolScrollJoystick, {connection: "Bluetooth", clicks: true, audio: false}],
+        [-474578727, -573099553, buildIt2, Reg.SolScrollJoystick, {connection: "Wired", clicks: true, audio: true}],
+        [-1114586279, 934778463, buildIt2, Reg.SolScrollJoystick, {connection: "Bluetooth", clicks: true, audio: true}],
         
     ],
     
@@ -322,58 +323,58 @@ var Recreate = {
     
     onePortHashTable: [
         // Hash-value,  build-func,    solution-reg,    parameters
-        [-1561617021,  oneBtnMouseEx, SolOneBtnMouse, {connection: "Wired"}],
-        [  891305351,  oneBtnMouseEx, SolOneBtnMouse, {connection: "Bluetooth"}],
+        [-1561617021,  oneBtnMouseEx, Reg.SolOneBtnMouse, {connection: "Wired"}],
+        [  891305351,  oneBtnMouseEx, Reg.SolOneBtnMouse, {connection: "Bluetooth"}],
         
-        [      987944, buildIt, SolLeftClick, {connection: "Wired",     audio: false}],
-        [  1853996003, buildIt, SolLeftClick, {connection: "Wired",     audio: true }],
-        [      991788, buildIt, SolLeftClick, {connection: "Bluetooth", audio: false}],
-        [  1109043431, buildIt, SolLeftClick, {connection: "Bluetooth", audio: true }],
+        [      987944, buildIt, Reg.SolLeftClick, {connection: "Wired",     audio: false}],
+        [  1853996003, buildIt, Reg.SolLeftClick, {connection: "Wired",     audio: true }],
+        [      991788, buildIt, Reg.SolLeftClick, {connection: "Bluetooth", audio: false}],
+        [  1109043431, buildIt, Reg.SolLeftClick, {connection: "Bluetooth", audio: true }],
         
-        [      987947, buildIt, SolRightClick, {connection: "Wired",     audio: false}],
-        [  1856766566, buildIt, SolRightClick, {connection: "Wired",     audio: true }],
-        [      991791, buildIt, SolRightClick, {connection: "Bluetooth", audio: false}],
-        [  1111813994, buildIt, SolRightClick, {connection: "Bluetooth", audio: true }],
+        [      987947, buildIt, Reg.SolRightClick, {connection: "Wired",     audio: false}],
+        [  1856766566, buildIt, Reg.SolRightClick, {connection: "Wired",     audio: true }],
+        [      991791, buildIt, Reg.SolRightClick, {connection: "Bluetooth", audio: false}],
+        [  1111813994, buildIt, Reg.SolRightClick, {connection: "Bluetooth", audio: true }],
         
-        [ -1873354147, buildIt, SolLeftPressReleaseToggle, {connection: "Wired",     audio: false}],
-        [     5512509, buildIt, SolLeftPressReleaseToggle, {connection: "Wired",     audio: true }],
-        [  -365476131, buildIt, SolLeftPressReleaseToggle, {connection: "Bluetooth", audio: false}],
-        [  1920230333, buildIt, SolLeftPressReleaseToggle, {connection: "Bluetooth", audio: true }],
+        [ -1873354147, buildIt, Reg.SolLeftPressReleaseToggle, {connection: "Wired",     audio: false}],
+        [     5512509, buildIt, Reg.SolLeftPressReleaseToggle, {connection: "Wired",     audio: true }],
+        [  -365476131, buildIt, Reg.SolLeftPressReleaseToggle, {connection: "Bluetooth", audio: false}],
+        [  1920230333, buildIt, Reg.SolLeftPressReleaseToggle, {connection: "Bluetooth", audio: true }],
 
-        [ -1738641404, buildIt, SolLeftEmulation, {connection: "Wired"}],
-        [   937636484, buildIt, SolLeftEmulation, {connection: "Bluetooth"}],
+        [ -1738641404, buildIt, Reg.SolLeftEmulation, {connection: "Wired"}],
+        [   937636484, buildIt, Reg.SolLeftEmulation, {connection: "Bluetooth"}],
 
-        [  -711621658, buildIt, SolThreeFuncMouseButton, {connection: "Wired"}],
-        [   650116714, buildIt, SolThreeFuncMouseButton, {connection: "Bluetooth"}],
+        [  -711621658, buildIt, Reg.SolThreeFuncMouseButton, {connection: "Wired"}],
+        [   650116714, buildIt, Reg.SolThreeFuncMouseButton, {connection: "Bluetooth"}],
 
-        [  -598153412, buildIt, SolScrollToggle, {connection: "Wired"}],
-        [ -1611132996, buildIt, SolScrollToggle, {connection: "Bluetooth"}],
+        [  -598153412, buildIt, Reg.SolScrollToggle, {connection: "Wired"}],
+        [ -1611132996, buildIt, Reg.SolScrollToggle, {connection: "Bluetooth"}],
         
-        [ -1446077293, buildIt, SolUpDownArrowToggle, {connection: "Wired"}],
-        [   563349845, buildIt, SolUpDownArrowToggle, {connection: "Bluetooth"}],
+        [ -1446077293, buildIt, Reg.SolUpDownArrowToggle, {connection: "Wired"}],
+        [   563349845, buildIt, Reg.SolUpDownArrowToggle, {connection: "Bluetooth"}],
         
         // Simple Scrolling Joystick - without click options so the A-side does nothing.
-        [  -573099553, buildIt, SolScrollJoystick, {connection: "Wired", clicks: false, audio: false}],
-        [   934778463, buildIt, SolScrollJoystick, {connection: "Bluetooth", clicks: false, audio: false}],
+        [  -573099553, buildIt, Reg.SolScrollJoystick, {connection: "Wired", clicks: false, audio: false}],
+        [   934778463, buildIt, Reg.SolScrollJoystick, {connection: "Bluetooth", clicks: false, audio: false}],
         
         // Keyboard extra is needed to distinguish text, special and modifier options.
-        [       31838, keyboardExtra, SolKeyboardText, {connection: "Wired",     length: 1}],
-        [  -661677636, keyboardExtra, SolKeyboardText, {connection: "Wired",     length: 2}],
-        [  1869928474, keyboardExtra, SolKeyboardText, {connection: "Wired",     length: 3}],
-        [  2058860408, keyboardExtra, SolKeyboardText, {connection: "Wired",     length: 4}],
-        [  1621080022, keyboardExtra, SolKeyboardText, {connection: "Wired",     length: 5}],
-        [   397695284, keyboardExtra, SolKeyboardText, {connection: "Wired",     length: 6}],
+        [       31838, keyboardExtra, Reg.SolKeyboardText, {connection: "Wired",     length: 1}],
+        [  -661677636, keyboardExtra, Reg.SolKeyboardText, {connection: "Wired",     length: 2}],
+        [  1869928474, keyboardExtra, Reg.SolKeyboardText, {connection: "Wired",     length: 3}],
+        [  2058860408, keyboardExtra, Reg.SolKeyboardText, {connection: "Wired",     length: 4}],
+        [  1621080022, keyboardExtra, Reg.SolKeyboardText, {connection: "Wired",     length: 5}],
+        [   397695284, keyboardExtra, Reg.SolKeyboardText, {connection: "Wired",     length: 6}],
         
-        [       31807, keyboardExtra, SolKeyboardText, {connection: "Bluetooth", length: 1}],
-        [  -690306818, keyboardExtra, SolKeyboardText, {connection: "Bluetooth", length: 2}],
-        [  2037812797, keyboardExtra, SolKeyboardText, {connection: "Bluetooth", length: 3}],
-        [ -1562663940, keyboardExtra, SolKeyboardText, {connection: "Bluetooth", length: 4}],
-        [ -1003371973, keyboardExtra, SolKeyboardText, {connection: "Bluetooth", length: 5}],
-        [  -188700422, keyboardExtra, SolKeyboardText, {connection: "Bluetooth", length: 6}],
+        [       31807, keyboardExtra, Reg.SolKeyboardText, {connection: "Bluetooth", length: 1}],
+        [  -690306818, keyboardExtra, Reg.SolKeyboardText, {connection: "Bluetooth", length: 2}],
+        [  2037812797, keyboardExtra, Reg.SolKeyboardText, {connection: "Bluetooth", length: 3}],
+        [ -1562663940, keyboardExtra, Reg.SolKeyboardText, {connection: "Bluetooth", length: 4}],
+        [ -1003371973, keyboardExtra, Reg.SolKeyboardText, {connection: "Bluetooth", length: 5}],
+        [  -188700422, keyboardExtra, Reg.SolKeyboardText, {connection: "Bluetooth", length: 6}],
         
         // Keylock - could be Shift-lock or Control-lock
-        [ -2105499416, keyLockExtra, SolKeyboardShift, {audio: false}],
-        [  1920131486, keyLockExtra, SolKeyboardShift, {audio: true}]
+        [ -2105499416, keyLockExtra, Reg.SolKeyboardShift, {audio: false}],
+        [  1920131486, keyLockExtra, Reg.SolKeyboardShift, {audio: true}]
     ],
     
     lookForOnePortMatch: function(triggerSet) {
@@ -438,14 +439,14 @@ var Recreate = {
             this.Sen_ACCEL_Z.isResolved();
             parameters.tiltThreshold = tiltThreshold;
         }
-        var theSolution = SolGyroMouse.createFunc(SolGyroMouse);
+        var theSolution = SolutionList.add(Reg.SolGyroMouse);
         theSolution.setParameters(parameters);
         Chooser.addTab(theSolution); 
     }
 };
 
 function keyboardExtra(triggerSet, solutionReg, parameters) {
-    solutionReg = SolKeyboardText; // default
+    solutionReg = Reg.SolKeyboardText; // default
 
     if (triggerSet.list.length() === 1) {
         var param = triggerSet.list.get(0).actionParam;
@@ -454,7 +455,7 @@ function keyboardExtra(triggerSet, solutionReg, parameters) {
         // the '| 0' after KEY_MODIFIER causes sign extension on that
         // so that the two values will match (ugh!).
         if ((param & 0xff000000) === (KEY_MODIFIER | 0)) {
-            solutionReg = SolKeyboardModifier;
+            solutionReg = Reg.SolKeyboardModifier;
             parameters.keyCode = getWiredKey(param & 0xff);
             parameters.modKey = getWiredKey( (param >> 8) & 0xff);
 
@@ -464,18 +465,18 @@ function keyboardExtra(triggerSet, solutionReg, parameters) {
 
         } else if (parameters.connection === "Wired") {
             if ((0xfe > param) && (param > 0x7f)) {
-                solutionReg = SolKeyboardSpecial;
+                solutionReg = Reg.SolKeyboardSpecial;
                 parameters.keyCode = getWiredKey(param & 0xff);
             } 
         } else { // Bluetooth
             if (param < 32) {
-                solutionReg = SolKeyboardSpecial;
+                solutionReg = Reg.SolKeyboardSpecial;
                 parameters.keyCode = getBTKey(param & 0xff);
             }             
         }
     }
 
-    if (solutionReg === SolKeyboardText) {
+    if (solutionReg === Reg.SolKeyboardText) {
         var returnKey;
         if (parameters.connection === "Wired") {
             returnKey = RETURN_KEY.wiredCode;
@@ -533,9 +534,9 @@ function keyLockExtra(triggerSet, solutionReg, parameters) {
         param = trigList.get(1).actionParam;
     }
     if ((param & 0x0ff) === LEFT_SHIFT_KEY.wiredCode) {
-        solutionReg = SolKeyboardShift;
+        solutionReg = Reg.SolKeyboardShift;
     } else {
-        solutionReg = SolKeyboardControl;
+        solutionReg = Reg.SolKeyboardControl;
     }
     buildIt(triggerSet, solutionReg, parameters);
 }
@@ -550,7 +551,7 @@ function buildIt(triggerSet, solutionReg, parameters) {
         }
     } */
     
-    var theSolution = solutionReg.createFunc(solutionReg);
+    var theSolution = SolutionList.add(solutionReg);
     theSolution.setParameters(triggerSet.sensor, parameters);
     Chooser.addTab(theSolution);
     triggerSet.isResolved();
@@ -562,7 +563,7 @@ function buildIt2(triggerSetA, triggerSetB, solutionReg, parameters) {
         console.log("    " + x + ": " + parameters[x]);
     } */
     
-    var theSolution = solutionReg.createFunc(solutionReg);
+    var theSolution = SolutionList.add(solutionReg);
     theSolution.setParameters(triggerSetA.sensor, parameters);
     Chooser.addTab(theSolution); 
     triggerSetA.isResolved();
