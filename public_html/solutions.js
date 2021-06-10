@@ -1056,7 +1056,7 @@ class ThreeFunctionButton extends SolutionBase {
 // -- Left-Right click buttons -----------------------------------
 class LeftRightClick extends SolutionBase {
     constructor(solreg) {
-        super(solreg, LDS_LEFT_RIGHT_CLICK);
+        super(solreg);
         this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
         this.addSetting( new SelectionBox (Q_TWO_BTN_PORT_LOCATION, portOptions, portOptions[0]));
         this.addOption( new CheckBox (Q_ADD_AUDIO_FEEDBACK_CLICKS, false));
