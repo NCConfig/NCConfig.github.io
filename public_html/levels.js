@@ -172,7 +172,7 @@ var Levels = {
         
         document.getElementById("levels").style.display = "block";
 
-        Connection.onNewSensorData = Levels.informNewSensorData;
+        Connection.onNewSensorData = (stream) => {this.processData(stream);}
         Connection.sendCommand(REPORT_MODE);
     },
     
@@ -180,10 +180,6 @@ var Levels = {
         Connection.sendCommand(RUN_SENSACT);
         document.getElementById("levels").style.display = "none";    
         Connection.onNewSensorData = null;
-    },
-    
-    informNewSensorData: function(stream) {
-        Levels.processData(stream);  
     },
     
     processData: function(stream) {

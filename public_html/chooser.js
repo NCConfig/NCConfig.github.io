@@ -210,22 +210,20 @@ let Chooser = {
 
     // Define what to do when an activity button is pressed.
     activityButtonAction: function(button, activity) {
-        let thisRef = this;
-        button.onclick = function() {
-            thisRef.activitySelection = activity.id;
-            thisRef.updateDisplay();
-            thisRef.hidePossible();
+        button.onclick = () => {  // Note: Arrow function is required to preserve 'this'.
+            this.activitySelection = activity.id;
+            this.updateDisplay();
+            this.hidePossible();
         };
     },
 
     // What to do when a device button is clicked.
     // Open a list of available solutions.
     deviceButtonAction: function(btn, device) {
-        let thisRef = this;
-        btn.onclick = function(event) {
-            thisRef.hidePossible();
-            thisRef.deviceSelection = device.id;
-            thisRef.updateDisplay();
+        btn.onclick = (event) => { // Note: Arrow function is required to preserve 'this'.
+            this.hidePossible();
+            this.deviceSelection = device.id;
+            this.updateDisplay();
             let theDiv = document.getElementById("possibleSolutions");
             while(theDiv.firstChild) {  // Empty the div.
                 theDiv.removeChild(theDiv.lastChild);
@@ -236,12 +234,12 @@ let Chooser = {
             title.className = "solutionsTitle";
             theDiv.appendChild(title);
 
-            for (let solRef of thisRef.SolutionRef) {
+            for (let solRef of this.SolutionRef) {
                 if (solRef.deviceid === device.id) {
                     var name;
                     var toolTipText;
 
-                    if (solRef instanceof thisRef.Selection) {
+                    if (solRef instanceof this.Selection) {
                         name = solRef.solreg.name;
                         toolTipText = solRef.solreg.summary;
                     } else {
@@ -256,7 +254,7 @@ let Chooser = {
                     b.type = "button";
                     b.className = "solutionButton";
                     b.value = name;
-                    thisRef.solutionButtonAction(b, solRef);
+                    this.solutionButtonAction(b, solRef);
                     innerDiv.appendChild(b);  
 
                     // Tool tip
@@ -282,16 +280,15 @@ let Chooser = {
 
     // Define the action when a solutions button is pressed
     solutionButtonAction: function(btn, solRef) {
-        let thisRef = this;
-        btn.onclick = function() {
-            if (solRef instanceof thisRef.Reference) {
-                thisRef.closeIt();
+       btn.onclick = () => { // Note: Arrow function is required to preserve 'this'.
+            if (solRef instanceof this.Reference) {
+                this.closeIt();
                 showMessageBox("Information", solRef.longD, ["OK"]);
             } else {
                 var solreg = solRef.solreg;  // Get solution registry
                 var theSolution = SolutionList.add(solreg);
-                thisRef.addTab(theSolution);
-                thisRef.closeIt();
+                this.addTab(theSolution);
+                this.closeIt();
             }
         };
     },
@@ -321,18 +318,17 @@ let Chooser = {
         tabButton.className = "tabButton";
         tabButton.value = theSolution.name;
         tabButton.myID = currentID;
-        let thisRef = this;
-        tabButton.onclick = function() {
-            thisRef.setActiveTab(currentID);
+        tabButton.onclick = () => {// Note: Arrow function is required to preserve 'this'.
+            this.setActiveTab(currentID);
         };
 
         tabClose.className = "closeTab";
         tabClose.innerHTML = "&times";
-        tabClose.onclick = function() {
+        tabClose.onclick = () => {// Note: Arrow function is required to preserve 'this'.
             showMessageBox("Please confirm", "Do you want to delete " + theSolution.name + "?", ["Yes", "No"])
                 .then( (response) => {
                     if (response === "Yes") {
-                        thisRef.removeTab(currentID);
+                        this.removeTab(currentID);
                     }
                 });
         };
