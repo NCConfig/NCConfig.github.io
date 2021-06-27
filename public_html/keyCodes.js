@@ -55,7 +55,7 @@ keyCodeList.push( new KeyCode("7 Key", 0x37, 0, false, false) );
 keyCodeList.push( new KeyCode("8 Key", 0x38, 0, false, false) );
 keyCodeList.push( new KeyCode("9 Key", 0x39, 0, false, false) );
         
-keyCodeList.push( new KeyCode("Space Key",  0x20, 0, false, false) );
+keyCodeList.push( new KeyCode("Space Key",  0x20, 0, false, true) );
 keyCodeList.push( new KeyCode("Plus Key",   0x2B, 0, false, false) );
 keyCodeList.push( new KeyCode("Minus Key",  0x2D, 0, false, false) );
 keyCodeList.push( new KeyCode("back Quote", 0x60, 0, false, false) );
