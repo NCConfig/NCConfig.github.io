@@ -54,6 +54,7 @@ function toClipboard() {
     // doPortCheck may put up a dialog, and thus returns a promise.
     SolutionList.doPortCheck().then( (val) => {
         if (val === true) {  // Port check passed
+            SolutionList.compile();
             TFunc.sendTriggers(CandP.informDataForClipBoard);
             showMessageBox("Information", "Configuration data copied to clipboard.", ["OK"]);    
         }

@@ -377,6 +377,7 @@ var TFunc = {
 
         // Send cursor speed data.
         if (this.onSendingCursorSpeed != null) {
+            ostream.putByte('\n'.charCodeAt(0));
             this.onSendingCursorSpeed(ostream);
         }
 
