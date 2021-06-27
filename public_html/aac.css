@@ -132,7 +132,7 @@ div.tabContent { /* A div enclosing the content for one tab */
 /* Main solutions dialog box. */
 #solutionsDlg {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 120px;
     left: 200px;
     z-index: 1;
@@ -149,7 +149,7 @@ div.tabContent { /* A div enclosing the content for one tab */
 #possibleSolutions {
     z-index: 2;
     display: none;
-    position: fixed;
+    position: absolute;
     top: 0px;
     left: 0px;
     background-color: white;
@@ -339,8 +339,8 @@ select.setting {
 /* ========== Cursor Speed Styling =============== */
 #cursorSpeed {
     display: none;
-    position: fixed;
-    top: 100px;
+    position: absolute;
+    top: 120px;
     left: 200px;
     z-index: 1;
     padding: 20px;
@@ -425,8 +425,8 @@ select.setting {
 
 #levels {
     display: none;
-    position: fixed;
-    top: 100px;
+    position: absolute;
+    top: 120px;
     left: 200px;
     z-index: 1;
     padding: 20px;

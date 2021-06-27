@@ -265,10 +265,12 @@ let Chooser = {
                 }
             }
 
+            let scroll = Math.floor(window.scrollY);
+            
             // Position and display the div.
             theDiv.style.display = "block";
-            theDiv.style.position = "fixed";
-            theDiv.style.top = (event.clientY - 15).toString() + "px";
+            theDiv.style.position = "absolute";
+            theDiv.style.top = (event.clientY - 15 + scroll).toString() + "px";
             theDiv.style.left = (event.clientX + 50).toString() + "px"; 
         };
     },
