@@ -104,16 +104,16 @@ keyCodeList.push( new KeyCode("F10", 0xCB, 24, false, true) );
 keyCodeList.push( new KeyCode("F11", 0xCC, 25, false, true) );
 keyCodeList.push( new KeyCode("F12", 0xCD, 26, false, true) );
         
-const LEFT_CONTROL_KEY = new KeyCode("Left Control",  0x80, 0, true, false);
-const LEFT_SHIFT_KEY = new KeyCode("Left Shift",    0x81, 0, true, false);
+const LEFT_CONTROL_KEY = new KeyCode("Left Control",  0x80, 0xE0, true, false);
+const LEFT_SHIFT_KEY = new KeyCode("Left Shift",    0x81, 0xE1, true, false);
 keyCodeList.push( LEFT_CONTROL_KEY );
 keyCodeList.push( LEFT_SHIFT_KEY );
-keyCodeList.push( new KeyCode("Left Alt",      0x82, 0, true, false) );
-keyCodeList.push( new KeyCode("Left Windows",  0x83, 0, true, false) );
-keyCodeList.push( new KeyCode("Right Control", 0x84, 0, true, true) );
-keyCodeList.push( new KeyCode("Right Shift",   0x85, 0, true, false) );
-keyCodeList.push( new KeyCode("Right Alt",     0x86, 0, true, true) );
-keyCodeList.push( new KeyCode("Right Windows", 0x87, 0, true, false) );
+keyCodeList.push( new KeyCode("Left Alt",      0x82, 0xE2, true, false) );
+keyCodeList.push( new KeyCode("Left Windows",  0x83, 0xE3, true, false) );
+keyCodeList.push( new KeyCode("Right Control", 0x84, 0xE4, true, true) );
+keyCodeList.push( new KeyCode("Right Shift",   0x85, 0xE5, true, false) );
+keyCodeList.push( new KeyCode("Right Alt",     0x86, 0xE6, true, true) );
+keyCodeList.push( new KeyCode("Right Windows", 0x87, 0xE7, true, false) );
 
 function getWiredKey(value) {
     for(let ch of keyCodeList) {
