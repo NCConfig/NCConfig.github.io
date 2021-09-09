@@ -68,7 +68,7 @@
   border: 1px solid #ccc;
   margin: auto;
   padding: 10px 10px 10px 10px;
-  min-height: 900px;
+  min-height: 100px;
 }
 
 .cfgbutton {
@@ -99,11 +99,9 @@
 
     <div class="about">
         <button class="aboutlinks" onclick="openAbout(event, 'intro')" id="defaultOpen">Introduction</button>
+        <button class="aboutlinks" onclick="openAbout(event, 'config_tool')">Configuration Tool</button>
         <button class="aboutlinks" onclick="openAbout(event, 'hub')">netClé Hub</button>
-        <button class="aboutlinks" onclick="openAbout(event, 'switches')">Switches &amp Sensors</button>
-        <button class="aboutlinks" onclick="openAbout(event, 'joysticks')">Joysticks</button>
-        <button class="aboutlinks" onclick="openAbout(event, 'other')">Other Peripherals</button>
-        <button class="aboutlinks" onclick="openAbout(event, 'bt')">Bluetooth</button>
+        <button class="aboutlinks" onclick="openAbout(event, 'peripherals')">Peripherals</button>
         <button class="aboutlinks" onclick="openAbout(event, 'acknowledgements')">Acknowledgments</button>
     </div>
 
@@ -135,18 +133,6 @@
         The top of the netClé should glow green after a few seconds.
         </p>
         
-        <h2>Configuring netClé </h2>
-        <p>
-        Your netClé system can be configured and tuned using the menu options on the left side of the <a href="config.html"> configuration tool </a> web page. 
-        <ul> 
-            <li> Click on the "Get" option to retrieve the current configuration from the netClé.</li>
-            <li> Click on the "Add Solution" option to create a new configutation. </li>
-            <li> Click on the "Set" option to send configuration data to the netClé.</li>
-            <li> Click on the "Help" option for more detailed help documentation. </li>
-        </ul>
-        </p>
-
-        <a href="config.html" ><button class="cfgbutton">Go to netClé Configuration Tool</button></a>
     </div>
 
     <div id="hub" class="aboutcontent">
@@ -163,9 +149,15 @@
                 </ul>
         </ul>
         </p>
+        <p>
+        netClé can be configured to emulate a USB mouse and/or keyboard. 
+        </p>
+        <p>
+        If an optional Bluetooth daughter board is installed, netClé can also emulate a Bluetooth mouse and/or keyboard. 
+        </p>
     </div>
 
-    <div id="switches" class="aboutcontent">
+    <div id="peripherals" class="aboutcontent">
         <div class="flex-container">
             <div class="peripheral_description">
                 <h2>Touch Sensor</h3>
@@ -258,9 +250,7 @@
                 </video>
             </div>
         </div>
-    </div>
 
-    <div id="joysticks" class="aboutcontent">
         <div class="flex-container">
             <div class="peripheral_description">
                 <h2>Large Joystick</h3>
@@ -365,9 +355,7 @@
                 </video>
             </div>
         </div>
-    </div>
 
-    <div id="other" class="aboutcontent">
         <div class="flex-container">
             <div class="peripheral_description">
                 <h2>Gyro</h3>
@@ -429,10 +417,19 @@
         </div>
     </div>
 
-    <div id="bt" class="aboutcontent">
+    <div id="config_tool" class="aboutcontent">
+        <h2>Configuring netClé </h2>
         <p>
-        netClé can be configured to emulate a bluetooth mouse and keyboard, with the installation of a serial to bluetooth daughter board.
+        Your netClé system can be configured and tuned using the menu options on the left side of the <a href="config.html"> configuration tool </a> web page. 
+        <ul> 
+            <li> Click on the "Get" option to retrieve the current configuration from the netClé.</li>
+            <li> Click on the "Add Solution" option to create a new configutation. </li>
+            <li> Click on the "Set" option to send configuration data to the netClé.</li>
+            <li> Click on the "Help" option for more detailed help documentation. </li>
+        </ul>
         </p>
+
+        <a href="config.html" ><button class="cfgbutton">Go to netClé Configuration Tool</button></a>
     </div>
 
     <div id="acknowledgements" class="aboutcontent">
