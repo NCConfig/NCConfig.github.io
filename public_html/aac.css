@@ -1,34 +1,75 @@
+:root {
+     --header_background: #007a6c;
+     --header_text: #effffc;
+     --nav_menu_background: lightgrey;
+     --tab_background_colour: #ef9b20;
+     --tab_hover_colour: #fccf00;
+     --tab_active_colour: #ff6101;
+}
 
 body {
     font-family: "Times New Roman", serif;
     font-size: 100%;
     margin: 0;
     padding: 0;
+    background-color: var(--header_text);
 }
 
+#header_logo {
+    height: 2em;
+}	
 #header {
-    background-color: grey;
-    color: white;
+    background-color: var(--header_background);
+    color: var(--header_text);
     padding-top: 10px;
     padding-bottom: 15px;
     text-align: center;
     font-size: 1.5em;
     font-family: Arial, Helvetica, sans-serif;
+    min-height: 50%;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0px;
+    padding: 10px 10px 0px 10px;
+    width: 100%;
+    height: 50px;
+    background-color: var(--tab_background_colour);
+    display: table;
+}
+
+#footer_text {
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+#footer_image {
+    text-align: left;
+    vertical-align: middle;
+    display: table-cell;
 }
 
 /* Navigation side-bar */
 #nav {
     width: 170px;
-    background-color: linen;
+    background-color: var(--nav_menu_background);
     padding: 20px 2px;
     float: left;
     border: black solid 2px;
     margin: 0px;
 }
 #nav button{
+    background-color: var(--header_text);
+    border-radius: 13px;
     margin: 10px 8px;
     width: 150px;
     font-size: 1.2em; 
+    box-shadow: 0 2px 2px #888888;
+}
+#nav button:hover {
+    color: orange;
 }
 
 #dropzone {
@@ -60,20 +101,25 @@ body {
 
 /* Tabs --------------------------------------------------- */
 #tabButtons {  /* The bar which holds the buttons */
-    min-height: 45px;
-    background-color: lightgrey;
+/*
+*/
+    border: 1px solid #ccc;
+    min-height: 40px;
+    background-color: var(--tab_background_colour);
     padding-left: 0px;
     margin-left: 0px;
 }
 
 div.tabDivItem { /* A div which holds each tab button and close btn. */
     display: inline;
-    padding: 10px 0px 10px 0px;
     position: relative;
+    background-color: orange;
+    padding: 10px 0px 10px 0px;
+/*
     top: 7px;
-    background-color: lightgray;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+*/
 } 
 
 input.tabButton { /* The button which selects the tab. */
@@ -82,16 +128,20 @@ input.tabButton { /* The button which selects the tab. */
     border: none;
     margin: 0;
     background: rgba(0,0,0,0); /* this make the background transparent */
+/*
+*/
 }
 
 div.tabDivItem:hover {
-    background-color: lightblue;
+    background-color: var(--tab_hover_colour);
 }
 
 div.activeItem,
 div.activeItem:hover {
-    background-color: white;
+    /*background-color: #effffc; */
+    background-color: var(--tab_active_colour);
 }
+
 
 input.tabButton:hover,
 input.tabButton:focus {
@@ -136,7 +186,7 @@ div.tabContent { /* A div enclosing the content for one tab */
     top: 120px;
     left: 200px;
     z-index: 1;
-    background-color: white;
+    background-color: #e6fffc;
     border: 2px solid black;
     border-radius: 10px;
     padding: 10px;
@@ -152,7 +202,7 @@ div.tabContent { /* A div enclosing the content for one tab */
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: white;
+    background-color: #e6fffc;
     border: 2px solid black;
     border-radius: 10px;
     padding: 10px;
@@ -188,7 +238,7 @@ p.devicesTitle {
     font-size: 1.2em;
     display: block;
     border: none;
-    background-color: white;
+    background-color: #e6fffc;
     padding: 5px 20px;
     position: relative;
 }
@@ -199,7 +249,7 @@ p.devicesTitle {
     display: block;
     border: none;
     border-left: 2px solid black;
-    background-color: white;
+    background-color: #effffc;
     padding: 5px 10px;   
     position: relative;
     left: 50px;
@@ -241,7 +291,7 @@ p.devicesTitle {
     left: 75%;
     z-index: 3;   
     padding: 5px;
-    background-color: white;
+    background-color: #effffc;
     border: 1px solid black;
     border-radius: 10px;
     font-size: 1.1em;
@@ -260,7 +310,7 @@ p.devicesTitle {
     left: 90%;
     z-index: 1;   
     padding: 5px;
-    background-color: white;
+    background-color: #effffc;
     border: 1px solid black;
     border-radius: 10px; 
     font-size: 14pt;
@@ -312,7 +362,7 @@ select.setting {
     top: 120px;
     left: 250px;
     z-index: 1;
-    background-color: white;
+    background-color: #effffc;
     border: 2px solid black;
     border-radius: 10px;
     padding: 20px;
@@ -345,7 +395,7 @@ select.setting {
     z-index: 1;
     padding: 20px;
     font-size: 1.2em;
-    background-color: white;
+    background-color: #effffc;
     border: 2px solid black;
     border-radius: 10px;
     padding: 20px;
@@ -360,7 +410,7 @@ select.setting {
   width: 300px;
   margin: 10px 5px;
   height: 10px;
-  background: lightgray;
+  background: blue;
   outline: none;
 }
 
@@ -373,7 +423,7 @@ select.setting {
   appearance: none;
   width: 10px;
   height: 25px;
-  background: gray;
+  background: blue;
   cursor: pointer;
 }
 
@@ -431,7 +481,7 @@ select.setting {
     z-index: 1;
     padding: 20px;
     font-size: 1.2em;
-    background-color: white;
+    background-color: #effffc;
     border: 2px solid black;
     border-radius: 10px;
     padding: 20px;

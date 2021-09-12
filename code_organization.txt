@@ -1,0 +1,96 @@
+﻿main.js
+-------
+Functions connected to buttons.  Some are just for testing as yet.
+connect()
+checkVersion()
+sendTriggers()
+getVersion()
+getConfig()
+closeConnection()
+
+const.js
+--------
+Constants used in action parameters.
+
+keyCodes.js
+-----------
+KeyCodes class 
+keyCodeList – global
+definitions of all key codes.
+
+widgets.js
+----------
+SENSOR_A and SENSOR_B const
+portValue class – includes mapping from port & A or B to sensor.
+list of ports.
+
+ - widgets used to select solution options.
+WidgetBase (getLabel, getWidget, getValue, setValue)
+SelectionBox – general purpose, but only used for ports.
+	KeySets – for lists of key codes.
+		SpecialKeys
+		ModifierKeys
+		NonModifierKeys
+	NumericSelector
+	CheckBox
+	TextBox
+
+solutions.js
+----------
+SolutionList class (add, remove, compile)
+SolutionBase (addSetting, adoption, compile)
+Constants for commonly used labels.
+Solution Long Descriptions.
+All solution implimentations.
+
+chooser.js
+----------
+Activity, Device & Selection classes
+Lists of each – these define the hierarchy of the solution selection dialog.
+Selection refers to make<Solution> functions in solutions.js
+
+Functions that support the selection dialog:
+showSolutionDlg
+closeIt
+updateDisplay
+showDevices
+activityButtonAction
+deviceButtonAction
+hidePossible
+solutionButtonAction
+
+Functions that support the creation, display and removal of tabs.
+addTab
+setActiveTab
+createContent
+removeTab
+defaultDisplay – default to show solution dlg.
+addControlItem
+
+Functions that support the display of a message box.  Needs expansion.
+showInfoBox
+gotInfoOK
+
+connect.js
+----------
+constants for comms protocol values
+The connection singleton.
+inputStream
+outputStream
+
+triggers.js
+----------
+Sensor class and const for sensors and list of sensors.
+Same for actions
+getBuzzerAction(pitch, duration)
+
+TAction and TSignal classes defined – holders for related values.
+
+TRIGGER_ON_LOW _HIGH _EQUAL constants.
+
+Trigger class
+TriggerList class
+  includes add(TSignal, startState, delay, TAction, endState)
+global Triggers = new TriggerList();
+
+Code to send the triggers in Triggers and to receive triggers into Triggers.
