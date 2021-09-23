@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>netClé Configuration</title>
+        <title>netClé Configuration Tool</title>
         <link rel="shortcut icon" href="favicon.ico">        
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,12 +29,14 @@ and open the template in the editor.
     <body onload="startup();">
     <!-- Header -->
 	<div id="header">
-		<h1> <img id="header_logo" src="images/logo.png", align="center" alt="Image: netClé logo"> Configuration Tool</h1>
+		<h1> 
+                    <img id="header_logo" src="images/logo.png" align="center" alt="Image: netClé logo"> 
+                    Configuration Tool</h1>
 	</div>
 	    
     <!-- Menu -->
     <div id="nav">
-        <button onclick="window.open('./index.html', '_blank');">About netClé</button>
+        <!-- <button onclick="window.open('./index.html', '_blank');">About netClé</button> -->
 
         <div class="tooltipdiv">
             <button onclick="Chooser.showSolutionDlg();">Add Solution</button>
@@ -61,7 +63,10 @@ and open the template in the editor.
             <span class="buttontip">Monitor signal levels on the hub.</span>
         </div>
 
-        <button onclick="window.open('./help.html', '_blank');">Help</button>
+        <div class="tooltipdiv">
+            <button onclick="window.open('./help.html', '_blank');">Help</button>
+            <span class="buttontip">Get more detailed instructions.</span>
+        </div>
         
         <hr> 
         
@@ -85,6 +90,19 @@ and open the template in the editor.
     <div id="content">
         <div id="tabButtons"></div>
         <div id="tabContents"></div>
+        <div id="intro">
+            <h2>Configuring netClé</h2>
+        <p>
+        Your netClé system can be configured and tuned using the menu options on the left. 
+        </p>
+        <ul> 
+            <li> Click on the "Add Solution" option to create a new configuration. </li>
+            <li> Click on the "Set" option to send configuration data to the netClé.</li>
+            <li> Click on the "Get" option to retrieve the current configuration from the netClé.</li>
+            <li> Click on the "Help" option for more detailed help documentation. </li>
+        </ul>
+
+        </div>
     </div>
 
 
@@ -157,6 +175,7 @@ and open the template in the editor.
     </div>
 
     <!-- Footer -->
+    <!-- Footer Unused
 	<footer id="footer">
         <div id="footer_text">
             <small>
@@ -173,5 +192,6 @@ and open the template in the editor.
             </a>
 	    </div>
 	</footer>
+    Unused Footer -->
     </body>
 </html>

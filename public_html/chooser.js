@@ -145,6 +145,7 @@ let Chooser = {
     
     // PUBLIC ENTRY POINT to show solution choice dialogs
     showSolutionDlg: function() {
+        document.getElementById('intro').style.display = "none";
         // Show the solutions modal dialog 
         document.getElementById("solutionsDlg").style.display = "block";  
         this.updateDisplay();

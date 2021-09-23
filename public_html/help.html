@@ -21,19 +21,24 @@
   overflow: hidden;
   border: 1px solid #ccc;
   background-color: var(--tab_background_colour);
+  min-height: 45px;
 }
 
 
 /* Style the buttons inside the tab */
 .about button {
   background-color: var(--tab_background_colour);
-  float: left;
+  display: inline;
+  position: relative;
+  top: 7px;
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 14px 16px;
+  padding: 10px 16px;
   transition: 0.3s;
   font-size: 17px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 /* Change background color of buttons on hover */
@@ -43,35 +48,38 @@
 
 /* Create an active/current tablink class */
 .about button.active {
-  background-color: var(--tab_active_colour);
+  background-color: var(--default_background);
 }
 
 /* Style the tab content */
 .helpcontent {
   display: none;
-  padding: 6px 12px;
-  /*
-  border: 1px solid #ccc;
-  */
-  border-top: none;
-  margin-bottom: 60px;
+  max-width: 750px;
+  padding: 20px 45px;
+  margin: auto;
+  font-size: 1.1em;
+  background-color: var(--default_background);
 }
 
-.flex-container {
+.img {
+    padding: 10px 0px;
+    margin-left: -30px;
+}
+
+.flex-container {  /* unused */
   display: flex;
   flex-wrap: wrap;
 }
 
-.peripheral_description {
+.peripheral_description { /* unused */
   max-width: 350px;
-  overflow: wrap;
   border: 1px solid #ccc;
   margin: auto;
   padding: 10px 10px 10px 10px;
   min-height: 475px;
 }
 
-.cfgbutton {
+.cfgbutton { /* unused */
   background-color: var(--nav_menu_background);
   color: var(--tab_background_colour);
   width: 30%;
@@ -84,7 +92,7 @@
   margin: 4px 2px;
   cursor: pointer;
 }
-.cfgbutton:hover {
+.cfgbutton:hover { /* unused */
   background-color: lightblue;
 }
 
@@ -93,11 +101,11 @@
 <body>
     <!-- Header -->
 	<div id="header">
-		<h1> <img id="header_logo" src="images/logo.png", align="center" alt="Image: netClé logo"> Configuration Help</h1>
+		<h1> <img id="header_logo" src="images/logo.png" alt="Image: netClé logo"> Configuration Help</h1>
 	</div>
 
     <div class="about">
-        <button class="helplinks" onclick="openHelp(event, 'intro')" id="defaultOpen">Introduction</button>
+        <button class="helplinks" onclick="openHelp(event, 'introduction')" id="defaultOpen">Introduction</button>
         <button class="helplinks" onclick="openHelp(event, 'section1')">Getting Started</button>
         <button class="helplinks" onclick="openHelp(event, 'section2')">Adjusting your Configuration</button>
         <button class="helplinks" onclick="openHelp(event, 'section3')">Legacy Configurations</button>
@@ -106,7 +114,8 @@
         <button class="helplinks" onclick="openHelp(event, 'section6')">Checking Signal Levels</button>
     </div>
 
-    <div id="intro" class="helpcontent">
+    <div id="introduction" class="helpcontent">
+        <h2>Introduction</h2>
         <p>
         This help documentation assumes that the user has a netClé hub, 
         appropriate peripherals and cables and that the user understands how to connect them.  
@@ -115,7 +124,7 @@
         <p>
         The netClé configuration tool is a web-based application that uses the
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API"> web serial API</a> 
-        not supported by all browsers at this time (e.g. Firefox, Safari).  
+        which is not supported by all browsers at this time (e.g. Firefox, Safari).  
         </p>
         <p>
         Supported browsers are Chrome (this includes Chromium), Edge and Opera.  
@@ -129,9 +138,14 @@
         <p>
         and set the option to 'enabled'.
         </p>
+        <p>
+        If you require further assistance please send an e-mail to 
+        <a href="mailto:info@netcle.ca"> info@netcle.ca </a>.
+        </p>
     </div>
 
     <div id="section1" class="helpcontent">
+        <h2>Getting Started</h2>
         <p>
         To create a new configuration for your netClé open your browser 
         (see introduction for browser requirements) and navigate to 
@@ -152,7 +166,7 @@
         which provides a more detailed description and allows you to make 
         adjustments to the configuration.  You can select the port to which 
         you will connect the peripheral and for most solutions you are given 
-        the option to use a wired connection USB or a Bluetooth connection.  
+        the option to use a wired USB connection or a Bluetooth connection.  
         (Note: To use the Bluetooth option you will need a Bluetooth-enabled
         hub.)
         </p>
@@ -179,6 +193,7 @@
     </div>
 
     <div id="section2" class="helpcontent">
+        <h2>Adjusting Your Configuration</h2>
         <p>
         If, after using your device for a while, you want to make some 
         adjustment to the configuration, open the configuration tool 
@@ -207,6 +222,7 @@
     </div>
 
     <div id="section3" class="helpcontent">
+        <h2>Legacy Configurations</h2>
         <p>
         If you have an existing configuration that was created using an earlier
         configuration tool you should begin by connecting your 
@@ -234,6 +250,7 @@
     </div>
 
     <div id="section4" class="helpcontent">
+        <h2>Cursor Speeds</h2>
         <p>
         When you use a solution which involves moving the cursor, the speed 
         the cursor moves can be adjusted.  Clicking on the ‘Cursor Speed’ 
@@ -249,6 +266,7 @@
     </div>
 
     <div id="section5" class="helpcontent">
+        <h2>Importing & Exporting</h2>
         <p>
         You may want to save your configuration so that you can restore it
         after some experimentation.  Or, you may want to load a configuration
@@ -289,6 +307,7 @@
     </div>
 
     <div id="section6" class="helpcontent">
+        <h2>Checking Signal Levels</h2>
         <p>
         Clicking on the ‘Levels’ button opens a window that lets you see 
         what the signals levels for each input are.  If you have a gyroscope 
@@ -303,6 +322,7 @@
     </div>
 
     <!-- Footer -->
+    <!-- Footer Unused 
 	<footer id="footer">
 	    <div id="footer_text">
             <small>
@@ -320,7 +340,8 @@
 	    </div>
 
 	</footer>
-
+    Unused Footer -->
+        
 <script>
 function openHelp(evt, cityName) {
   var i, helpcontent, helplinks;

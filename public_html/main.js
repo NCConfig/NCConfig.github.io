@@ -34,6 +34,7 @@ function startup() {
 
 
 function download() {
+    document.getElementById('intro').style.display = "none";
     if (!Connection.isSupported()) {
         showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
         return;
@@ -51,6 +52,7 @@ function download() {
     }
 }
 function toClipboard() {
+    document.getElementById('intro').style.display = "none";
     // doPortCheck may put up a dialog, and thus returns a promise.
     SolutionList.doPortCheck().then( (val) => {
         if (val === true) {  // Port check passed
@@ -64,6 +66,7 @@ function toClipboard() {
 // A lot like download - but without the port check.
 // Used when launching a Get or Levels or version check.
 function connectAndRun( callbackFunc ) {
+    document.getElementById('intro').style.display = "none";
     if (!Connection.isSupported()) {
         showMessageBox("Error", MSG_NOT_SUPPORTED, ["OK"]);
         return;
