@@ -92,7 +92,7 @@
   background-color: var(--solution_hover);
 }
 
-#intro1, #hub, #acknowledgements {
+#intro1, #hub, #acknowledgements, #config {
     max-width: 750px;
     margin: auto;
     font-size: 1.2em;
@@ -110,6 +110,7 @@
         <button class="aboutlinks" onclick="openAbout(event, 'intro1')" id="defaultOpen">Introduction</button>
         <button class="aboutlinks" onclick="openAbout(event, 'hub')">netClé Hub</button>
         <button class="aboutlinks" onclick="openAbout(event, 'peripherals')">Peripherals</button>
+        <button class="aboutlinks" onclick="openAbout(event, 'config')">Configuration</button>
         <button class="aboutlinks" onclick="openAbout(event, 'acknowledgements')">Acknowledgments</button>
     </div>
 
@@ -140,12 +141,20 @@
         The top of the netClé should glow green after a few seconds.
         </p>
         
-        <h2>Configuring netClé</h2>
-        <p>
+         <p>
             You can configure netClé to meet your needs by using the netClé Configuration Tool.
         </p>      
-        <button class="cfgbutton" onClick="launchConfig();">Go to netClé Configuration Tool</button>
+        <button class="cfgbutton" onClick="launchConfig();">Launch the netClé Configuration Tool</button>
     </div>
+
+    <div id="config" class="aboutcontent">
+        <h2>Configuring netClé</h2>
+        <p>
+            After you have selected and connected the peripherals that are suitable for you, you can configure netClé to meet your particular needs by using the netClé Configuration Tool.
+        </p>      
+        <button class="cfgbutton" onClick="launchConfig();">Launch the netClé Configuration Tool</button>    
+    </div>
+    
     <div id="hub" class="aboutcontent">
         <h2>netClé Hub</h2>
         <img style="width:40%" src="images/netCle-Gen-2-Hub.png" alt="netClé hub">

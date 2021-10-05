@@ -1,7 +1,11 @@
 :root {
     /* Colors */
     --tetra_teal: #007a6c;
-    --logo_orange: #ff9900;
+    /* Don's '--logo_orange: #ff9900; */
+    --logo_orange: #ef9b20;
+    --logo_blue: #2e5aa9;
+    --logo_light_blue: #5271b7;
+    
     --default_background: #effffc;
     
     /* Navigation menu */
@@ -22,8 +26,8 @@
     --solution_hover: lightblue;
     
     /* Cursor speed slider */
-    --slider_bar: #7e95ca;
-    --slider_thumb: #2e5aa9;
+    --slider_bar: var(--logo_blue);
+    --slider_thumb: var(--logo_light_blue);
 }
 
 body {
@@ -39,15 +43,19 @@ body {
     height: 2em;
 }	
 #header {
-    background-color: var(--tetra_teal);
-    color: var(--default_background);
-    color: light_green;
-    padding-top: 10px;
-    padding-bottom: 15px;
+    background-color: var(--default_background);
+    color: var(--logo_blue);
+    padding-top: 8px;
+    padding-bottom: 5px;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 2em;
     font-family: Arial, Helvetica, sans-serif;
-    min-height: 50%;
+
+}
+
+#header h1 {
+    font-size: 2em;
+    margin: 0;
 }
 
 /****** Footer Unused
@@ -168,7 +176,7 @@ div.tabDivItem:hover {
 
 div.activeItem,
 div.activeItem:hover {
-    background-color: var(--default_background);)
+    background-color: var(--default_background);
 }
 
 
