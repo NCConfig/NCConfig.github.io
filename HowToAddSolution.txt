@@ -1,0 +1,93 @@
+
+This file documents the steps you need to follow to add a new solution.
+
+In reg.js:
+    Create a new entry giving the name, summary and description for the
+    new solution.
+    You will also need to set a create method following the pattern
+    given.  You will create the control object later.
+
+In chooser.js:
+    The heirarchy of menus displayed when the user adds a solution is
+    defined here.
+    initActivies defines the highest level and creates an ID for each.
+    initDevices defines the next level - creates an ID for each line and
+        references the activity ID.
+    initSolutions define the lowest level, and references the device ID.
+
+    You will need to add your solution to initSolutions using the new
+    reg.js entry you created.
+
+    You may also need to define a new device in initDevices.
+
+At this point you should be able to run the program and see you new
+device (if you created one) and the new solution.
+
+In solutions.js
+    You need to create a new child of SolutionsBase.
+    The name you give to the new object must match the name in the 
+    create function of reg.js.
+
+    For now create a simple constructor:
+        constructor(solreg) {
+            super(solreg);
+        }
+    and empty getPortUsed(), setParameters() and compile() functions.
+
+You should now be able to see and select your solution and see the summary
+and description created in reg.js.
+
+    Look at other similar solutions to try to get the right code for
+    the constructor and other functions.
+    . The constructor defines which widgets are needed in the Settings and
+    Options panels.
+    . getPortUsed returns the user's port selection.  This information is
+    needed by the logic that checks for port use conflicts.
+    . setParameters is used when the configuration is read back from a device
+    or a saved config.
+    . compile is likely to be the most complex function.  This is where the
+    user's settings and preferences are converted into the netCle triggers
+    needed to implement the solution.
+
+You may need a new widget.  Widgets are defined in widgets.js.  
+There are selection boxes, check boxes, sliders, buttons, key-code lists ...
+If you can't find what you need - god help you - you will have to create 
+something.
+
+Understanding how to create a compile function is beyond the scope of this
+document - just study the examples in solutions.js and go from there.
+
+Create and test the compile code.  When it is working try to 'Get' the
+solution from the netCle device.  It will come back as unknown.  
+Here is how to fix that.
+
+The code to recognize and recreate solutions is in recreate.js.
+The basic idea is that the hash of a solution will be unique and this 
+can be used to identify the solution.  But there are a lot of extra
+if's and but's.
+
+So - for each unique set of options for your new solution you need to
+get the hash.
+
+In config.html uncomment the Hash and Generate Trigs buttons (around lines
+85 to 95).  Now you can create a solution, set the parameters, and then -
+    - click Generate Trigs - this will create a trigger set.
+    - cleck Hash - a dialog will appear giving the hash value for each
+       sensor.
+
+Record the hash values for each set of options.  Note: changing port will
+not change the hash value.
+
+Now, if you are lucky, you can just add your codes to a hash table in 
+recreate.js.   If your solution has some specialized parameters you may
+have to write a bunch of code to look at the trigger settings and deduce
+the correct solution.
+
+Test that all parameter settings can be saved and restored.  You can use Set 
+and Get for this - or Copy and Paste - which is quicker and does not
+require a netCle.
+
+Finally - go back to config.html and comment out the Hash and 
+Generate Trigs buttons.
+
+    

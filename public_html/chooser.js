@@ -73,6 +73,7 @@ let Chooser = {
         /* for CURSOR */
         this.Devices.push (new this.Device(1, 1, "One Button"));
         this.Devices.push (new this.Device(2, 1, "Two Buttons"));
+        this.Devices.push (new this.Device(5, 1, "Four Buttons"));
         this.Devices.push (new this.Device(3, 1, "Joystick"));
         this.Devices.push (new this.Device(4, 1, "Gyro"));
 
@@ -109,6 +110,7 @@ let Chooser = {
     initSolutions: function() {
         this.SolutionRef.push (new this.Selection(1, Reg.SolOneBtnMouse));
         this.SolutionRef.push (new this.Selection(2, Reg.SolTwoBtnMouse));
+        this.SolutionRef.push (new this.Selection(5, Reg.SolFourBtnMouse));
         this.SolutionRef.push (new this.Selection(3, Reg.SolJoystickMouse1));
         this.SolutionRef.push (new this.Selection(3, Reg.SolJoystickMouse2));
         this.SolutionRef.push (new this.Selection(4, Reg.SolGyroMouse));

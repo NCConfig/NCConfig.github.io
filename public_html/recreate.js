@@ -284,7 +284,12 @@ var Recreate = {
         //HashA, HashB, build-func,    solution-reg,    parameters
         [1491643326, 1712345086, buildIt2, Reg.SolTwoBtnMouse, {connection: "Wired"}],
         [ 478663742,  699365502, buildIt2, Reg.SolTwoBtnMouse, {connection: "Bluetooth"}],
-        
+
+        [987942, 987943, buildIt2, Reg.SolFourBtnMouse, {connection: "Wired", orientation: "left-right"}],
+        [987940, 987941, buildIt2, Reg.SolFourBtnMouse, {connection: "Wired", orientation: "up-down"}],
+        [991786, 991787, buildIt2, Reg.SolFourBtnMouse, {connection: "Bluetooth", orientation: "left-right"}],
+        [991784, 991785, buildIt2, Reg.SolFourBtnMouse, {connection: "Bluetooth", orientation: "up-down"}],
+
         [1582011234, 1553382080, buildIt2, Reg.SolJoystickMouse1, {connection: "Wired", clicks: false, audio: false}],
         [-552848382, 1553382080, buildIt2, Reg.SolJoystickMouse1, {connection: "Wired", clicks:  true, audio: false}],
         [2108447451, 1553382080, buildIt2, Reg.SolJoystickMouse1, {connection: "Wired", clicks:  true, audio:  true}],

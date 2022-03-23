@@ -383,6 +383,74 @@ class TwoButtonMouse extends SolutionBase {
         Triggers.add(btnBRelease, 4,  500, buzz,      1);       
     }
  }
+ 
+// -----------------------------------------------------------------
+// -- Four Button Mouse -------------------------------
+
+class OrientationOption {
+    constructor(name) { 
+        this.name = name; 
+    }    
+}
+
+const LEFT_RIGHT = "Left- Right";
+const UP_DOWN = "Up - Down";
+const orientations = [];
+const LR_OPTION = new OrientationOption(LEFT_RIGHT);
+const UD_OPTION = new OrientationOption(UP_DOWN);
+orientations.push( LR_OPTION );
+orientations.push( UD_OPTION );
+
+class FourButtonMouse extends SolutionBase {
+    constructor(solreg) {
+        super(solreg);
+        this.addSetting( new SelectionBox (Q_CONNECTION_TYPE, connectionOptions, connectionOptions[0]));
+        this.addSetting( new SelectionBox (Q_TWO_BTN_PORT_LOCATION, portOptions, portOptions[0]));
+        this.addSetting( new SelectionBox ("Which motions should this button pair control?", orientations, orientations[0]));
+        this.sensorCount = 2;
+    }
+    
+    getPortUsed() {
+        return this.settings[1].getValue();
+    }
+    
+    setParameters(sensor, parameters) {
+        this.settings[0].setValue(getConnection(parameters.connection));
+        this.settings[1].setValue(getPortBySensor(sensor));
+        if (parameters.orientation === "left-right") {
+            this.settings[2].setValue(LR_OPTION);            
+        } else {
+            this.settings[2].setValue(UD_OPTION);                        
+        }
+    }
+    
+    compile() {
+        var connectionType = this.settings[0].getValue();
+        var port = this.settings[1].getValue();
+        var orientation = this.settings[2].getValue();
+        
+
+        var sensorA = port.getSensor(SENSOR_A);
+        var sensorB = port.getSensor(SENSOR_B);
+        
+        var btnAPressed = new TSignal(sensorA, 500, TRIGGER_ON_HIGH);
+        var btnBPressed = new TSignal(sensorB, 500, TRIGGER_ON_HIGH);
+        
+        var mouseAction = connectionType.mouseAction;
+        var action1;
+        var action2;
+        if (orientation.name === LEFT_RIGHT) {
+            action1 = new TAction(mouseAction, MOUSE_LEFT, true);
+            action2 = new TAction(mouseAction, MOUSE_RIGHT, true);
+        } else {
+            action1 = new TAction(mouseAction, MOUSE_UP, true);
+            action2 = new TAction(mouseAction, MOUSE_DOWN, true);            
+        }
+        
+        Triggers.add(btnAPressed, 1,    0, action1,   1);
+        Triggers.add(btnBPressed, 1,    0, action2,   1);     
+    }
+ }
 
 // -----------------------------------------------------------------
 // -- Joystick 1 ----------------------------------
