@@ -19,6 +19,7 @@ var CandP = {
     }, 
     
     fromClipBoard: function() {
+        document.getElementById('intro').style.display = "none";
         navigator.clipboard.readText()
           .then(text => {
             CandP.processPaste(text);
@@ -29,6 +30,7 @@ var CandP = {
       },
       
       dropZoneDrop: function(ev) {
+          document.getElementById('intro').style.display = "none";
             ev.preventDefault();
             var items = ev.dataTransfer.items;
             if (items && items.length >= 1) {

@@ -6,14 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="aac.css">  
-
+    
 <style>
 
-.center {
+.center {       /* Used on peripheral images */
     display: block;
     margin-left: auto;
     margin-right: auto;
-
 }
 
 /* Style the tab */
@@ -21,19 +20,24 @@
   overflow: hidden;
   border: 1px solid #ccc;
   background-color: var(--tab_background_colour);
+  min-height: 45px;
 }
 
 
 /* Style the buttons inside the tab */
 .about button {
   background-color: var(--tab_background_colour);
-  float: left;
+  display: inline;
+  position: relative;
+  top: 7px;
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 14px 16px;
+  padding: 10px 16px;
   transition: 0.3s;
   font-size: 17px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 /* Change background color of buttons on hover */
@@ -43,7 +47,7 @@
 
 /* Create an active/current tablink class */
 .about button.active {
-  background-color: var(--tab_active_colour);
+  background-color: var(--default_background);
 }
 
 /* Style the tab content */
@@ -64,7 +68,6 @@
 
 .peripheral_description {
   max-width: 350px;
-  overflow: wrap;
   border: 1px solid #ccc;
   margin: auto;
   padding: 10px 10px 10px 10px;
@@ -86,7 +89,13 @@
   cursor: pointer;
 }
 .cfgbutton:hover {
-  background-color: lightblue;
+  background-color: var(--solution_hover);
+}
+
+#intro1, #hub, #acknowledgements, #config {
+    max-width: 750px;
+    margin: auto;
+    font-size: 1.2em;
 }
 
 </style>
@@ -94,22 +103,22 @@
 <body>
     <!-- Header -->
 	<div id="header">
-		<h1> <img id="header_logo" src="images/logo.png", align="center" alt="Image: netClé logo"> About netClé</h1>
+		<h1> <img id="header_logo" src="images/logo.png" alt="Image: netClé logo"> About netClé</h1>
 	</div>
 
     <div class="about">
-        <button class="aboutlinks" onclick="openAbout(event, 'intro')" id="defaultOpen">Introduction</button>
-        <button class="aboutlinks" onclick="openAbout(event, 'config_tool')">Configuration Tool</button>
+        <button class="aboutlinks" onclick="openAbout(event, 'intro1')" id="defaultOpen">Introduction</button>
         <button class="aboutlinks" onclick="openAbout(event, 'hub')">netClé Hub</button>
         <button class="aboutlinks" onclick="openAbout(event, 'peripherals')">Peripherals</button>
+        <button class="aboutlinks" onclick="openAbout(event, 'config')">Configuration</button>
         <button class="aboutlinks" onclick="openAbout(event, 'acknowledgements')">Acknowledgments</button>
     </div>
 
-    <div id="intro" class="aboutcontent">
-        <h2>Welcome to netClé&#42</h2>
+    <div id="intro1" class="aboutcontent">
+        <h2>Welcome to netClé</h2>
         <p>
         NetClé is a customizable user-friendly device that enables people with a range of mobility limitations to independently use a computer, tablet or similar device.
-        At the heart of netClé is a custom hub containing an ATmega32U4 micro-controller which can accomodate a selection of input and output peripherals.
+        At the heart of netClé is a custom hub containing an ATmega32U4 micro-controller which can accommodate a selection of input and output peripherals.
         These peripherals can be combined and configured in a variety of ways to allow the user to operate netClé by touch or movement (from a single digit, limb - or even their head), 
         in order to perform mouse and keyboard functions that are difficult for the user to accomplish with standard input devices.
         </p>
@@ -122,9 +131,8 @@
             <li> Drag and drop</li>
             <li> Keyboard actions (including key combinations)</li>
         </ul>
-        </p>
 
-        <h2>Connecting netClé </h2>
+        <h2>Connecting netClé</h2>
         <p>
         The netClé hub peripheral ports are labelled from 0 to 3 and each netClé peripheral has a colour-coded base to indicate which port or ports it is compatible with. 
         Peripherals are connected to the hub using the white 3.5mm male-to-male 4 conductor TRRS audio cables, included with the kit.
@@ -133,22 +141,36 @@
         The top of the netClé should glow green after a few seconds.
         </p>
         
+         <p>
+            You can configure netClé to meet your needs by using the netClé Configuration Tool.
+        </p>      
+        <button class="cfgbutton" onClick="launchConfig();">Launch the netClé Configuration Tool</button>
     </div>
 
+    <div id="config" class="aboutcontent">
+        <h2>Configuring netClé</h2>
+        <p>
+            After you have selected and connected the peripherals that are suitable for you, you can configure netClé to meet your particular needs by using the netClé Configuration Tool.
+        </p>      
+        <button class="cfgbutton" onClick="launchConfig();">Launch the netClé Configuration Tool</button>    
+    </div>
+    
     <div id="hub" class="aboutcontent">
-        <img width="20%" src="images/netCle-Gen-2-Hub.png" alt="netClé hub">
+        <h2>netClé Hub</h2>
+        <img style="width:40%" src="images/netCle-Gen-2-Hub.png" alt="netClé hub">
         <p>
             The netClé hub contains a custom board based on an ATmega32U4 microcontroller.
+        </p>
         <ul>
             <li>Dimensions: 77mm x 68mm 23mm</li>
             <li>Weight: 60g</li>
-            <li>Powered over USB: 5V</li>
+            <li>Powered over USB: 5V
                 <ul>
                     <li> 50mA (without Bluetooth daughter board installed)</li>
                     <li> 100mA (with Bluetooth daughter board installed)</li>
                 </ul>
+            </li>
         </ul>
-        </p>
         <p>
         netClé can be configured to emulate a USB mouse and/or keyboard. 
         </p>
@@ -160,7 +182,7 @@
     <div id="peripherals" class="aboutcontent">
         <div class="flex-container">
             <div class="peripheral_description">
-                <h2>Touch Sensor</h3>
+                <h2>Touch Sensor</h2>
                 <img class="center" src="images/touch_sensor.png" alt="touch sensor">
                 <ul>
                     <li>An assistive switch requiring minimal pressure to activate</li>
@@ -182,7 +204,7 @@
                 </video>
             </div>
             <div class="peripheral_description">
-                <h2>Dual Touch Sensor</h3>
+                <h2>Dual Touch Sensor</h2>
                 <img class="center" src="images/dual_touch_sensor.png" alt="dual touch sensor">
                 <ul>
                     <li>An assistive switch requiring minimal pressure to activate</li>
@@ -196,7 +218,7 @@
                     </li>
                     <li>Dimensions: 32mm x 57mm x 16mm </li>
                     <li>Weight: 16g</li>
-                    <li><strong>NOT</strong> compatible with yellow splitter</li>
+                    <li><strong>NOT</strong> compatible with splitter</li>
                 </ul>
                 <video width="320" height="240" controls>
                     <source src="videos/dual_touch_sensor_video_med.mp4" type="video/mp4">
@@ -204,7 +226,7 @@
                 </video>
             </div>
             <div class="peripheral_description">
-                <h2>Mini Touch Sensor</h3>
+                <h2>Mini Touch Sensor</h2>
                 <img class="center" src="images/mini_touch_sensor.png" alt="mini touch sensor">
                 <ul>
                     <li>A proximity switch requiring no pressure to activate</li>
@@ -227,7 +249,7 @@
                 </video>
             </div>
             <div class="peripheral_description">
-                <h2>Button Switch</h3>
+                <h2>Button Switch</h2>
                 <img class="center" src="images/tactile_switch.png" alt="tactile switch">
                 <ul>
                     <li>A pressure switch requiring moderate touch to click and activate</li>
@@ -253,7 +275,7 @@
 
         <div class="flex-container">
             <div class="peripheral_description">
-                <h2>Large Joystick</h3>
+                <h2>Large Joystick</h2>
                 <img class="center" src="images/joystick.png" alt="large joystick">
                 <ul>
                     <li>A standard Joystick that operates much like the joystick on a power wheelchair</li>
@@ -265,11 +287,12 @@
                         </ul>
                     </li>
                     <li>Base dimensions: 78mm x 105mm x 50mm  (not including side flanges)</li>
-                    <li>Base dimensions: 108mm x 105mm x 50mm  (including side flanges)</li>
+                    <li>Base dimensions: 108mm x 105mm x 50mm  (including side flanges)
                         <ul>
                             <li>Shaft and knob extend 60mm above the base</li>
                             <li>Knob diameter: 35mm</li>
                         </ul>
+                    </li>
                     <li>Weight: 285g</li>
                     <li><strong>NOT</strong> compatible with  splitter</li>
                 </ul>
@@ -279,7 +302,7 @@
                 </video>
             </div>
             <div class="peripheral_description">
-                <h2>Large Joystick with Palm Cradle</h3>
+                <h2>Large Joystick with Palm Cradle</h2>
                 <img class="center" src="images/joystick_with_cradle.png" alt="large joystick with cradle">
                 <ul>
                     <li>The cradle makes it possible for people with minimal or no grip strength to operate the joystick</li>
@@ -290,12 +313,13 @@
                         </ul>
                     </li>
                     <li>Base dimensions: 78mm x 105mm x 50mm  (not including side flanges)</li>
-                    <li>Base dimensions: 108mm x 105mm x 50mm  (including side flanges)</li>
+                    <li>Base dimensions: 108mm x 105mm x 50mm  (including side flanges)
                         <ul>
                             <li>Shaft and cradle extend 40mm above the base</li>
                             <li>Cradle dimensions: 34mm x 133mm x 45mm</li>
                             <li>Inner cradle width: 99mm</li>
                         </ul>
+                    </li>
                     <li>Weight: 300g</li>
                     <li><strong>NOT</strong> compatible with  splitter</li>
                 </ul>
@@ -307,7 +331,7 @@
                 </video>
             </div>
             <div class="peripheral_description">
-                <h2>Mini Joystick</h3>
+                <h2>Mini Joystick</h2>
                 <img class="center" src="images/mini_joystick.png" alt="mini joystick">
                 <ul>
                     <li>A small easy to use joystick that is operated by one or two fingers</li>
@@ -318,10 +342,11 @@
                             <li>Good finger control, dexterity</li>
                         </ul>
                     </li>
-                    <li>Base dimensions: 40mm x 51mm x 28mm </li>
+                    <li>Base dimensions: 40mm x 51mm x 28mm 
                         <ul>
                             <li>Handle extends 12mm above the base</li>
                         </ul>
+                    </li>
                     <li>Weight: 28g</li>
                     <li><strong>NOT</strong> compatible with splitter</li>
                 </ul>
@@ -331,7 +356,7 @@
                 </video>
             </div>
             <div class="peripheral_description">
-                <h2>Mini Joystick with Extender Rod</h3>
+                <h2>Mini Joystick with Extender Rod</h2>
                     <img class="center" src="images/mini_joystick_with_rod.png" alt="mini joystick with extender">
                     <ul>
                         <li>The extender rod operated the mini joystick  with less finger strength</li>
@@ -342,10 +367,11 @@
                             <li>Some finger control, dexterity</li>
                         </ul>
                     </li>
-                    <li>Base dimensions: 40mm x 51mm x 28mm </li>
+                    <li>Base dimensions: 40mm x 51mm x 28mm 
                         <ul>
                             <li>Handle extends 50mm above the base</li>
                         </ul>
+                    </li>
                     <li>Weight: 30g</li>
                     <li><strong>NOT</strong> compatible with splitter</li>
                 </ul>
@@ -356,10 +382,10 @@
             </div>
         </div>
 
-        <div class="flex-container">
+        <div class="flex-container">  
             <div class="peripheral_description">
-                <h2>Gyro</h3>
-                <img class="center"src="images/gyro.png" alt="gyro">
+                <h2>Gyro</h2>
+                <img class="center" src="images/gyro.png" alt="gyro">
                 <ul>
                     <li>Mount to a headband or hat, the gyroscope controls functions by moving the device left, right, up and down</li>
                     <li>Operated by/with:
@@ -379,7 +405,7 @@
                 </video>
             </div>
             <div class="peripheral_description">
-                <h2>Lightbox</h3>
+                <h2>Lightbox</h2>
                 <img class="center" src="images/lightbox.png" alt="lightbox">
                 <ul>
                     <li>Provides visual feedback to help the user identify the mode the peripheral is in, when the peripheral is set to perform multiple functions</li>
@@ -389,21 +415,22 @@
                 </ul>
             </div>
             <div class="peripheral_description">
-                <h2>Splitters</h3>
+                <h2>Splitters</h2>
                 <img class="center" src="images/splitters.png" alt="splitters">
                 <ul>
-                    <li>Enables 2 peripherals to be plugged into the same port</li>
+                    <li>Enables 2 peripherals to be plugged into the same port
                         <ul>
                             <li>Green splitter for gyro/lightbox</li>
                             <li>Yellow splitter for single switches and touch sensors</li>
                         </ul>
+                    </li>
                     <li>Dimensions: 30mm x 30mm x 14mm </li>
                     <li>Weight: 9g</li>
                     <li>Maximum 1 splitter per port (<strong>cannot be daisy-chained</strong>)</li>
                 </ul>
             </div>
             <div class="peripheral_description">
-                <h2>Switch Adaptor</h3>
+                <h2>Switch Adaptor</h2>
                 <img class="center" src="images/switch_adaptor.png" alt="switch adaptor">
                 <ul>
                     <li>Enables commercial switches with standard mono plugs to connect to netClé</li>
@@ -417,22 +444,8 @@
         </div>
     </div>
 
-    <div id="config_tool" class="aboutcontent">
-        <h2>Configuring netClé </h2>
-        <p>
-        Your netClé system can be configured and tuned using the menu options on the left side of the <a href="config.html"> configuration tool </a> web page. 
-        <ul> 
-            <li> Click on the "Get" option to retrieve the current configuration from the netClé.</li>
-            <li> Click on the "Add Solution" option to create a new configutation. </li>
-            <li> Click on the "Set" option to send configuration data to the netClé.</li>
-            <li> Click on the "Help" option for more detailed help documentation. </li>
-        </ul>
-        </p>
-
-        <a href="config.html" ><button class="cfgbutton">Go to netClé Configuration Tool</button></a>
-    </div>
-
     <div id="acknowledgements" class="aboutcontent">
+        <h2>Acknowledgements</h2>
         <p>
         netClé is based on SensAct, an assistive device developed by volunteers at the Saint Vincent Hospital in Ottawa Canada. 
         </p>
@@ -440,26 +453,35 @@
         Since early 2019, with funds from the Canadian federal government, the <a href="https://tetrasociety.org">Tetra Society </a> has been developing netClé with the goal of 
         being able to offer an affordable finished product on <a href="https://tetragear.com">TetraGear</a>.
         </p>
-        <p>
-        The netClé development team is:
+        <p>The netClé development team is:</p>
             <ul>
-                <li>Yih Lerh Huang </li>
-                <li>Andrew Hodgson </li>
+                <li>Yih Lerh Huang</li>
+                <li>Andrew Hodgson</li>
                 <li>Don Haig </li>
             </ul>
-        </p>
         <p>
-        Please send your feedback to: <a href="mailto:info@netcle.ca"> info@netcle.ca </a>
+                netClé is a trademark of the <a href="https://tetrasociety.org/contact/"> Tetra Society 
+                    of North America.</a><br/>
+                
+                More information can be found at <a href="https://tetrasociety.org/netcle/"> netClé 
+                </a> or by mailing <a href="mailto:info@netcle.ca"> info@netcle.ca </a>.</p>
+        <p>
+                Except where otherwise noted, content on this website is licensed under a 
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                Creative Commons Attribution-ShareAlike 4.0 International License</a>.
         </p>
+
 
     </div>
 
     <!-- Footer -->
+    <!-- Footer Unused 
 	<footer id="footer">
 	    <div id="footer_text">
             <small>
                 &#42 netClé is a trademark of the <a href="https://tetrasociety.org/contact/"> Tetra Society of North America. </a>
-                More information can be found at <a href="https://tetrasociety.org/netcle/"> netClé </a> or by mailing <a href="mailto:info@netcle.ca"> info@netcle.ca </a>.
+                More information can be found at <a href="https://tetrasociety.org/netcle/"> netClé 
+    </a> or by mailing <a href="mailto:info@netcle.ca"> info@netcle.ca </a>.
                 Except where otherwise noted, content on this website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
                 Creative Commons Attribution-ShareAlike 4.0 International License</a>.
             </small>
@@ -472,7 +494,7 @@
 	    </div>
 
 	</footer>
-
+    Unused Footer -->
 <script>
 function openAbout(evt, cityName) {
   var i, aboutcontent, aboutlinks;
@@ -486,6 +508,18 @@ function openAbout(evt, cityName) {
   }
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
+}
+
+var configLaunched = false;
+function launchConfig() {
+    if (configLaunched) {
+        var val = confirm("You have already launched the config tool.\n\
+You should not run two copies of it at the same time.\n\
+Click OK if you need to restart it.  Otherwise click cancel.");
+        if (val == false) return;
+    }
+    window.open('config.html', '_blank');
+    configLaunched = true;
 }
 
 // Get the element with id="defaultOpen" and click on it

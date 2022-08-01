@@ -1,10 +1,33 @@
 :root {
-     --header_background: #007a6c;
-     --header_text: #effffc;
-     --nav_menu_background: lightgrey;
-     --tab_background_colour: #ef9b20;
-     --tab_hover_colour: #fccf00;
-     --tab_active_colour: #ff6101;
+    /* Colors */
+    --tetra_teal: #007a6c;
+    /* Don's '--logo_orange: #ff9900; */
+    --logo_orange: #ef9b20;
+    --logo_blue: #2e5aa9;
+    --logo_light_blue: #5271b7;
+    
+    --default_background: #effffc;
+    
+    /* Navigation menu */
+    --nav_menu_background: #dddddd;
+    --nav_button_color: var(--tetra_teal);
+    
+    /* Drop Zone */
+    --dropzone_background: var(--default_background);
+    --dropzone_color: #009c9f;
+    --dropzone_hover: var(--tetra_teal);
+    
+    /* Tab bar */
+    --tab_background_colour: var(--logo_orange);
+    --tab_hover_colour: #fccf00;
+    /* tab_active color is --default_background */
+    
+    /* Solutions */
+    --solution_hover: lightblue;
+    
+    /* Cursor speed slider */
+    --slider_bar: var(--logo_blue);
+    --slider_thumb: var(--logo_light_blue);
 }
 
 body {
@@ -12,23 +35,30 @@ body {
     font-size: 100%;
     margin: 0;
     padding: 0;
-    background-color: var(--header_text);
+    /* default background color - inherited by many */
+    background-color: var(--default_background);
 }
 
 #header_logo {
     height: 2em;
 }	
 #header {
-    background-color: var(--header_background);
-    color: var(--header_text);
-    padding-top: 10px;
-    padding-bottom: 15px;
+    background-color: var(--default_background);
+    color: var(--logo_blue);
+    padding-top: 8px;
+    padding-bottom: 5px;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 2em;
     font-family: Arial, Helvetica, sans-serif;
-    min-height: 50%;
+
 }
 
+#header h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+/****** Footer Unused
 #footer {
     position: fixed;
     bottom: 0px;
@@ -50,47 +80,51 @@ body {
     vertical-align: middle;
     display: table-cell;
 }
+Unused Footer *****************/
 
 /* Navigation side-bar */
 #nav {
     width: 170px;
-    background-color: var(--nav_menu_background);
+    background-color: var(--nav_menu_background); 
     padding: 20px 2px;
     float: left;
     border: black solid 2px;
     margin: 0px;
 }
 #nav button{
-    background-color: var(--header_text);
-    border-radius: 13px;
+    background-color: var(--nav_button_color);
+    color: var(--default_background);
+    border-radius: 8px; 
     margin: 10px 8px;
     width: 150px;
+    min-height: 36px;
     font-size: 1.2em; 
     box-shadow: 0 2px 2px #888888;
 }
 #nav button:hover {
-    color: orange;
+    text-decoration: underline;
+/*    color: #fc944c;   /* Orange */
 }
 
 #dropzone {
-    border: 4px gray dashed;
+    border: 4px dashed;
+    border_color: var(--dropzone_color);
     border-radius: 10px;
     margin-top: 10px;
     margin-left: 21px;
     padding: 10px;
     width: 100px;
     height: 100px;
-    editable: false;
     font-size: 1.4em;
     text-align: center;
-    background-color: #eee;
-    color: #666;
+    background-color: var(--dropzone_background);
+    color: var(--dropzone_color);
 }
 
 #dropzone:hover  {
   border-style: solid;
-  border-color: #333;
-  color: #333;
+  border-color: var(--dropzone_hover);
+  color: var(--dropzone_hover);
 }
 
 /* Content div - holds tabs and tab-content */
@@ -99,12 +133,20 @@ body {
     margin-left: 178px;
 }
 
+#intro {
+    margin-left: 20px;
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+
+#intro li {
+    margin-bottom: 6px;
+}
+
 /* Tabs --------------------------------------------------- */
 #tabButtons {  /* The bar which holds the buttons */
-/*
-*/
     border: 1px solid #ccc;
-    min-height: 40px;
+    min-height: 45px;
     background-color: var(--tab_background_colour);
     padding-left: 0px;
     margin-left: 0px;
@@ -113,13 +155,11 @@ body {
 div.tabDivItem { /* A div which holds each tab button and close btn. */
     display: inline;
     position: relative;
-    background-color: orange;
+    background-color: var(--tab_background_colour);
     padding: 10px 0px 10px 0px;
-/*
     top: 7px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-*/
 } 
 
 input.tabButton { /* The button which selects the tab. */
@@ -127,9 +167,7 @@ input.tabButton { /* The button which selects the tab. */
     padding: 1px 5px 10px 21px;
     border: none;
     margin: 0;
-    background: rgba(0,0,0,0); /* this make the background transparent */
-/*
-*/
+    background: rgba(0,0,0,0); /* this makes the background transparent */
 }
 
 div.tabDivItem:hover {
@@ -138,8 +176,7 @@ div.tabDivItem:hover {
 
 div.activeItem,
 div.activeItem:hover {
-    /*background-color: #effffc; */
-    background-color: var(--tab_active_colour);
+    background-color: var(--default_background);
 }
 
 
@@ -186,7 +223,7 @@ div.tabContent { /* A div enclosing the content for one tab */
     top: 120px;
     left: 200px;
     z-index: 1;
-    background-color: #e6fffc;
+    background-color: var(--default_background);
     border: 2px solid black;
     border-radius: 10px;
     padding: 10px;
@@ -202,7 +239,7 @@ div.tabContent { /* A div enclosing the content for one tab */
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: #e6fffc;
+    background-color: var(--default_background);
     border: 2px solid black;
     border-radius: 10px;
     padding: 10px;
@@ -238,7 +275,7 @@ p.devicesTitle {
     font-size: 1.2em;
     display: block;
     border: none;
-    background-color: #e6fffc;
+    background-color: var(--default_background);
     padding: 5px 20px;
     position: relative;
 }
@@ -249,7 +286,7 @@ p.devicesTitle {
     display: block;
     border: none;
     border-left: 2px solid black;
-    background-color: #effffc;
+    background-color: var(--default_background);
     padding: 5px 10px;   
     position: relative;
     left: 50px;
@@ -274,7 +311,7 @@ p.devicesTitle {
 .solutionButton:focus,
 .deviceButton:hover,
 .deviceButton:focus {
-    background-color: lightblue;
+    background-color: var(--solution_hover); /* Hover color */
 }
 
 .tooltipdiv {
@@ -291,7 +328,7 @@ p.devicesTitle {
     left: 75%;
     z-index: 3;   
     padding: 5px;
-    background-color: #effffc;
+    background-color: var(--default_background);
     border: 1px solid black;
     border-radius: 10px;
     font-size: 1.1em;
@@ -310,7 +347,7 @@ p.devicesTitle {
     left: 90%;
     z-index: 1;   
     padding: 5px;
-    background-color: #effffc;
+    background-color: var(--default_background);
     border: 1px solid black;
     border-radius: 10px; 
     font-size: 14pt;
@@ -362,7 +399,7 @@ select.setting {
     top: 120px;
     left: 250px;
     z-index: 1;
-    background-color: #effffc;
+    background-color: var(--default_background);
     border: 2px solid black;
     border-radius: 10px;
     padding: 20px;
@@ -395,7 +432,7 @@ select.setting {
     z-index: 1;
     padding: 20px;
     font-size: 1.2em;
-    background-color: #effffc;
+    background-color: var(--default_background);
     border: 2px solid black;
     border-radius: 10px;
     padding: 20px;
@@ -410,7 +447,7 @@ select.setting {
   width: 300px;
   margin: 10px 5px;
   height: 10px;
-  background: blue;
+  background: var(--slider_bar);
   outline: none;
 }
 
@@ -423,14 +460,14 @@ select.setting {
   appearance: none;
   width: 10px;
   height: 25px;
-  background: blue;
+  background: var(--slider_thumb);
   cursor: pointer;
 }
 
 .csspeed::-moz-range-thumb {
   width: 10px;
   height: 40px;
-  background: #4CAF50;
+  background: var(--slider_thumb);
   cursor: pointer;
 }
 
@@ -481,7 +518,7 @@ select.setting {
     z-index: 1;
     padding: 20px;
     font-size: 1.2em;
-    background-color: #effffc;
+    background-color: var(--default_background);
     border: 2px solid black;
     border-radius: 10px;
     padding: 20px;

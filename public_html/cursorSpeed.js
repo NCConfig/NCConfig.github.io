@@ -132,6 +132,7 @@ function limitNumericRange(event) {
 }
 
 function showCursorSpeed() {
+    document.getElementById('intro').style.display = "none";
     DisplayCursorSpeed.loadFromRaw();
     var cs = document.getElementById("cursorSpeed");
     cs.style.display = "block";

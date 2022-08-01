@@ -33,6 +33,16 @@ up-down motion.",
         createMethod: function() {return new TwoButtonMouse(Reg.SolTwoBtnMouse);}
     },
     
+    SolFourBtnMouse: {
+        name: "Four Button Mouse",
+        summary: "Enable cursor control with four buttons. \
+    One button is assigned to each of the up, down, left and right motions.",
+        description: "Control cursor motion with four buttons.<br/>\
+    A single configuration tab controls two buttons.<br>\
+    One pair of buttons controls up & down cursor motion the other pair controls left & right. ",
+        createMethod: function() {return new FourButtonMouse(Reg.SolFourBtnMouse);}
+    },
+   
     SolJoystickMouse1: {
         name: "Joystick Mouse",
         summary: "Control the cursor with a joystick. Left- and right-click capability can be added.",
